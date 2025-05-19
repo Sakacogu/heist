@@ -38,7 +38,11 @@ const BRAND_INFO: Record<BrandKey, Brand> = {
 };
 
 export default function BrandList() {
-  const [open, setOpen] = useState<Set<BrandKey>>(new Set());
+
+    const initialOpen = new Set<BrandKey>(
+      Object.keys(BRAND_INFO) as BrandKey[]
+    );
+  const [open, setOpen] = useState<Set<BrandKey>>(initialOpen);
   const toggle = (k: BrandKey) =>
     setOpen((s) => {
       const copy = new Set(s);

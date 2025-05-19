@@ -17,7 +17,7 @@ export default function CartPage(){
             <div className="flex items-center gap-4"><span className="font-medium">{i.price} kr.</span><button onClick={()=>removeItem(i.id)} className="text-red-500">✕</button></div>
           </div>
         ))}
-        {items.length===0&&<p>Karfa er tóm 🤷‍♂️</p>}
+        {items.length===0&&<p className='flex justify-center pt-30'>Karfan er tóm 🤷‍♂️</p>}
       </div>
       <aside className="md:w-80 mt-10 md:mt-0">
         <div className="bg-white p-6 rounded-xl shadow space-y-4 sticky top-24">
