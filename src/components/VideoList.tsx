@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function VideoList() {
   return (
-    <section className="grid md:grid-cols-3 gap-4 py-6 px-4">
+    <section className="flex flex-col gap-4">
       {[1, 2, 3].map((n) => (
         <div
           key={n}

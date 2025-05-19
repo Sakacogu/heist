@@ -1,23 +1,28 @@
-'use client';
+import FeaturedCarousel from '../components/FeaturedCarousel'
+import BrandList from '../components/BrandList'
+import VoiceAssistantSection from '@/components/VoiceAssistantSection'
+import VideoList from '@/components/VideoList'
 
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { I18nextProvider } from 'react-i18next';
-import i18n from './i18n';
-import App from './app';
+export const metadata = {
+  title: 'Heist – Home',
+}
 
-const rootElement = document.getElementById('root');
-if (rootElement) {
-  ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
-      <I18nextProvider i18n={i18n}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </I18nextProvider>
-    </React.StrictMode>
-  );
-} else {
-  console.error("Root element not found");
+export default function Home() {
+  return (
+    <div>
+      <FeaturedCarousel />
+
+      <div className="md:flex md:items-start md:justify-center md:gap-8 px-4">
+        {/* Left 2/3: Brands + Voice Assistants */}
+        <div className="md:w-2/3">
+          <BrandList />
+          <VoiceAssistantSection />
+        </div>
+
+        <aside className="md:w-1/3">
+          <VideoList />
+        </aside>
+      </div>
+    </div>
+  )
 }
