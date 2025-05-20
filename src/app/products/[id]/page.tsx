@@ -1,3 +1,6 @@
+import { notFound } from 'next/navigation';
+import { AddToCartButton } from '../../../components/AddToCartButton';
+
 export const revalidate = 60;
 
 interface Drink {
@@ -13,15 +16,26 @@ async function fetchDrink(id: string): Promise<Drink> {
     { next: { revalidate } }
   );
   if (!res.ok) throw new Error('Failed to fetch drink');
-  const { drinks } = await res.json();
+
+  const json = await res.json();
+  const drinks: Drink[] | null = json.drinks;
+
+  if (!drinks || drinks.length === 0) {
+    notFound();
+  }
+
   return drinks[0];
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function ProductDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const drink = await fetchDrink(params.id);
 
   return (
-    <section className="max-w-5xl mx-auto px-4 py-10 md:flex md:gap-10">
+    <div className="max-w-5xl mx-auto px-4 py-10 md:flex md:gap-10">
       <img
         src={drink.strDrinkThumb}
         alt={drink.strDrink}
@@ -32,36 +46,13 @@ export default async function Page({ params }: { params: { id: string } }) {
         <h1 className="text-2xl font-semibold">{drink.strDrink}</h1>
         <p className="text-gray-700">{drink.strInstructions}</p>
 
-        <AddToCart
+        <AddToCartButton
           id={drink.idDrink}
           name={drink.strDrink}
           price={0}
+          image={drink.strDrinkThumb}
         />
       </div>
-    </section>
-  );
-}
-
-'use client';
-
-import { useCart } from '../../lib/cart-provider';
-
-export function AddToCart({
-  id,
-  name,
-  price,
-}: {
-  id: string;
-  name: string;
-  price: number;
-}) {
-  const { addItem } = useCart();
-  return (
-    <button
-      onClick={() => addItem({ id, name, price })}
-      className="w-full bg-cyan-600 text-white py-3 rounded-lg font-medium shadow hover:bg-cyan-700"
-    >
-      Setja í körfu
-    </button>
+    </div>
   );
 }

@@ -10,9 +10,17 @@ export default function CartPage(){
   const handleCheckout=async()=>{ if(!stripe||!elements)return; alert('Stripe checkout coming soon'); };
   return(
     <div className="max-w-6xl mx-auto md:flex md:gap-10 p-6">
+
       <div className="flex-1 space-y-4">
         {items.map(i=>(
           <div key={i.id} className="bg-white p-4 rounded-xl shadow flex justify-between items-center">
+            {i.image && (
+              <img
+                src={i.image}
+                alt={i.name}
+                className="w-16 h-16 object-cover rounded"
+              />
+            )}
             <span>{i.name}</span>
             <div className="flex items-center gap-4"><span className="font-medium">{i.price} kr.</span><button onClick={()=>removeItem(i.id)} className="text-red-500">✕</button></div>
           </div>
