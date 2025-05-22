@@ -39,7 +39,7 @@ export default async function ProductsPage() {
                 alt={d.strDrink}
                 className="h-40 w-full object-cover rounded mb-3"
               />
-              <span className="font-medium">{d.strDrink}</span>
+              <span className="font-medium text-center">{d.strDrink}</span>
             </Link>
           ))}
         </div>

@@ -42,9 +42,9 @@ export default async function ProductDetailPage({
         className="md:w-1/2 rounded-xl object-cover"
       />
 
-      <div className="md:w-1/2 mt-6 md:mt-0 space-y-6">
-        <h1 className="text-2xl font-semibold">{drink.strDrink}</h1>
-        <p className="text-gray-700">{drink.strInstructions}</p>
+      <div className="md:w-1/2 mt-6 md:mt-0 space-y-6 justify-center align-center">
+        <h1 className="text-2xl font-semibold text-center">{drink.strDrink}</h1>
+        <p className="text-gray-700 text-center">{drink.strInstructions}</p>
 
         <AddToCartButton
           id={drink.idDrink}

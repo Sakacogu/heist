@@ -18,8 +18,8 @@ const BRAND_INFO: Record<BrandKey, Brand> = {
     color: '#00AEEF',
   },
   Shelby: {
-    name: 'Shelby',
-    desc: 'Shelby smart home hub connects all your devices and offers advanced automation rules.',
+    name: 'Shelly',
+    desc: 'Shelly smart home hub connects all your devices and offers advanced automation rules.',
     logo: '/logos/shelby.png',
     color: '#FF5A1F',
   },
