@@ -1,101 +1,116 @@
-'use client';
+import Image from 'next/image';
+import {
+  Lightbulb,
+  Thermometer,
+  AlignVerticalJustifyCenter,
+  Activity,
+  Zap,
+  Wifi,
+  Camera,
+  Shield,
+  Cpu,
+  Bluetooth,
+} from 'lucide-react';
 
-import { useState } from 'react';
-
-type BrandKey = 'Plejd' | 'Shelly' | 'HomeAssistant' | 'Unify';
-interface Brand {
-  name: string;
-  desc: string;
-  logo: string;
-  color: string;
-}
-
-const BRAND_INFO: Record<BrandKey, Brand> = {
-  Plejd: {
+const BRANDS = [
+  {
     name: 'Plejd',
-    desc: 'Plejd offers smart lighting control via Bluetooth and cloud, easy to install and integrate.',
     logo: '/logos/plejd.png',
-    color: '#00AEEF',
+    color: '#00bbcf',
+    description:
+      'Bluetooth-mesh dimmers & relays for lighting, heating loops and motorised window coverings.',
+    features: [
+      { icon: Lightbulb, label: 'Lights' },
+      { icon: Thermometer, label: 'Heat' },
+      { icon: AlignVerticalJustifyCenter, label: 'Blinds' },
+      { icon: Bluetooth, label: 'BT-Mesh' },
+    ],
   },
-  Shelly: {
+  {
     name: 'Shelly',
-    desc: 'Shelly smart home hub connects all your devices and offers advanced automation rules.',
     logo: '/logos/shelly.png',
-    color: '#FF5A1F',
+    color: '#0076bf',
+    description:
+      'Wi-Fi relays with power metering, roller-shutter control and upcoming Z-Wave LR sensors.',
+    features: [
+      { icon: Lightbulb, label: 'Lights' },
+      { icon: Thermometer, label: 'Heat' },
+      { icon: AlignVerticalJustifyCenter, label: 'Blinds' },
+      { icon: Activity, label: 'kWh Meter' },
+      { icon: Zap, label: 'Relays' },
+    ],
   },
-  HomeAssistant: {
+  {
     name: 'Home Assistant',
-    desc: 'Home Assistant is an open-source home automation platform, highly customizable and community-driven.',
     logo: '/logos/homeassistant.png',
     color: '#03A9F4',
+    description:
+      'Open-source hub with 2800 + integrations, advanced automations and local voice.',
+    features: [
+      { icon: Cpu, label: 'Automation' },
+      { icon: Wifi, label: 'Matter / Zigbee' },
+      { icon: Lightbulb, label: 'Lights' },
+      { icon: Thermometer, label: 'Climate' },
+      { icon: Camera, label: 'Cams' },
+    ],
   },
-  Unify: {
-    name: 'Unify',
-    desc: 'Unify by Ubiquiti delivers seamless Wi-Fi and smart home integration for prosumers.',
+  {
+    name: 'UniFi',
     logo: '/logos/unify.png',
-    color: '#FF6C2C',
+    color: '#2984cf',
+    description:
+      'Enterprise-grade Wi-Fi 6, PoE switching and Protect AI cameras for rock-solid backbone.',
+    features: [
+      { icon: Wifi, label: 'Wi-Fi 6' },
+      { icon: Camera, label: 'Protect Cam' },
+      { icon: Shield, label: 'Door Access' },
+    ],
   },
-};
+] as const;
 
 export default function BrandList() {
-
-    const initialOpen = new Set<BrandKey>(
-      Object.keys(BRAND_INFO) as BrandKey[]
-    );
-  const [open, setOpen] = useState<Set<BrandKey>>(initialOpen);
-  const toggle = (k: BrandKey) =>
-    setOpen((s) => {
-      const copy = new Set(s);
-      copy.has(k) ? copy.delete(k) : copy.add(k);
-      return copy;
-    });
-
   return (
-    <section className="px-10 py-8">
-      <div className="flex justify-between">
-        {(Object.keys(BRAND_INFO) as BrandKey[]).map((key) => {
-          const { name, desc, logo, color } = BRAND_INFO[key];
-          const isOpen = open.has(key);
+    <section className="flex flex-wrap justify-between gap-8 px-4">
+      {BRANDS.map((b) => (
+        <div
+          key={b.name}
+          className="flex flex-col items-center w-64 text-center"
+        >
+          <div
+            className="w-28 h-28 rounded-full flex items-center justify-center mb-4 shadow"
+            style={{ backgroundColor: 'white' }}
+          >
+            <Image
+              src={b.logo}
+              alt={b.name}
+              width={64}
+              height={64}
+              className="object-contain"
+            />
+          </div>
 
-          return (
-            <div
-              key={key}
-              className="flex flex-col items-center"
-              style={{ width: '10rem', height: '16rem' }}
-            >
-              <button
-                onClick={() => toggle(key)}
-                className="w-24 h-24 rounded-full flex items-center justify-center
-                           border-2 transition-colors overflow-hidden"
-                style={{
-                  backgroundColor: 'white',
-                  borderColor: isOpen ? color : 'black',
-                }}
-              >
-                <img
-                  src={logo}
-                  alt={name}
-                  className="max-w-full max-h-full object-contain"
-                />
-              </button>
+          <h3 className="font-semibold text-lg mb-1" style={{ color: b.color }}>
+            {b.name}
+          </h3>
 
+          <p className="text-gray-700 text-sm mb-4 leading-relaxed">
+            {b.description}
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-4">
+            {b.features.map(({ icon: Icon, label }) => (
               <div
-                className={`mt-4 w-full transition-opacity ${
-                  isOpen ? 'visible opacity-100' : 'invisible opacity-0'
-                }`}
+                key={label}
+                className="flex flex-col items-center text-gray-600 hover:text-cyan-600 transition text-xs"
+                title={label}
               >
-                <h4
-                  className="mb-1 text-center font-semibold"
-                  style={{ color }}
-                >
-                  {name}
-                </h4>
-                <p className="text-center text-sm leading-snug">{desc}</p>
+                <Icon className="w-5 h-5" />
+                <span className="mt-0.5">{label}</span>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </section>
   );
 }

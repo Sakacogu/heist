@@ -1,79 +1,130 @@
+import FeatureCard from '@/components/FeatureCard';
+import {
+  Zap,
+  Lightbulb,
+  Thermometer,
+  Wifi,
+  Cpu,
+  Activity,
+  Camera,
+  Home,
+} from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Heist - Uppsetning',
+  title: 'Heist – Uppsetning',
 };
 
 export default function SetupPage() {
   return (
-    <main className="max-w-5xl mx-auto px-6 py-10 space-y-16">
- 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Plejd</h2>
-        <p className="text-gray-700">
-          Plejd sérhæfir sig í snjallljósastýringu. Með Bluetooth- og skýja­lausn
-          býður Plejd upp á auðvelda uppsetningu án þess að þurfa flókna millistykki.
-          Þetta kerfi er frábært til að stjórna ljósmagni, birta­stillingum og
-          tímastilli fyrir ljós í heimilinu.
+    <main className="max-w-6xl mx-auto px-6 py-12 space-y-20">
+      <section className="text-center space-y-6">
+        <h1 className="text-4xl font-bold">Veldu snjallkerfin þín</h1>
+        <p className="text-gray-700 max-w-2xl mx-auto">
+          Við notum fjórar lausnir sem passa saman eins og púsl. Hér sérðu hvað
+          hver lausn gerir – og hvernig þær mynda eitt heilsteypt
+          heimastýringarkerfi.
         </p>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Shelly</h2>
-        <p className="text-gray-700">
-          Shelly býður upp á breiðari heimstýringarviðmót með Wi-Fi tengingu.
-          Með Shelly-græjum getur þú stýrt rofum, tímastilli og mælt hvers kyns
-          aflnotkun heimilisins beint í skýið. Shelly virkar frítt sem sjálfstætt
-          kerfi eða tengist öðrum kerfum.
+      <section className="grid gap-8 md:grid-cols-2">
+        <FeatureCard
+          title="Plejd"
+          icon={Zap}
+          description="Bluetooth-mesh dimmers & relays sem rafvirkjar treysta fyrir
+          lýsingu, raf­tenglum og stemningu."
+          features={[
+            { icon: Lightbulb, label: 'Lýsing' },
+            { icon: Zap, label: 'Mesh dimming' },
+          ]}
+          href="/products?brand=plejd"
+        />
+
+        <FeatureCard
+          title="Shelly"
+          icon={Activity}
+          description="Wi-Fi rofar og afl­mælar sem sýna rafmagns­notkun í rauntíma og
+          lækka orkukostnað strax."
+          features={[
+            { icon: Thermometer, label: 'Aflmæling' },
+            { icon: Wifi, label: 'Wi-Fi rofar' },
+          ]}
+          href="/products?brand=shelly"
+        />
+
+        <FeatureCard
+          title="Home Assistant"
+          icon={Cpu}
+          description="Opinn, staðbundinn hub með 2800+ samþættingum – sameinar Plejd,
+          Shelly, UniFi og raddaðstoð."
+          features={[
+            { icon: Cpu, label: 'Sjálfvirkni' },
+            { icon: Home, label: '2800+ tæki' },
+          ]}
+          href="/products?brand=homeassistant"
+        />
+
+        <FeatureCard
+          title="UniFi"
+          icon={Wifi}
+          description="Enterprise-Wi-Fi 6 og Protect myndavélar – hraðvirk og stöðug
+          nettenging fyrir alla snjalltæki."
+          features={[
+            { icon: Wifi, label: 'Wi-Fi 6' },
+            { icon: Camera, label: 'Protect vélar' },
+          ]}
+          href="/products?brand=unify"
+        />
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-semibold text-center">Flýtisamanburður</h2>
+        <div className="overflow-x-auto rounded-xl shadow">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-cyan-600 text-white">
+              <tr>
+                <th className="p-3 font-medium">Kerfi</th>
+                <th className="p-3 font-medium">Lýsing / Dimming</th>
+                <th className="p-3 font-medium">Aflmæling</th>
+                <th className="p-3 font-medium">Wi-Fi 6</th>
+                <th className="p-3 font-medium">Sjálfvirkni</th>
+                <th className="p-3 font-medium">Myndavélar</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {[
+                ['Plejd', '✓', '', '', '✓ (Fyrir reglur)', ''],
+                ['Shelly', '✓', '✓', '', '✓', ''],
+                ['Home Assistant', '✓ (í gegnum Plejd)', '✓ (í gegnum Shelly)', '', '✓✓✓', '✓ (Protect + ONVIF)'],
+                ['UniFi', '', '', '✓', '', '✓✓✓'],
+              ].map((row) => (
+                <tr key={row[0]} className="hover:bg-gray-50">
+                  {row.map((cell, idx) => (
+                    <td key={idx} className="p-3">
+                      {cell || '—'}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-gray-600 text-center">
+          ✓ = grunnstuðningur · ✓✓✓ = full samþætting
         </p>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Home Assistant</h2>
-        <p className="text-gray-700">
-          Home Assistant er opinn hugbúnaður fyrir sjálfvirkni heimilisins.
-          Það samhæfir óteljandi snjalltæki, meðal annars Plejd og Shelly,
-          og býður upp á öflugar reglur, rök og samþættingar (integrations).
-          Þetta er „heilaklasi“ kerfisins sem heldur utan um alla snjallheiminn þinn.
-        </p>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">UniFi (Unify)</h2>
-        <p className="text-gray-700">
-          UniFi tengir snjalltæki í öflugt Wi-Fi net sem tryggir stöðuga tengingu.
-          Með UniFi-netkerfi færðu áreiðanlegt Wi-Fi í gegnum allt heimilið,
-          forgangsstillingu fyrir Home Assistant og lága latens til allra Plejd
-          og Shelly eininga.
-        </p>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Fullkomin samþætting</h2>
-        <p className="text-gray-700 leading-relaxed">
-          1. <strong>Plejd</strong> sjá um lýsingu og stemningu.<br />
-          2. <strong>Shelly</strong> sér um rafmagnsstýringu og mælingu.<br />
-          3. <strong>UniFi</strong> tryggir hraðvirkt, áreiðanlegt net.<br />
-          4. <strong>Home Assistant</strong> tengir allt saman, býr til sjálfvirkni:
-        </p>
-        <ul className="list-disc list-inside text-gray-700 space-y-2">
-          <li>„Ef sólin sest, dimma ljósið í stofu um 50 %“</li>
-          <li>„Ef hiti utan við er undir 5 °C, kveikja á gólf­hitalokunni“</li>
-          <li>„Ákveðinn notandi kemur heim → kveikja á gangljósinu“</li>
-        </ul>
-        <p className="text-gray-700">
-          Þannig nýtir Heist styrkleika hvers kerfis til fullkominna heimastillinga.
-        </p>
-      </section>
-
-      <div className="text-center">
+      <section className="text-center space-y-4">
+        <h3 className="text-xl font-semibold">
+          Klárt að smíða drauma-heimakerfið?
+        </h3>
         <Link
           href="/products"
           className="inline-block bg-cyan-600 text-white px-6 py-3 rounded-lg shadow hover:bg-cyan-700 transition"
         >
-          Skoða vörur
+          Skoða vörur & pakkar
         </Link>
-      </div>
+      </section>
     </main>
   );
 }
