@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-type BrandKey = 'Plejd' | 'Shelby' | 'HomeAssistant' | 'Unify';
+type BrandKey = 'Plejd' | 'Shelly' | 'HomeAssistant' | 'Unify';
 interface Brand {
   name: string;
   desc: string;
@@ -17,10 +17,10 @@ const BRAND_INFO: Record<BrandKey, Brand> = {
     logo: '/logos/plejd.png',
     color: '#00AEEF',
   },
-  Shelby: {
+  Shelly: {
     name: 'Shelly',
     desc: 'Shelly smart home hub connects all your devices and offers advanced automation rules.',
-    logo: '/logos/shelby.png',
+    logo: '/logos/shelly.png',
     color: '#FF5A1F',
   },
   HomeAssistant: {
@@ -68,8 +68,8 @@ export default function BrandList() {
                 className="w-24 h-24 rounded-full flex items-center justify-center
                            border-2 transition-colors overflow-hidden"
                 style={{
-                  backgroundColor: color,
-                  borderColor: isOpen ? color : '#ccc',
+                  backgroundColor: 'white',
+                  borderColor: isOpen ? color : 'black',
                 }}
               >
                 <img
