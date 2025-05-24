@@ -70,7 +70,7 @@ const BRANDS = [
 
 export default function BrandList() {
   return (
-    <section className="flex flex-wrap justify-between gap-8 px-4">
+    <section className="flex flex-wrap justify-between px-22 gap-8">
       {BRANDS.map((b) => (
         <div
           key={b.name}

@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Providers>
           <NavBar />
-          <main className="pt-16 min-h-screen bg-white text-gray-900">
+          <main className="pt-16 min-h-screen bg-gray-50 text-gray-900">
             {children}
           </main>
         </Providers>

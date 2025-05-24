@@ -11,10 +11,11 @@ export default function NavBar() {
   const navItem = 'px-3 py-2 rounded-lg hover:bg-cyan-100 transition-colors font-medium text-gray-900';
 
   return (
-    <header className="fixed top-0 inset-x-0 h-16 bg-white shadow-sm z-50">
+    <header className="fixed top-0 inset-x-0 h-26 text-xl bg-gray-50 z-50">
       <div className="mx-auto max-w-7xl h-full px-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-cyan-600">
-          <span className="text-2xl">💡</span> Heist
+          <span className="text-5xl">💡</span> 
+          <p className="text-4xl">HEIST</p>
         </Link>
 
         <nav className="hidden md:flex items-center gap-4 text-gray-900">
