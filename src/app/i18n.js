@@ -37,6 +37,31 @@ const resources = {
 
       quickLinks: 'Flýtileiðir',
       contactUs:  'Tengiliðir',
+
+      heroTitle:   'Snjöll heimastjórnun á þínum forsendum',
+      heroTag:     'Ljós, hitastýring, net og öryggi – allt undir einu þaki.',
+
+      mainBrands:  'Helstu samstarfsmerki',
+      voiceAI:     'Hægt að stjórna með gervigreind!',
+
+      starterPack: 'Starter ljós',
+      securityPack:'Öryggispakki',
+      mixPack:     'Mix & Match',
+
+      chooseSystems:'Veldu snjallkerfin þín',
+      compareQuick: 'Flýtisamanburður',
+      legend:       '✓ = grunnstuðningur · ✓✓✓ = full samþætting',
+      buildDream:   'Klárt að smíða drauma-heimakerfið?',
+      viewProductsBtn:'Skoða vörur & pakkar',
+
+      contactHeading:'Hafa samband',
+      contactSubtitle:'Velkomin! Við svörum á virkum dögum 09-17.',
+      phone:        'Sími',
+      email:        'Netfang',
+      bookMeeting:  'Bóka fund',
+
+      colSystem:'Kerfi', colDim:'Lýsing / Dimming', colPower:'Aflmæling',
+      colWifi:'Wi-Fi 6', colAuto:'Sjálfvirkni', colCam:'Myndavélar',
     },
   },
   en: {
@@ -71,6 +96,31 @@ const resources = {
 
       quickLinks: 'Quick links',
       contactUs:  'Contact',
+
+      heroTitle:   'Smart home control on your terms',
+      heroTag:     'Lights, climate, Wi-Fi and security – all in one app.',
+
+      mainBrands:  'Our key partner brands',
+      voiceAI:     'Voice-assistant ready!',
+
+      starterPack: 'Starter Lights',
+      securityPack:'Security Pack',
+      mixPack:     'Mix & Match',
+
+      chooseSystems:'Choose your ecosystems',
+      compareQuick: 'Quick comparison',
+      legend:       '✓ = basic · ✓✓✓ = full integration',
+      buildDream:   'Ready to build your dream setup?',
+      viewProductsBtn:'Browse products & bundles',
+
+      contactHeading:'Contact us',
+      contactSubtitle:'We reply Mon–Fri 09-17.',
+      phone:        'Phone',
+      email:        'Email',
+      bookMeeting:  'Book a meeting',
+
+      colSystem:'System', colDim:'Dimming', colPower:'Power metering',
+      colWifi:'Wi-Fi 6', colAuto:'Automation', colCam:'Cameras',
     },
   },
 };
