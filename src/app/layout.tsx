@@ -2,7 +2,7 @@ import './globals.css';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Providers } from './providers';
 import NavBar from '../components/NavBar';
-import Footer from '../components/Footer';
+import Footer from '../components/footer';
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });

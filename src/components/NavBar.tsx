@@ -1,18 +1,25 @@
 'use client';
+
 import Link from 'next/link';
-import { Search, ShoppingCart } from 'lucide-react';
-import { useCart } from '../app/lib/cart-provider';
 import { useTranslation } from 'react-i18next';
+import { Search, ShoppingCart } from 'lucide-react';
+import { useCart } from '@/app/lib/cart-provider';
 
 export default function NavBar() {
   const { items } = useCart();
-  const { t } = useTranslation();
-  
-  const navItem = 'px-3 py-2 rounded-lg hover:bg-cyan-100 transition-colors font-medium text-gray-900';
+  const { t, i18n } = useTranslation();
+
+  const navItem =
+    'px-3 py-2 rounded-lg hover:bg-cyan-100 transition-colors font-medium text-gray-900';
+
+
+  const toggleLang = () =>
+    i18n.changeLanguage(i18n.language === 'is' ? 'en' : 'is');
 
   return (
-    <header className="fixed top-0 inset-x-0 h-26 text-xl bg-gray-50 z-50">
+    <header className="fixed top-0 inset-x-0 h-16 bg-gray-50 shadow-sm z-50">
       <div className="mx-auto max-w-7xl h-full px-4 flex items-center justify-between">
+
         <Link href="/" className="flex items-center gap-2 font-bold text-cyan-600">
           <span className="text-5xl">💡</span> 
           <p className="text-4xl">HEIST</p>
@@ -26,9 +33,18 @@ export default function NavBar() {
         </nav>
 
         <div className="flex items-center gap-4 text-gray-900">
+
+          <button
+            onClick={toggleLang}
+            className="px-2 py-1 text-xs rounded-full bg-cyan-100 hover:bg-cyan-200"
+          >
+            {i18n.language === 'is' ? 'EN' : 'IS'}
+          </button>
+
           <button className="p-2 rounded-lg hover:bg-gray-100">
             <Search className="w-5 h-5" />
           </button>
+
           <Link href="/karfa" className="relative p-2 rounded-lg hover:bg-gray-100">
             <ShoppingCart className="w-5 h-5" />
             {items.length > 0 && (
