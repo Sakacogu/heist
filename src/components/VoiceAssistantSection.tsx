@@ -1,4 +1,3 @@
-// src/components/VoiceAssistantSection.tsx
 'use client';
 
 import Image from 'next/image';
@@ -17,11 +16,7 @@ const assistants: Assistant[] = [
 
 export default function VoiceAssistantSection() {
   return (
-    <section className="py-16 text-center">
-      <h2 className="text-3xl font-semibold mb-8">
-        Hægt að stjórna með gervigreind!
-      </h2>
-
+    <section className="py-6 text-center">
       <div className="flex justify-center gap-10">
         {assistants.map((a) => (
           <div

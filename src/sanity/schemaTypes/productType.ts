@@ -5,22 +5,39 @@ export const productType = defineType({
   title: 'Product',
   type: 'document',
   fields: [
-    defineField({ name: 'title', type: 'string', title: 'Title' }),
+    defineField({ name: 'title',     title: 'Title',      type: 'string' }),
     defineField({
       name: 'slug',
-      type: 'slug',
       title: 'Slug',
+      type: 'slug',
       options: { source: 'title', maxLength: 96 },
     }),
     defineField({
       name: 'brand',
-      type: 'string',
       title: 'Brand',
+      type: 'string',
       options: { list: ['UniFi', 'Plejd', 'Shelly', 'HomeAssistant'] },
     }),
-    defineField({ name: 'priceISK', type: 'number', title: 'Price (ISK)' }),
-    defineField({ name: 'image', type: 'image', title: 'Image' }),
-    defineField({ name: 'stock', type: 'number', title: 'Stock', initialValue: 10 }),
-    defineField({ name: 'blurb', type: 'text', title: 'Description' }),
+    defineField({ name: 'priceISK', title: 'Price (ISK)', type: 'number' }),
+    defineField({ name: 'image',    title: 'Image',       type: 'image'  }),
+    defineField({ name: 'stock',    title: 'Stock',       type: 'number', initialValue: 10 }),
+    defineField({ name: 'blurb',    title: 'Description', type: 'text'   }),
+
+    defineField({
+      name: 'functions',
+      title: 'Function tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: {
+        layout: 'tags',
+        list: [
+          { title: 'Lighting',  value: 'lighting' },
+          { title: 'Heating',   value: 'heating'  },
+          { title: 'Security',  value: 'security' },
+          { title: 'Wi-Fi',     value: 'wifi'     },
+          { title: 'Blinds',    value: 'blinds'   },
+        ],
+      },
+    }),
   ],
 });

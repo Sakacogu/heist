@@ -27,7 +27,6 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
           <div key={b.id} className="bg-white rounded-2xl shadow p-6 flex flex-col">
             <h2 className="text-xl font-semibold mb-4">{b.title}</h2>
 
-            {/* product list */}
             <ul className="flex-1 space-y-3 mb-6">
               {b.products.map((p) => (
                 <li key={p._id} className="flex items-center gap-2 text-sm">

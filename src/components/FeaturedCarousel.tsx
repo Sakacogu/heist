@@ -75,23 +75,13 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
     <div className="relative w-full h-full bg-gray-50">
 
       <div
-        className="relative h-[520px] my-8 overflow-hidden w-full flex items-center justify-center"
+        className="relative h-[520px] overflow-hidden w-full flex items-center justify-center"
         onPointerDown={onDragStart}
         onPointerMove={onDragMove}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onMouseEnter={() => (hoverPause.current = true)}
         onMouseLeave={() => (hoverPause.current = false)}
-        onWheel={(e) => {
-          e.preventDefault();
-          Math.abs(e.deltaY) > Math.abs(e.deltaX)
-            ? e.deltaY > 0
-              ? next()
-              : prev()
-            : e.deltaX > 0
-            ? next()
-            : prev();
-        }}
       >
         {itemsList.map((item, i) => {
           const diff = diffFor(i);
