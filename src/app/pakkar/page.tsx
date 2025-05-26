@@ -1,5 +1,5 @@
 import { sanity } from '@/lib/sanity';
-import PackagesPageClient from '@/components/PackagesPageClient';
+import PackagesPageClient from './PackagesPageClient';
 
 export const revalidate = 3600;
 
