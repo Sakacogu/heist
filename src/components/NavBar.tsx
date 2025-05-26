@@ -17,7 +17,7 @@ export default function NavBar() {
     i18n.changeLanguage(i18n.language === 'is' ? 'en' : 'is');
 
   return (
-    <header className="fixed top-0 inset-x-0 h-16 bg-gray-50 shadow-sm z-50">
+    <header className="fixed top-0 inset-x-0 h-22 bg-gray-50 shadow-sm z-50">
       <div className="mx-auto max-w-7xl h-full px-4 flex items-center justify-between">
 
         <Link href="/" className="flex items-center gap-2 font-bold text-cyan-600">
@@ -25,7 +25,7 @@ export default function NavBar() {
           <p className="text-4xl">HEIST</p>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-4 text-gray-900">
+        <nav className="hidden md:flex items-center text-xl gap-4 text-gray-900">
           <Link href="/pakkar"     className={navItem}>{t('packages')}</Link>
           <Link href="/uppsetning" className={navItem}>{t('setup')}</Link>
           <Link href="/products"   className={navItem}>{t('products')}</Link>
