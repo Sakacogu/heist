@@ -36,16 +36,16 @@ export default function NavBar() {
 
           <button
             onClick={toggleLang}
-            className="px-2 py-1 text-xs rounded-full bg-cyan-100 hover:bg-cyan-200"
+            className="px-2 py-1 text-sm rounded-full hover:bg-cyan-200"
           >
             {i18n.language === 'is' ? 'EN' : 'IS'}
           </button>
 
-          <button className="p-2 rounded-lg hover:bg-gray-100">
+          <button className="p-2 rounded-lg hover:bg-cyan-200">
             <Search className="w-5 h-5" />
           </button>
 
-          <Link href="/karfa" className="relative p-2 rounded-lg hover:bg-gray-100">
+          <Link href="/karfa" className="relative p-2 rounded-lg hover:bg-cyan-200">
             <ShoppingCart className="w-5 h-5" />
             {items.length > 0 && (
               <span className="absolute -top-1 -right-1 bg-cyan-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
