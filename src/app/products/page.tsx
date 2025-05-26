@@ -1,49 +1,69 @@
-import Link from 'next/link';
+import Image from 'next/image';
+import Link  from 'next/link';
+import { sanity } from '@/lib/sanity';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
-interface Cocktail {
-  idDrink: string;
-  strDrink: string;
-  strDrinkThumb: string;
+type Product = {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  brand: string;
+  priceISK: number;
+  image: { asset: { url: string } };
+};
+
+async function getProducts(brand?: string): Promise<Product[]> {
+  const query = `*[_type=="product"${brand ? ' && brand==$brand' : ''}]{
+    _id,title,slug,brand,priceISK,image{asset->{url}}
+  } | order(title asc)`;
+
+  const params = brand ? { brand } : {};
+
+  return sanity.fetch(query, params);
 }
 
-async function getCocktails(): Promise<Cocktail[]> {
-  const res = await fetch(
-    'https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail',
-    { next: { revalidate } }
-  );
-  if (!res.ok) throw new Error('Failed to fetch cocktails');
-
-  const data = await res.json();
-  return Array.isArray(data.drinks) ? data.drinks : [];
-}
-
-export default async function ProductsPage() {
-  const drinks = await getCocktails();
+export default async function ProductsPage({
+  searchParams,
+}: { searchParams: { brand?: string } }) {
+  const products = await getProducts(searchParams.brand);
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      {drinks.length === 0 ? (
-        <p className="text-center text-gray-500">Engar vörur fundust</p>
-      ) : (
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {drinks.map((d) => (
-            <Link
-              key={d.idDrink}
-              href={`/products/${d.idDrink}`}
-              className="bg-white rounded-xl shadow p-4 flex flex-col"
-            >
-              <img
-                src={d.strDrinkThumb}
-                alt={d.strDrink}
-                className="h-40 w-full object-cover rounded mb-3"
-              />
-              <span className="font-medium text-center">{d.strDrink}</span>
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
+    <main className="max-w-7xl mx-auto p-10 text-center">
+      <div className="flex flex-wrap gap-3 mb-6 justify-center">
+        {['all','UniFi','Plejd','Shelly','HomeAssistant'].map((b) => (
+          <Link
+            key={b}
+            href={b==='all' ? '/products' : `/products?brand=${b}`}
+            className={`px-4 py-1 rounded-full border
+              ${searchParams.brand===b ? 'bg-cyan-600 text-white' : 'bg-white'}`}
+          >
+            {b}
+          </Link>
+        ))}
+      </div>
+
+      {/* Product cards */}
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {products.map((p) => (
+          <Link
+            key={p._id}
+            href={`/products/${p.slug.current}`}
+            className="bg-white rounded-xl shadow p-4 flex flex-col"
+          >
+            <Image
+              src={p.image.asset.url+'?w=400&h=300&fit=crop&auto=format'}
+              alt={p.title}
+              width={400} height={300}
+              className="rounded mb-3 h-40 w-full object-cover"
+            />
+            <span className="font-medium">{p.title}</span>
+            <span className="mt-auto text-cyan-600 font-semibold">
+              {p.priceISK.toLocaleString('is-IS')} kr.
+            </span>
+          </Link>
+        ))}
+      </div>
+    </main>
   );
 }

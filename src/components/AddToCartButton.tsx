@@ -1,26 +1,17 @@
 'use client';
 
-import { useCart } from '../app/lib/cart-provider';
+import { useCart } from '@/app/lib/cart-provider';
+import type { CartItem } from '@/app/lib/cart-provider';
 
-export function AddToCartButton({
-  id,
-  name,
-  price,
-  image
-}: {
-  id: string;
-  name: string;
-  price: number;
-  image?: string;
-}) {
+export default function AddToCartButton({ item }: { item: CartItem }) {
   const { addItem } = useCart();
 
   return (
     <button
-      onClick={() => addItem({ id, name, price, image })}
-      className="w-full bg-cyan-600 text-white py-3 rounded-lg font-medium shadow hover:bg-cyan-700"
+      onClick={() => addItem(item)}
+      className="w-full bg-cyan-600 text-white py-3 rounded-lg hover:bg-cyan-700"
     >
-      Setja í körfu
+      Setja í körfu - {item.price.toLocaleString('is-IS')} kr.
     </button>
   );
 }

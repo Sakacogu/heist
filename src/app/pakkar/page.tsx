@@ -1,22 +1,41 @@
-'use client';
+import { sanity } from '@/lib/sanity';
+import PackagesPageClient from '@/components/PackagesPageClient';
 
-import { useCart } from '../lib/cart-provider';
+export const revalidate = 3600;
 
-const pkgs=[{id:1,title:'Pakki 1',items:3},{id:2,title:'Pakki 2',items:5},{id:3,title:'Pakki 3 - mix & match',items:7}];
+const bundleDefs = [
+  {
+    id: 1,
+    title: 'Starter ljós',
+    slugList: ['plejd-dimmer-2', 'plejd-led-driver', 'shelly-plus1'],
+  },
+  {
+    id: 2,
+    title: 'Öryggispakki',
+    slugList: ['unifi-door-sensor', 'shelly-motion', 'unifi-g4-doorbell'],
+  },
+  {
+    id: 3,
+    title: 'Mix & Match',
+    slugList: ['plejd-dimmer-2', 'shelly-plus1', 'unifi-ap6-lite', 'ha-blue'],
+  },
+];
 
-export default function PackagesPage(){
-
-  const { addItem } = useCart();
-
-  return(
-    <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 p-6">
-      {pkgs.map(p=>(
-        <div key={p.id} className="bg-white rounded-2xl shadow p-6 flex flex-col">
-          <h2 className="text-xl font-semibold mb-4">{p.title}</h2>
-          <ul className="flex-1 space-y-2 mb-6">{Array.from({length:p.items}).map((_,i)=>(<li key={i} className="h-4 bg-gray-100 rounded"/>))}</ul>
-          <button onClick={()=>addItem({id:`pakki-${p.id}`,name:p.title,price:p.items*10000})} className="bg-cyan-600 text-white w-full py-3 rounded-lg font-medium shadow hover:bg-cyan-700">Setja í körfu</button>
-        </div>
-      ))}
-    </div>
+async function buildBundles() {
+  const query = `*[_type=="product" && slug.current in $slugs]{
+      _id,title,priceISK,slug,
+      image{asset->{url}}
+    }`;
+  return Promise.all(
+    bundleDefs.map(async (b) => {
+      const products = await sanity.fetch(query, { slugs: b.slugList });
+      return { ...b, products };
+    }),
   );
+}
+
+export default async function PackagesPage() {
+  const bundles = await buildBundles();
+  console.log(JSON.stringify(bundles, null, 2));
+  return <PackagesPageClient bundles={bundles} />;
 }
