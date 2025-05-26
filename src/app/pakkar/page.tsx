@@ -37,5 +37,4 @@ async function buildBundles() {
 export default async function PackagesPage() {
   const bundles = await buildBundles();
   console.log(JSON.stringify(bundles, null, 2));
-  return <PackagesPageClient bundles={bundles} />;
 }

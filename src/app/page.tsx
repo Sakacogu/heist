@@ -53,7 +53,7 @@ export default function Home() {
         </div>
         
 
-        <aside className="md:w-1/3">
+        <aside className="md:w-1/4">
           <VideoList />
         </aside>
       </div>

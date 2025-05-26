@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import {
   Lightbulb,
@@ -17,6 +19,7 @@ const BRANDS = [
     name: 'Plejd',
     logo: '/logos/plejd.png',
     color: '#00bbcf',
+    url:  'https://plejd.com/',
     description:
       'Bluetooth-mesh dimmers & relays for lighting, heating loops and motorised window coverings.',
     features: [
@@ -30,6 +33,7 @@ const BRANDS = [
     name: 'Shelly',
     logo: '/logos/shelly.png',
     color: '#0076bf',
+    url:  'https://shelly.com/',
     description:
       'Wi-Fi relays with power metering, roller-shutter control and upcoming Z-Wave LR sensors.',
     features: [
@@ -44,6 +48,7 @@ const BRANDS = [
     name: 'Home Assistant',
     logo: '/logos/homeassistant.png',
     color: '#03A9F4',
+    url:  'https://www.home-assistant.io/',
     description:
       'Open-source hub with 2800 + integrations, advanced automations and local voice.',
     features: [
@@ -58,8 +63,9 @@ const BRANDS = [
     name: 'UniFi',
     logo: '/logos/unify.png',
     color: '#2984cf',
+    url:  'https://ui.com/',
     description:
-      'Enterprise-grade Wi-Fi 6, PoE switching and Protect AI cameras for rock-solid backbone.',
+      'Enterprise-grade Wi-Fi 6, PoE switching and Protect AI cameras for a rock-solid backbone.',
     features: [
       { icon: Wifi, label: 'Wi-Fi 6' },
       { icon: Camera, label: 'Protect Cam' },
@@ -72,10 +78,7 @@ export default function BrandList() {
   return (
     <section className="flex flex-wrap justify-between px-22 gap-8">
       {BRANDS.map((b) => (
-        <div
-          key={b.name}
-          className="flex flex-col items-center w-64 text-center"
-        >
+        <div key={b.name} className="flex flex-col items-center w-64 text-center">
           <div
             className="w-28 h-28 rounded-full flex items-center justify-center mb-4 shadow"
             style={{ backgroundColor: 'white' }}
@@ -89,9 +92,15 @@ export default function BrandList() {
             />
           </div>
 
-          <h3 className="font-semibold text-lg mb-1" style={{ color: b.color }}>
+          <a
+            href={b.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-lg mb-1 hover:underline"
+            style={{ color: b.color }}
+          >
             {b.name}
-          </h3>
+          </a>
 
           <p className="text-gray-700 text-sm mb-4 leading-relaxed">
             {b.description}

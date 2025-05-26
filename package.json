@@ -23,8 +23,10 @@
     "react": "^19.0.0",
     "react-datepicker": "^8.3.0",
     "react-dom": "^19.0.0",
+    "react-focus-lock": "^2.13.6",
     "react-i18next": "^15.5.1",
     "react-router-dom": "^6.30.0",
+    "react-youtube": "^10.1.0",
     "sanity": "^3.89.0",
     "styled-components": "^6.1.18"
   },
