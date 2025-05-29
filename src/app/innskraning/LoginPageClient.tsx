@@ -6,17 +6,19 @@ import { useTranslation } from 'react-i18next';
 export default function LoginPageClient() {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
+  const [sent, setSent]   = useState(false);
+
+  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!isValidEmail) return;
 
     await new Promise((r) => setTimeout(r, 600));
     setSent(true);
   };
 
-  if (sent)
+  if (sent) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <p className="bg-white p-8 rounded-xl shadow text-center max-w-md">
@@ -24,6 +26,7 @@ export default function LoginPageClient() {
         </p>
       </div>
     );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
@@ -44,7 +47,7 @@ export default function LoginPageClient() {
 
         <button
           type="submit"
-          disabled={!email}
+          disabled={!isValidEmail}
           className="w-full bg-cyan-600 text-white py-3 rounded-lg font-medium hover:bg-cyan-700 disabled:opacity-50"
         >
           {t('continue')}
