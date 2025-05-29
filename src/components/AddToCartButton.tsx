@@ -1,7 +1,7 @@
 'use client';
 
-import { useCart } from '@/app/lib/cart-provider';
-import type { CartItem } from '@/app/lib/cart-provider';
+import { useCart } from '@/app/karfa/lib/cart-provider';
+import type { CartItem } from '@/app/karfa/lib/cart-provider';
 
 export default function AddToCartButton({ item }: { item: CartItem }) {
   const { addItem } = useCart();

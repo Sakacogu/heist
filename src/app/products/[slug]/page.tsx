@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { sanity } from '@/lib/sanity';
 import AddToCartButton from '@/components/AddToCartButton';
 
-export const revalidate = 3600; // ISR cache
+export const revalidate = 3600;
 
 export default async function ProductDetail({
   params: { slug },
@@ -25,6 +25,8 @@ export default async function ProductDetail({
     name:  product.title,
     price: product.priceISK,
     image: product.image.asset.url + '?w=160&h=120&fit=crop&auto=format',
+    qty:   1,
+    cartId: `cart-${product._id}`,
   };
 
   return (

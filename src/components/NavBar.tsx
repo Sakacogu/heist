@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { Search, ShoppingCart } from 'lucide-react';
-import { useCart } from '@/app/lib/cart-provider';
+import { useCart } from '@/app/karfa/lib/cart-provider';
 
 export default function NavBar() {
   const { items } = useCart();

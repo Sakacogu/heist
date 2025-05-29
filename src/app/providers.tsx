@@ -4,7 +4,7 @@ import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { CartProvider } from './lib/cart-provider';
+import { CartProvider } from './karfa/lib/cart-provider';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!

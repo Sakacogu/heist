@@ -1,13 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import { useCart, type CartItem } from '@/app/lib/cart-provider';
+import { useCart, type CartItem } from '@/app/karfa/lib/cart-provider';
 import { useTranslation } from 'react-i18next';
 
-/* -------- types coming from the server component -------- */
 type Bundle = {
   id: number;
-  tKey: string; // translation key for the bundle title
+  tKey: string;
   products: {
     _id: string;
     title: string;
@@ -18,7 +17,7 @@ type Bundle = {
 
 export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
   const { addItem } = useCart();
-  const { t } = useTranslation();           // ✅ hook inside component
+  const { t } = useTranslation();
 
   return (
     <main className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 p-6">
