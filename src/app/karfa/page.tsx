@@ -4,13 +4,12 @@ import { useCart } from './lib/cart-provider';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 export default function CartPage() {
-  const { items, removeItem } = useCart();
+  const { items, inc, dec, removeRow } = useCart();
   const total = items.reduce((s, i) => s + i.price * i.qty, 0);
 
   const stripe = useStripe();
   const elements = useElements();
-
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (!stripe || !elements) return;
     alert('Stripe checkout coming soon');
   };
@@ -24,30 +23,49 @@ export default function CartPage() {
             className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
           >
             {i.image && (
-              <img src={i.image} alt={i.name} className="w-16 h-16 object-cover rounded" />
+              <img
+                src={i.image}
+                alt={i.name}
+                className="w-16 h-16 object-cover rounded"
+              />
             )}
 
             <span className="flex-1 px-4">{i.name}</span>
 
-            <span className="mr-6 bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm">
-              × {i.qty}
-            </span>
-
-            <div className="flex items-center gap-4">
-              <span className="font-medium">{(i.price * i.qty).toLocaleString('is-IS')} kr.</span>
+            <div className="flex items-center gap-1">
               <button
-                onClick={() => removeItem(i.id)}
-                className="text-red-500 text-lg"
-                title="Remove one"
+                onClick={() => dec(i.id)}
+                className="px-2 py-1 bg-gray-200 rounded"
               >
-                ✕
+                −
+              </button>
+              <span className="px-2">{i.qty}</span>
+              <button
+                onClick={() => inc(i.id)}
+                className="px-2 py-1 bg-gray-200 rounded"
+              >
+                +
               </button>
             </div>
+
+            <span className="font-medium ml-4">
+              {(i.price * i.qty).toLocaleString('is-IS')} kr.
+            </span>
+
+            <button
+              onClick={() => removeRow(i.id)}
+              className="text-red-500 text-lg ml-4"
+              title="Remove all"
+            >
+              ✕
+            </button>
           </div>
         ))}
 
         {items.length === 0 && (
-          <p className="flex justify-center pt-10 opacity-70">Karfan er tóm 🤷‍♂️</p>
+          <p className="flex justify-center pt-10 opacity-70">
+            Karfan er tóm 🤷‍♂️
+          </p>
         )}
       </div>
 
@@ -58,15 +76,18 @@ export default function CartPage() {
             placeholder="Afsláttarkóði"
             className="w-full border rounded p-2"
           />
+
           <div className="flex justify-between font-medium">
             <span>Samtals</span>
-            <span>{total} kr.</span>
+            <span>{total.toLocaleString('is-IS')} kr.</span>
           </div>
+
           <CardElement className="p-3 border rounded" />
+
           <button
             onClick={handleCheckout}
             disabled={!stripe}
-            className="w-full bg-cyan-600 text-white py-3 rounded-lg font-medium shadow hover:bg-cyan-700"
+            className="w-full bg-cyan-600 text-white py-3 rounded-lg font-medium shadow hover:bg-cyan-700 disabled:opacity-50"
           >
             Ganga frá pöntun
           </button>

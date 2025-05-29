@@ -30,6 +30,7 @@ export default function NavBar() {
           <Link href="/uppsetning" className={navItem}>{t('setup')}</Link>
           <Link href="/products"   className={navItem}>{t('products')}</Link>
           <Link href="/samband"    className={navItem}>{t('contact')}</Link>
+          <Link href="/innskraning" className={navItem}>{t('login')}</Link>
         </nav>
 
         <div className="flex items-center gap-4 text-gray-900">
