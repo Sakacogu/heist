@@ -2,31 +2,24 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/lib/auth-context';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPageClient() {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
-  const [sent, setSent]   = useState(false);
+  const { login } = useAuth();
+  const router    = useRouter();
 
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValidEmail) return;
 
-    await new Promise((r) => setTimeout(r, 600));
-    setSent(true);
+    login(email);
+    router.push('/profile');
   };
-
-  if (sent) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <p className="bg-white p-8 rounded-xl shadow text-center max-w-md">
-          ✅ {t('checkInbox')}
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">

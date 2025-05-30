@@ -1,29 +1,69 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useAuth } from '@/lib/auth-context';
 
 export default function BookingForm() {
   const [date, setDate] = useState<Date | null>(null);
-  const [time, setTime] = useState<string>('09:00');
+  const [time, setTime] = useState('09:00');
   const [name, setName] = useState('');
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!date) return;
-    setSending(true);
+  const { user } = useAuth();
+  const email   = user?.email;
 
+
+  const today = new Date();
+  const allTimes = ['09:00', '11:00', '13:00', '15:00', '17:00'];
+
+  const validTimes = useMemo(() => {
+    if (!date) return allTimes;
+    if (date.toDateString() !== today.toDateString()) return allTimes;
+
+    const nowMins = today.getHours() * 60 + today.getMinutes();
+    return allTimes.filter((t) => {
+      const [h, m] = t.split(':').map(Number);
+      return h * 60 + m > nowMins;
+    });
+  }, [date]);
+
+  useEffect(() => {
+    if (date && !validTimes.includes(time)) {
+      setTime(validTimes[0] ?? '');
+    }
+  }, [date, validTimes, time]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!date || !time) return;
+
+    const [h, m] = time.split(':').map(Number);
+    const when = new Date(date);
+    when.setHours(h, m, 0, 0);
+    if (when <= new Date()) return;
+
+    setSending(true);
     const res = await fetch('/api/book', {
       method: 'POST',
-      body: JSON.stringify({ name, date, time }),
+      body: JSON.stringify({ name, date: when, time }),
     });
-
     setSending(false);
-    if (res.ok) setDone(true);
-  }
+
+    if (res.ok) {
+      if (email) {
+        const key = `heist-meet-${email}`;
+        const prev = JSON.parse(localStorage.getItem(key) || '[]');
+        localStorage.setItem(
+          key,
+          JSON.stringify([...prev, { when: when.toISOString(), name }]),
+        );
+      }
+      setDone(true);
+    }
+  };
 
   if (done) {
     return (
@@ -58,6 +98,7 @@ export default function BookingForm() {
             onChange={(d) => setDate(d)}
             dateFormat="dd.MM.yyyy"
             className="w-full border rounded px-3 py-2"
+            minDate={today}           /* blocks past days */
             required
           />
         </div>
@@ -69,15 +110,18 @@ export default function BookingForm() {
           value={time}
           onChange={(e) => setTime(e.target.value)}
           className="mt-1 w-full border rounded px-3 py-2"
+          required
         >
-          {['09:00', '11:00', '13:00', '15:00', '17:00'].map((t) => (
-            <option key={t}>{t}</option>
-          ))}
+          {validTimes.length === 0 ? (
+            <option value="">— Enginn tími laus í dag —</option>
+          ) : (
+            validTimes.map((t) => <option key={t}>{t}</option>)
+          )}
         </select>
       </label>
 
       <button
-        disabled={sending}
+        disabled={sending || !time}
         className="w-full bg-cyan-600 text-white py-3 rounded-lg hover:bg-cyan-700 disabled:opacity-50"
       >
         {sending ? 'Sendi…' : 'Senda beiðni'}

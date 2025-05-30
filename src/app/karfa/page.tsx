@@ -2,16 +2,34 @@
 
 import { useCart } from './lib/cart-provider';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useAuth } from '@/lib/auth-context';
 
 export default function CartPage() {
   const { items, inc, dec, removeRow } = useCart();
+  
+  const { user } = useAuth();
+  const email   = user?.email;
+
   const total = items.reduce((s, i) => s + i.price * i.qty, 0);
 
   const stripe = useStripe();
   const elements = useElements();
   const handleCheckout = () => {
     if (!stripe || !elements) return;
-    alert('Stripe checkout coming soon');
+    alert('Stripe checkout coming soon, order saved in the meantime');
+
+      if (email && items.length) {
+      const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+      const order = {
+      id:   crypto.randomUUID(),
+      total,
+      date: new Date().toISOString(),
+    };
+
+    const key   = `heist-orders-${email}`;
+    const prev  = JSON.parse(localStorage.getItem(key) || '[]');
+    localStorage.setItem(key, JSON.stringify([...prev, order]));
+    }
   };
 
   return (
