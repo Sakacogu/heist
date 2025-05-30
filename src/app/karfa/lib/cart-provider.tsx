@@ -1,103 +1,90 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from 'react';
 import { nanoid } from 'nanoid';
-import { useAuth } from '@/lib/auth-context';
 
 export type CartItem = {
   id: string;
   name: string;
   price: number;
   image?: string;
+
   qty: number;
   cartId: string;
 };
 
 type CartCtx = {
   items: CartItem[];
-  addItem:  (i: Omit<CartItem, 'qty' | 'cartId'>) => void;
-  inc:      (id: string) => void;
-  dec:      (id: string) => void;
-  removeRow:(id: string) => void;
-  totalCount: number; 
+  addItem: (p: Omit<CartItem, 'qty' | 'cartId'>, qty?: number) => void;
+  removeItem: (cartId: string) => void;
+  updateQty: (cartId: string, qty: number) => void;
 };
 
-const CartContext = createContext<CartCtx>({
-  items: [],
-  addItem() {},
-  inc() {},
-  dec() {},
-  removeRow() {},
-  totalCount: 0,
-});
-
+const CartContext = createContext<CartCtx>({} as CartCtx);
 export const useCart = () => useContext(CartContext);
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const { user } = useAuth();
-  const email   = user?.email;
+const STORAGE_KEY = 'heist-cart';
 
-  const storageKey = email ? `heist-cart-${email}` : 'heist-cart-guest';
+export function CartProvider({ children }: { children: ReactNode }) {
+  const [items, setItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    fetch('/api/cart')
-      .then((r) => r.json())
-      .then((data: CartItem[]) => setItems(data))
-      .catch(() => {
-        const saved = localStorage.getItem(storageKey);
-        if (saved) setItems(JSON.parse(saved));
-      });
-  }, []);
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
 
-useEffect(() => {
-  const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
-  setItems(saved);
-}, [storageKey]);
+    const parsed: CartItem[] = JSON.parse(raw);
 
-useEffect(() => {
-  localStorage.setItem(storageKey, JSON.stringify(items));
-}, [items, storageKey]);
+    const merged: Record<string, CartItem> = {};
+    parsed.forEach((row) => {
+      const safeRow: CartItem = {
+        ...row,
+        cartId: row.cartId ?? nanoid(),
+        qty: row.qty ?? 1,
+      };
 
-  const addItem = (p: Omit<CartItem, 'qty' | 'cartId'>) => {
-    setItems((prev) => {
-      const idx = prev.findIndex((x) => x.id === p.id);
-      if (idx > -1) {
-        const copy = [...prev];
-        copy[idx].qty += 1;
-        return copy;
-      }
-      return [...prev, { ...p, qty: 1, cartId: nanoid() }];
+      const key = safeRow.cartId;
+      if (!merged[key]) merged[key] = safeRow;
+      else merged[key].qty += safeRow.qty;
     });
 
-    fetch('/api/cart', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: p.id, delta: +1 }),
-    }).catch(() => {});
+    setItems(Object.values(merged));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }, [items]);
+
+  const addItem = (
+    p: Omit<CartItem, 'qty' | 'cartId'>,
+    qty: number = 1,
+  ) => {
+    setItems((cur) => {
+      const existing = cur.find((r) => r.id === p.id);
+      if (existing) {
+        return cur.map((r) =>
+          r.id === p.id ? { ...r, qty: r.qty + qty } : r,
+        );
+      }
+      return [...cur, { ...p, qty, cartId: nanoid() }];
+    });
   };
 
-  const inc = (id: string) =>
-    setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, qty: i.qty + 1 } : i)),
+  const removeItem = (cartId: string) =>
+    setItems((cur) => cur.filter((r) => r.cartId !== cartId));
+
+  const updateQty = (cartId: string, qty: number) =>
+    setItems((cur) =>
+      cur.map((r) => (r.cartId === cartId ? { ...r, qty } : r)),
     );
-
-  const dec = (id: string) =>
-    setItems((prev) =>
-      prev
-        .map((i) => (i.id === id ? { ...i, qty: i.qty - 1 } : i))
-        .filter((i) => i.qty > 0),
-    );
-
-  const removeRow = (id: string) =>
-    setItems((prev) => prev.filter((i) => i.id !== id));
-
-  const totalCount = items.reduce((n, i) => n + i.qty, 0);
 
   return (
-    <CartContext.Provider
-      value={{ items, addItem, inc, dec, removeRow, totalCount }}
-    >
+    <CartContext.Provider value={{ items, addItem, removeItem, updateQty }}>
       {children}
     </CartContext.Provider>
   );

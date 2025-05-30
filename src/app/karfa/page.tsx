@@ -1,43 +1,26 @@
 'use client';
 
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { useCart } from './lib/cart-provider';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { useAuth } from '@/lib/auth-context';
 
 export default function CartPage() {
-  const { items, inc, dec, removeRow } = useCart();
-  
-  const { user } = useAuth();
-  const email   = user?.email;
+  const { items, removeItem, updateQty } = useCart();
+  const total = items.reduce((s, r) => s + r.price * r.qty, 0);
 
-  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
-
-  const stripe = useStripe();
+  const stripe   = useStripe();
   const elements = useElements();
+
   const handleCheckout = () => {
     if (!stripe || !elements) return;
-    alert('Stripe checkout coming soon, order saved in the meantime');
-
-      if (email && items.length) {
-      const total = items.reduce((s, i) => s + i.price * i.qty, 0);
-      const order = {
-      id:   crypto.randomUUID(),
-      total,
-      date: new Date().toISOString(),
-    };
-
-    const key   = `heist-orders-${email}`;
-    const prev  = JSON.parse(localStorage.getItem(key) || '[]');
-    localStorage.setItem(key, JSON.stringify([...prev, order]));
-    }
+    alert('Stripe checkout coming soon 😊');
   };
 
   return (
     <div className="max-w-6xl mx-auto md:flex md:gap-10 p-16">
       <div className="flex-1 space-y-4">
-        {items.map((i) => (
+        {items.map((i, idx) => (
           <div
-            key={i.cartId}
+            key={`${i.cartId}-${idx}`}
             className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
           >
             {i.image && (
@@ -50,30 +33,32 @@ export default function CartPage() {
 
             <span className="flex-1 px-4">{i.name}</span>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <button
-                onClick={() => dec(i.id)}
-                className="px-2 py-1 bg-gray-200 rounded"
+                onClick={() => updateQty(i.cartId, Math.max(1, i.qty - 1))}
+                className="px-3 py-1 bg-gray-100 rounded"
               >
                 −
               </button>
-              <span className="px-2">{i.qty}</span>
+
+              <span className="min-w-[2ch] text-center">{i.qty}</span>
+
               <button
-                onClick={() => inc(i.id)}
-                className="px-2 py-1 bg-gray-200 rounded"
+                onClick={() => updateQty(i.cartId, i.qty + 1)}
+                className="px-3 py-1 bg-gray-100 rounded"
               >
                 +
               </button>
             </div>
 
-            <span className="font-medium ml-4">
+            <span className="w-24 text-right font-medium">
               {(i.price * i.qty).toLocaleString('is-IS')} kr.
             </span>
 
             <button
-              onClick={() => removeRow(i.id)}
+              onClick={() => removeItem(i.cartId)}
               className="text-red-500 text-lg ml-4"
-              title="Remove all"
+              title="Remove item"
             >
               ✕
             </button>
