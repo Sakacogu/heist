@@ -1,26 +1,57 @@
 'use client';
 
+import { useState } from 'react';
+import { nanoid } from 'nanoid';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { useCart } from './lib/cart-provider';
+import { useAuth } from '@/lib/auth-context';
+import Modal from '@/components/modal';
 
 export default function CartPage() {
-  const { items, removeItem, updateQty } = useCart();
-  const total = items.reduce((s, r) => s + r.price * r.qty, 0);
+  const { items, removeItem, updateQty, clearCart } = useCart();
+  const { user } = useAuth();
 
   const stripe   = useStripe();
   const elements = useElements();
+  const total    = items.reduce((s, r) => s + r.price * r.qty, 0);
+
+  const [modalMsg, setModalMsg] = useState<string | null>(null);
 
   const handleCheckout = () => {
     if (!stripe || !elements) return;
-    alert('Stripe checkout coming soon 😊');
+
+    if (!user) {
+      setModalMsg('Vinsamlegast skráðu þig inn áður en þú klárar pöntun 🙂');
+      return;
+    }
+
+    const order = {
+      id:    nanoid(),
+      total,
+      date:  new Date().toISOString(),
+      items,
+      status: 'pending',
+    };
+    const key     = `heist-orders-${user.email}`;
+    const history = JSON.parse(localStorage.getItem(key) || '[]');
+    localStorage.setItem(key, JSON.stringify([order, ...history]));
+
+    clearCart();
+    setModalMsg(
+      'Stripe greiðslusíða er væntanleg 😊\nPöntunin þín var vistuð á prófílnum.',
+    );
   };
 
   return (
     <div className="max-w-6xl mx-auto md:flex md:gap-10 p-16">
+      <Modal open={!!modalMsg} onClose={() => setModalMsg(null)}>
+        <p className="whitespace-pre-line text-center">{modalMsg}</p>
+      </Modal>
+
       <div className="flex-1 space-y-4">
-        {items.map((i, idx) => (
+        {items.map((i) => (
           <div
-            key={`${i.cartId}-${idx}`}
+            key={i.cartId}
             className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
           >
             {i.image && (
@@ -40,9 +71,7 @@ export default function CartPage() {
               >
                 −
               </button>
-
               <span className="min-w-[2ch] text-center">{i.qty}</span>
-
               <button
                 onClick={() => updateQty(i.cartId, i.qty + 1)}
                 className="px-3 py-1 bg-gray-100 rounded"
@@ -66,7 +95,7 @@ export default function CartPage() {
         ))}
 
         {items.length === 0 && (
-          <p className="flex justify-center pt-10 opacity-70">
+          <p className="flex justify-center pt-10">
             Karfan er tóm 🤷‍♂️
           </p>
         )}
@@ -89,8 +118,9 @@ export default function CartPage() {
 
           <button
             onClick={handleCheckout}
-            disabled={!stripe}
-            className="w-full bg-cyan-600 text-white py-3 rounded-lg font-medium shadow hover:bg-cyan-700 disabled:opacity-50"
+            disabled={!stripe || items.length === 0}
+            className="w-full bg-cyan-600 text-white py-3 rounded-lg font-medium
+                       shadow hover:bg-cyan-700 disabled:opacity-50"
           >
             Ganga frá pöntun
           </button>
