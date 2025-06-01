@@ -1,9 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { redirect } from 'next/navigation';
-import Image from 'next/image';
-import { ChevronDown } from 'lucide-react';
+import { redirect }           from 'next/navigation';
+import Image                  from 'next/image';
+import {
+  ChevronDown,
+  ShoppingCart,
+  CalendarClock,
+  History,
+  Receipt,
+} from 'lucide-react';
 
 import { useAuth } from '@/lib/auth-context';
 import { useCart } from '@/app/karfa/lib/cart-provider';
@@ -16,9 +22,9 @@ type OrderItem = {
   image?: string;
 };
 
-type OrderStatus = 'pending' | 'paid' | 'canceled';
+export type OrderStatus = 'pending' | 'paid' | 'canceled';
 
-type Order = {
+export type Order = {
   id: string;
   total: number;
   date: string;
@@ -29,110 +35,150 @@ type Order = {
 type Meeting = { when: string; name?: string };
 
 export default function ProfileClient() {
-  const { user, logout } = useAuth();
+  const { user, logout }           = useAuth();
   const { items: cartItems, addItem } = useCart();
-
   if (!user) redirect('/innskraning?next=/profile');
 
   const [orders, setOrders] = useState<Order[]>([]);
+
   useEffect(() => {
     const raw = localStorage.getItem(`heist-orders-${user.email}`) || '[]';
-    const parsed: (Omit<Order, 'status'> & { status?: string })[] =
-      JSON.parse(raw);
+    const parsed = JSON.parse(raw) as unknown[];
 
-    const cleaned: Order[] = parsed.map((o) => ({
-      ...o,
-      status:
-        o.status === 'paid' || o.status === 'canceled'
-          ? (o.status as OrderStatus)
-          : 'pending',
-    }));
+    const cleaned: Order[] = parsed.map((row) => {
+      const o = row as Partial<Order>;
+
+      const status: OrderStatus =
+        o.status === 'paid'
+          ? 'paid'
+          : o.status === 'canceled'
+          ? 'canceled'
+          : 'pending';
+
+      return {
+        id:    o.id    ?? crypto.randomUUID(),
+        total: o.total ?? 0,
+        date:  o.date  ?? new Date().toISOString(),
+        items: o.items ?? [],
+        status,
+      };
+    });
+
     setOrders(cleaned);
   }, [user.email]);
 
-  const saveOrders = (next: Order[]) => {
+  const persistOrders = (next: Order[]) => {
     setOrders(next);
     localStorage.setItem(`heist-orders-${user.email}`, JSON.stringify(next));
   };
 
-  const meetings: Meeting[] = JSON.parse(
-    localStorage.getItem(`heist-meet-${user.email}`) || '[]',
+const toStatus = (s: OrderStatus): OrderStatus => s;
+
+const finishPay = (id: string) => {
+  const next: Order[] = orders.map((o) =>
+    o.id === id ? { ...o, status: toStatus('paid') } : o,
   );
-  const now = new Date();
-  const upcoming = meetings.filter((m) => new Date(m.when) > now);
-  const past = meetings.filter((m) => new Date(m.when) <= now);
+  persistOrders(next);
+  alert('(stub) Stripe checkout would open now');
+};
 
-  const [openId, setOpenId] = useState<string | null>(null);
+const cancelOrder = (id: string) => {
+  const next: Order[] = orders.map((o) =>
+    o.id === id ? { ...o, status: toStatus('canceled') } : o,
+  );
+  persistOrders(next);
 
-  const finishPay = (id: string) => {
-    saveOrders(
-      orders.map((o) =>
-        o.id === id ? { ...o, status: 'paid' as OrderStatus } : o,
-      ),
-    );
-    alert('(Stub) Redirect to Stripe Checkout here');
-  };
-
-  const cancelOrder = (id: string) => {
-    const next = orders.map((o) =>
-      o.id === id ? { ...o, status: 'canceled' as OrderStatus } : o,
-    );
-    saveOrders(next);
-
-    const canceled = next.find((o) => o.id === id);
-    canceled?.items.forEach((it) =>
+  next
+    .find((o) => o.id === id)
+    ?.items.forEach((it) =>
       addItem(
         { id: it.id, name: it.name, price: it.price, image: it.image },
         it.qty,
       ),
     );
-  };
+};
+
+
+  const meetings: Meeting[] = JSON.parse(
+    localStorage.getItem(`heist-meet-${user.email}`) || '[]',
+  );
+  const now       = new Date();
+  const upcoming  = meetings.filter((m) => new Date(m.when) >  now);
+  const past      = meetings.filter((m) => new Date(m.when) <= now);
+
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  const badge = (s: OrderStatus) =>
+    ({
+      paid:     'bg-green-100 text-green-700',
+      canceled: 'bg-red-100 text-red-600',
+      pending:  'bg-gray-100 text-gray-600',
+    }[s]);
 
   return (
-    <main className="max-w-4xl mx-auto p-8 space-y-10">
-      <header className="flex justify-between items-center">
-        <h1 className="text-3xl font-semibold">👋 {user.email}</h1>
-        <button onClick={logout} className="text-red-600 underline">
+    <main className="max-w-5xl mx-auto py-12 px-6 space-y-14">
+      <header className="rounded-3xl bg-gradient-to-r from-cyan-600 to-blue-500 text-white p-8 shadow-lg relative overflow-hidden">
+        <h1 className="text-3xl font-semibold">
+          👋 {user.email.split('@')[0]}
+        </h1>
+        <p className="opacity-90">
+          Manage your cart, bookings and orders in one place.
+        </p>
+        <button
+          onClick={logout}
+          className="absolute top-6 right-6 text-sm bg-white/10 hover:bg-white/20 transition px-3 py-1.5 rounded-full"
+        >
           Log&nbsp;out
         </button>
       </header>
 
-      <section className="bg-white rounded-xl shadow p-6 space-y-4">
-        <h2 className="text-xl font-semibold">Current cart</h2>
+      <section className="section-card">
+        <h2 className="section-heading">
+          <ShoppingCart className="w-5 h-5 mr-2" />
+          Current cart
+        </h2>
+
         {cartItems.length === 0 && <p>No items in cart.</p>}
+
         {cartItems.map((i) => (
-          <div key={i.cartId} className="flex gap-3 py-2 border-b last:border-0">
+          <div key={i.cartId} className="item-row">
             {i.image && (
               <Image
                 src={i.image}
                 alt={i.name}
-                width={56}
-                height={42}
+                width={60}
+                height={45}
                 className="rounded object-cover"
               />
             )}
             <span className="flex-1">{i.name}</span>
-            <span className="text-sm">× {i.qty}</span>
+            <span className="badge-neutral">× {i.qty}</span>
           </div>
         ))}
       </section>
 
       <section className="grid md:grid-cols-2 gap-8">
-        <div className="bg-white rounded-xl shadow p-6 space-y-4">
-          <h2 className="text-xl font-semibold">Upcoming meetings</h2>
+        <div className="section-card">
+          <h2 className="section-heading">
+            <CalendarClock className="w-5 h-5 mr-2" />
+            Upcoming meetings
+          </h2>
           {upcoming.length === 0 && <p>Nothing booked.</p>}
           {upcoming.map((m, i) => (
-            <div key={i} className="border rounded p-3">
+            <div key={i} className="meeting-row bg-cyan-50/40">
               {new Date(m.when).toLocaleString('is-IS')}
             </div>
           ))}
         </div>
 
-        <div className="bg-white rounded-xl shadow p-6 space-y-4">
-          <h2 className="text-xl font-semibold">Past meetings</h2>
+        <div className="section-card">
+          <h2 className="section-heading">
+            <History className="w-5 h-5 mr-2" />
+            Past meetings
+          </h2>
           {past.length === 0 && <p>—</p>}
           {past.map((m, i) => (
-            <div key={i} className="border rounded p-3 opacity-60">
+            <div key={i} className="meeting-row opacity-60">
               {new Date(m.when).toLocaleDateString('is-IS')}{' '}
               {new Date(m.when).toLocaleTimeString('is-IS', {
                 hour: '2-digit',
@@ -143,32 +189,25 @@ export default function ProfileClient() {
         </div>
       </section>
 
-      <section className="bg-white rounded-xl shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Orders</h2>
+      <section className="section-card">
+        <h2 className="section-heading">
+          <Receipt className="w-5 h-5 mr-2" />
+          Orders
+        </h2>
         {orders.length === 0 && <p>No orders yet.</p>}
 
         {orders.map((o) => (
           <div key={o.id} className="border-b last:border-0">
             <button
-              onClick={() => setOpenId((cur) => (cur === o.id ? null : o.id))}
-              className="w-full flex items-center justify-between py-3 gap-4"
+              onClick={() => setOpenId((c) => (c === o.id ? null : o.id))}
+              className="w-full flex items-center justify-between py-3 gap-4 hover:bg-gray-50"
             >
               <span>
-                {new Date(o.date).toLocaleDateString('is-IS')} –{' '}
+                {new Date(o.date).toLocaleDateString('is-IS')} •{' '}
                 {o.total.toLocaleString('is-IS')} kr.
               </span>
 
-              <span
-                className={`px-2 py-0.5 text-xs rounded-full ${
-                  o.status === 'paid'
-                    ? 'bg-green-100 text-green-700'
-                    : o.status === 'canceled'
-                    ? 'bg-red-100 text-red-600'
-                    : 'bg-gray-100 text-gray-600'
-                }`}
-              >
-                {o.status}
-              </span>
+              <span className={`badge ${badge(o.status)}`}>{o.status}</span>
 
               <ChevronDown
                 className={`w-5 h-5 transition-transform ${
@@ -178,18 +217,15 @@ export default function ProfileClient() {
             </button>
 
             {openId === o.id && (
-              <div className="space-y-3 pb-4 px-1">
+              <div className="space-y-3 pb-4 px-1 animate-fade-in">
                 {o.items.map((it) => (
-                  <div
-                    key={it.id}
-                    className="flex items-center gap-3 text-sm border rounded p-2"
-                  >
+                  <div key={it.id} className="item-row text-sm border">
                     {it.image && (
                       <Image
                         src={it.image}
                         alt={it.name}
-                        width={40}
-                        height={32}
+                        width={46}
+                        height={34}
                         className="rounded object-cover"
                       />
                     )}
@@ -205,13 +241,13 @@ export default function ProfileClient() {
                   <div className="flex gap-4 pt-3">
                     <button
                       onClick={() => finishPay(o.id)}
-                      className="flex-1 bg-cyan-600 text-white py-2 rounded-lg hover:bg-cyan-700"
+                      className="btn-primary flex-1"
                     >
                       Finish paying
                     </button>
                     <button
                       onClick={() => cancelOrder(o.id)}
-                      className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200"
+                      className="btn-neutral flex-1"
                     >
                       Cancel order
                     </button>
@@ -225,3 +261,4 @@ export default function ProfileClient() {
     </main>
   );
 }
+
