@@ -51,8 +51,13 @@ const bundleDefs = [
 
 async function buildBundles() {
   const query = `*[_type=="product" && slug.current in $slugs]{
-      _id,title,priceISK,slug,brand,
-      image{asset->{url}}
+    _id,
+    title,
+    priceISK,
+    slug,
+    brand,
+    functions,
+    image{asset->{url}}
   }`;
   return Promise.all(
     bundleDefs.map(async (b) => ({
