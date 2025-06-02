@@ -83,6 +83,7 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
         onMouseEnter={() => (hoverPause.current = true)}
         onMouseLeave={() => (hoverPause.current = false)}
       >
+        
         {itemsList.map((item, i) => {
           const diff = diffFor(i);
           const abs = Math.abs(diff);

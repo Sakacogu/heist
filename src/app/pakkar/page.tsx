@@ -1,73 +1,46 @@
-import { sanity } from '@/lib/sanity';
-import PackagesPageClient from './PackagesPageClient';
+
+import { sanity }            from '@/lib/sanity';
+import PackagesPageClient    from './PackagesPageClient';
+
+const TIERS = ['Starter', 'Comfort', 'Pro', 'Ultimate'] as const;
 
 export const revalidate = 3600;
 
-const bundleDefs = [
-  {
-    id: 1,
-    tier: 'Starter',
-    title: 'Starter ljós',
-    blurb: 'Plug-and-play dimming in any room.',
-    ribbon: false,
-    slugList: ['plejd-dimmer-2', 'plejd-led-driver', 'shelly-plus1'],
-  },
-  {
-    id: 2,
-    tier: 'Comfort',
-    title: 'Comfort heimili',
-    blurb: 'Lights + climate control + basic automations.',
-    ribbon: true,
-    slugList: [
-      'plejd-dimmer-2',
-      'shelly-plus1',
-      'shelly-temp-sensor',
-      'ha-blue',
-    ],
-  },
-  {
-    id: 3,
-    tier: 'Pro',
-    title: 'Öryggispakki',
-    blurb: 'Motion, entry sensors & AI doorbell video.',
-    ribbon: false,
-    slugList: ['unifi-door-sensor', 'shelly-motion', 'unifi-g4-doorbell'],
-  },
-  {
-    id: 4,
-    tier: 'Ultimate',
-    title: 'Mix & Match',
-    blurb: 'Everything above + Wi-Fi 6 backbone.',
-    ribbon: false,
-    slugList: [
-      'plejd-dimmer-2',
-      'shelly-plus1',
-      'unifi-ap6-lite',
-      'ha-blue',
-      'unifi-g4-doorbell',
-    ],
-  },
-];
+const query = `*[_type=="product" && defined(bundleTier)]{
+    _id,title,priceISK,slug,brand,functions,image{asset->{url}},bundleTier
+}`;
+type Row = {
+  _id:string;title:string;priceISK:number;slug:{current:string};
+  brand?:string;functions?:string[];image:{asset:{url:string}};
+  bundleTier:(typeof TIERS)[number];
+};
 
-async function buildBundles() {
-  const query = `*[_type=="product" && slug.current in $slugs]{
-    _id,
-    title,
-    priceISK,
-    slug,
-    brand,
-    functions,
-    image{asset->{url}}
-  }`;
-  return Promise.all(
-    bundleDefs.map(async (b) => ({
-      ...b,
-      products: await sanity.fetch(query, { slugs: b.slugList }),
-    })),
-  );
+async function getGrouped() {
+  const rows: Row[] = await sanity.fetch(query);
+  return rows.reduce<Record<string, Row[]>>((acc, r) => {
+    acc[r.bundleTier] = acc[r.bundleTier] ? [...acc[r.bundleTier], r] : [r];
+    return acc;
+  }, {});
+}
+
+function buildBundles(groups: Record<string, Row[]>) {
+  return TIERS.map((t, i) => ({
+    id     : i + 1,
+    title  : t === 'Starter' ? 'Starter ljós'
+           : t === 'Comfort' ? 'Comfort heimili'
+           : t === 'Pro'     ? 'Öryggispakki'
+           :                   'Mix & Match',
+    blurb  : t === 'Starter' ? 'Plug-and-play dimming in any room.'
+           : t === 'Comfort' ? 'Lights + climate control + basic automations.'
+           : t === 'Pro'     ? 'Motion, entry sensors & AI doorbell video.'
+           :                   'Everything above + Wi-Fi 6 backbone.',
+    ribbon : t === 'Comfort',
+    products: groups[t] ?? [],
+  }));
 }
 
 export default async function PackagesPage() {
-  const bundles = await buildBundles();
+  const groups  = await getGrouped();
+  const bundles = buildBundles(groups);
   return <PackagesPageClient bundles={bundles} />;
 }

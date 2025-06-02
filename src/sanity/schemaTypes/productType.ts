@@ -24,6 +24,16 @@ export const productType = defineType({
     defineField({ name: 'blurb',    title: 'Description', type: 'text'   }),
 
     defineField({
+      name: 'bundleTier',
+      title: 'Package tier',
+      type: 'string',
+      options: {
+        list: ['Starter','Comfort','Pro','Ultimate'],
+        layout: 'radio',
+      },
+    }),
+
+    defineField({
       name: 'functions',
       title: 'Function tags',
       type: 'array',
