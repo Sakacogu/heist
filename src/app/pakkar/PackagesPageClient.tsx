@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Zap } from 'lucide-react';
 import { fnIcons, fnLabels } from '@/utils/functionIcons';
 import { useCart } from '@/app/karfa/lib/cart-provider';
+import { formatISK } from '@/utils/format';
 
 type Product = {
   _id: string;
@@ -95,6 +96,9 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
                     <span className="text-sm opacity-60">
                       {p.priceISK.toLocaleString('is-IS')} kr.
                     </span>
+                    <span className="text-sm opacity-60">
+                      {formatISK(p.priceISK)} kr.
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -110,11 +114,15 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
                 <span className="font-semibold">
                   − {savings.toLocaleString('is-IS')} kr.
                 </span>
+                <span className="font-semibold">
+                  - {formatISK(savings)} kr.
+                </span>
               </div>
 
               <div className="flex justify-between font-semibold text-lg">
                 <span>Samtals</span>
                 <span>{total.toLocaleString('is-IS')} kr.</span>
+                <span>{formatISK(total)} kr.</span>
               </div>
             </section>
 
