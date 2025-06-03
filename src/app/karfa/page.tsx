@@ -5,8 +5,8 @@ import { nanoid }  from 'nanoid';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { useCart, discountTiers } from './lib/cart-provider';
 import { useAuth }  from '@/lib/auth-context';
-import Modal        from '@/components/modal';
 import { useTranslation } from 'react-i18next';
+import Modal from '@/components/Modal';
 
 
 export default function CartPage() {
