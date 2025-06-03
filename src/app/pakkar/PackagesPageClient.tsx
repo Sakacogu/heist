@@ -42,14 +42,13 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
   return (
     <main className="max-w-7xl mx-auto grid xl:grid-cols-4 md:grid-cols-2 gap-8 p-6">
       {bundles.map((b) => {
-        const qty      = b.products.length;
-        const brands   = new Set(b.products.map((p) => p.brand)).size;
-        const pct      = discountRate(qty, brands);
-        const sub      = b.products.reduce((s, p) => s + p.priceISK, 0);
-        const savings  = Math.round(sub * pct);
-        const total    = sub - savings;
-
-        const fnSet = new Set(b.products.flatMap((p) => p.functions ?? []));
+        const qty     = b.products.length;
+        const brands  = new Set(b.products.map((p) => p.brand)).size;
+        const pct     = discountRate(qty, brands);
+        const sub     = b.products.reduce((s, p) => s + p.priceISK, 0);
+        const saving  = Math.round(sub * pct);
+        const total   = sub - saving;
+        const fnSet   = new Set(b.products.flatMap((p) => p.functions ?? []));
 
         return (
           <article key={b.id} className="relative flex flex-col bg-white rounded-3xl shadow ring-1 ring-gray-200 overflow-hidden">
@@ -66,7 +65,7 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
               </h2>
             </header>
 
-            <section className="flex-1 p-6 space-y-6">
+            <section className="flex-1 flex flex-col p-6 gap-6">
               <p className="text-gray-700">{b.blurb}</p>
 
               <div className="flex gap-2">
@@ -96,12 +95,7 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
                       className="rounded object-cover"
                     />
                     <span className="flex-1">{p.title}</span>
-                    <span className="text-sm opacity-60">
-                      {p.priceISK.toLocaleString('is-IS')} kr.
-                    </span>
-                    <span className="text-sm opacity-60">
-                      {formatISK(p.priceISK)} kr.
-                    </span>
+                    <span className="text-sm opacity-60">{formatISK(p.priceISK)} kr.</span>
                   </li>
                 ))}
               </ul>
@@ -114,17 +108,11 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
                 <span>
                   {pct ? `Afsláttur ${Math.round(pct * 100)} %` : 'Enginn afsláttur'}
                 </span>
-                <span className="font-semibold">
-                  − {savings.toLocaleString('is-IS')} kr.
-                </span>
-                <span className="font-semibold">
-                  - {formatISK(savings)} kr.
-                </span>
+                <span className="font-semibold">- {formatISK(saving)} kr.</span>
               </div>
 
-              <div className="flex justify-between font-semibold text-lg">
-                <span>Samtals</span>
-                <span>{total.toLocaleString('is-IS')} kr.</span>
+              <div className="mt-auto pt-4 border-t flex justify-between font-semibold text-lg">
+                <span>{t('total')}</span>
                 <span>{formatISK(total)} kr.</span>
               </div>
             </section>
@@ -137,15 +125,13 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
                       id: p._id,
                       name: p.title,
                       price: Math.round(p.priceISK * (1 - pct)),
-                      image: `${p.image.asset.url}?w=160&h=120&fit=crop&auto=format`,
                     },
-                    1,
                   ),
                 )
               }
               className="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-4 transition"
             >
-              Setja allt í körfu
+              {t('addAll')}
             </button>
           </article>
         );
