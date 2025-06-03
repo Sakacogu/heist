@@ -8,11 +8,14 @@ type Product = {
   _id: string;
   title: string;
   slug: { current: string };
-  brand?: string;
+  brand: string;
   priceISK: number;
   image: { asset: { url: string } };
   functions?: string[];
 };
+
+const BRAND_KEYS = ['Plejd', 'Shelly', 'UniFi', 'HomeAssistant'] as const;
+const FN_KEYS    = ['lighting', 'heating', 'security', 'wifi', 'blinds'] as const;
 
 export default function ProductsClient({
   products,
@@ -26,22 +29,23 @@ export default function ProductsClient({
   const { t } = useTranslation();
 
   const brandLabels: Record<string, string> = {
-    Plejd: 'Plejd',
-    Shelly: 'Shelly',
-    UniFi: 'UniFi',
+    Plejd:         'Plejd',
+    Shelly:        'Shelly',
+    UniFi:         'UniFi',
     HomeAssistant: 'Home Assistant',
   };
 
   const fnLabels: Record<string, string> = {
-    lighting: t('lighting'),
-    heating: t('heating'),
-    security: t('security'),
-    wifi: t('wifi'),
-    blinds: t('blinds'),
+    lighting:  t('lighting'),
+    heating:   t('heating'),
+    security:  t('security'),
+    wifi:      t('wifi'),
+    blinds:    t('blinds'),
   };
 
   return (
     <main className="max-w-7xl mx-auto p-16 space-y-6">
+
       <div className="flex flex-wrap justify-center gap-4">
         <Link
           href="/products"
@@ -52,7 +56,7 @@ export default function ProductsClient({
           {t('allBrands')}
         </Link>
 
-        {Object.keys(brandLabels).map((b) => (
+        {BRAND_KEYS.map((b) => (
           <Link
             key={b}
             href={`/products?brand=${b}${fn ? `&fn=${fn}` : ''}`}
@@ -75,15 +79,15 @@ export default function ProductsClient({
           {t('allFunctions')}
         </Link>
 
-        {Object.keys(fnLabels).map((key) => (
+        {FN_KEYS.map((k) => (
           <Link
-            key={key}
-            href={`/products?${brand ? `brand=${brand}&` : ''}fn=${key}`}
+            key={k}
+            href={`/products?${brand ? `brand=${brand}&` : ''}fn=${k}`}
             className={`px-3 py-1 rounded-full border text-sm ${
-              fn === key ? 'bg-cyan-100 text-cyan-800' : 'bg-white'
+              fn === k ? 'bg-cyan-100 text-cyan-800' : 'bg-white'
             }`}
           >
-            {fnLabels[key]}
+            {fnLabels[k]}
           </Link>
         ))}
       </div>

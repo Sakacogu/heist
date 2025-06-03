@@ -5,13 +5,13 @@ import BookingForm from '@/components/BookingForm';
 import { Phone, Mail } from 'lucide-react';
 
 export default function ContactPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('contact');
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-12 space-y-12">
       <section className="text-center space-y-2">
-        <h1 className="text-4xl font-bold">{t('contactHeading')}</h1>
-        <p className="text-gray-700">{t('contactSubtitle')}</p>
+        <h1 className="text-4xl font-bold">{t('heading')}</h1>
+        <p className="text-gray-700">{t('subtitle')}</p>
       </section>
 
       <section className="grid gap-6 md:grid-cols-2">

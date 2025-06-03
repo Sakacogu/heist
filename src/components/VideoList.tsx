@@ -49,7 +49,7 @@ export default function VideoList() {
 
   return (
     <>
-      <section className="flex flex-col gap-6">
+      <section className="flex flex-col gap-4 p-4 md:p-8 max-w-3xl mx-auto">
         {VIDEOS.map((v) => {
           const isPlaying  = playingId === v.id;
 
