@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import type { CartItem } from '../../karfa/lib/cart-provider'
+import type { CartItem } from '../../karfa/lib/CartProvider'
 
 const COOKIE_NAME = 'cart'
 

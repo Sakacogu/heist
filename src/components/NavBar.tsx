@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { Search, ShoppingCart, User2 } from 'lucide-react';
-import { useCart } from '@/app/karfa/lib/cart-provider';
+import { useCart } from '@/app/karfa/lib/CartProvider';
 import { useAuth } from '@/lib/auth-context';
 import i18next from '@/app/i18n';
 

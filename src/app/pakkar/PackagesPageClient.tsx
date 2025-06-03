@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Zap } from 'lucide-react';
 import { fnIcons, fnLabels } from '@/utils/functionIcons';
-import { useCart } from '@/app/karfa/lib/cart-provider';
+import { useCart } from '@/app/karfa/lib/CartProvider';
 import { formatISK } from '@/utils/format';
 import { useTranslation } from 'react-i18next';
 

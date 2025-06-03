@@ -2,7 +2,7 @@
 
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { CartProvider } from '@/app/karfa/lib/cart-provider';
+import { CartProvider } from '@/app/karfa/lib/CartProvider';
 import { AuthProvider } from '@/lib/auth-context';
 
 const stripePromise = loadStripe(

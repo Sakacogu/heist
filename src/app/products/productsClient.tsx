@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link  from 'next/link';
 import { useTranslation } from 'react-i18next';
+import { formatISK } from '@/utils/format';
 
 type Product = {
   _id: string;
@@ -26,7 +27,8 @@ export default function ProductsClient({
   brand?: string;
   fn?: string;
 }) {
-  const { t } = useTranslation();
+
+  const { t } = useTranslation('products');
 
   const brandLabels: Record<string, string> = {
     Plejd:         'Plejd',
@@ -120,8 +122,8 @@ export default function ProductsClient({
               ))}
             </div>
 
-            <span className="mt-auto text-cyan-600 font-semibold">
-              {p.priceISK.toLocaleString('is-IS')} kr.
+            <span className="t-auto text-cyan-600 font-semibold">
+            {formatISK(p.priceISK)} kr.
             </span>
           </Link>
         ))}
