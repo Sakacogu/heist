@@ -1,7 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { sanity } from '@/lib/sanity';
 import AddToCartButton from '@/components/AddToCartButton';
+import { useTranslation } from 'react-i18next';
+
+
 
 export const revalidate = 3600;
 
@@ -17,6 +22,8 @@ export default async function ProductDetail({
     }`,
     { slug }
   );
+
+const { t } = useTranslation('products');
 
   if (!product) return notFound();
 

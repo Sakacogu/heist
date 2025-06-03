@@ -1,8 +1,11 @@
-
 import { sanity }            from '@/lib/sanity';
 import PackagesPageClient    from './PackagesPageClient';
+import { useTranslation } from 'react-i18next';
+
 
 const TIERS = ['Starter', 'Comfort', 'Pro', 'Ultimate'] as const;
+
+const { t } = useTranslation('products');
 
 export const revalidate = 3600;
 

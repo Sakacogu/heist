@@ -6,6 +6,8 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { useCart, discountTiers } from './lib/cart-provider';
 import { useAuth }  from '@/lib/auth-context';
 import Modal        from '@/components/modal';
+import { useTranslation } from 'react-i18next';
+
 
 export default function CartPage() {
   const { items, removeItem, updateQty, clearCart } = useCart();
@@ -17,6 +19,8 @@ export default function CartPage() {
   const itemQty  = items.reduce((s, r) => s + r.qty, 0);
 
   const [modal, setModal] = useState<string | null>(null);
+  
+const { t } = useTranslation('products');
 
   const handleCheckout = () => {
     if (!stripe || !elements) return;

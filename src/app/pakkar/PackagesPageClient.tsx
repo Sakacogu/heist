@@ -5,6 +5,8 @@ import { Zap } from 'lucide-react';
 import { fnIcons, fnLabels } from '@/utils/functionIcons';
 import { useCart } from '@/app/karfa/lib/cart-provider';
 import { formatISK } from '@/utils/format';
+import { useTranslation } from 'react-i18next';
+
 
 type Product = {
   _id: string;
@@ -35,7 +37,8 @@ function discountRate(totalQty: number, distinctBrands: number) {
 
 export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
   const { addItem } = useCart();
-
+  const { t } = useTranslation('packages');
+  
   return (
     <main className="max-w-7xl mx-auto grid xl:grid-cols-4 md:grid-cols-2 gap-8 p-6">
       {bundles.map((b) => {

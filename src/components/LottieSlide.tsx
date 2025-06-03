@@ -1,6 +1,7 @@
 'use client';
 
 import Lottie from 'lottie-react';
+
 export default function LottieSlide({ json }: { json: object }) {
   return (
     <Lottie

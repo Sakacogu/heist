@@ -39,7 +39,7 @@ export default function LoginPage() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder={t('enterEmail')}
+          placeholder={t('Email')}
           className="w-full border rounded px-4 py-3"
           required
         />

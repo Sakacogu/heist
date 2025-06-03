@@ -10,7 +10,7 @@ import i18next from '@/app/i18n';
 export default function NavBar() {
   const { items }  = useCart();
   const { user }   = useAuth();
-  const { t }      = useTranslation();
+  const { t }      = useTranslation('common');
 
   const totalCount = items.reduce((s, r) => s + r.qty, 0);
 
@@ -19,6 +19,9 @@ export default function NavBar() {
 
   const toggleLang = () =>
     i18next.changeLanguage(i18next.language === 'is' ? 'en' : 'is');
+
+
+
 
   return (
     <header className="fixed top-0 inset-x-0 h-22 bg-gray-50 shadow-sm z-50">

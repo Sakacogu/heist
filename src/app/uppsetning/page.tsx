@@ -10,10 +10,14 @@ import {
   Home,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+
 
 export const metadata = {
   title: 'Heist – Uppsetning',
 };
+
+const { t } = useTranslation('products');
 
 export default function SetupPage() {
   return (

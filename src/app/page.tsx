@@ -14,16 +14,17 @@ import unified   from '@/lotties/unified.json';
 import savings   from '@/lotties/savings.json';
 
 const slides: FeaturedItem[] = [
-  { id: 'goodnight', name: 'Goodnight',        lottie: goodnight },
-  { id: 'energy',    name: 'Energy Saver',     lottie: energy },
-  { id: 'security',  name: 'Security',         lottie: security },
-  { id: 'morning',   name: 'Morning Routine',  lottie: morning },
-  { id: 'unified',   name: 'One App',          lottie: unified },
-  { id: 'savings',   name: 'Bill Savings',     lottie: savings },
+  { id: 'goodnight', name: 'Goodnight',        lottie: goodnight, description: 'Wind down with smart home routines', link: '/goodnight' },
+  { id: 'energy',    name: 'Energy Saver',     lottie: energy, description: 'Save energy with smart devices' },
+  { id: 'security',  name: 'Security',         lottie: security, description: 'Protect your home with smart security' },
+  { id: 'morning',   name: 'Morning Routine',  lottie: morning, description: 'Start your day with smart home routines' },
+  { id: 'unified',   name: 'One App',          lottie: unified, description: 'Control all devices in one app' },
+  { id: 'savings',   name: 'Bill Savings',     lottie: savings, description: 'Save on bills with smart home devices' },
 ];
 
+const { t } = useTranslation('home');
+
 export default function Home() {
-  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-gray-50">

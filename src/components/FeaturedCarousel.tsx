@@ -9,6 +9,8 @@ export type FeaturedItem = {
   id: string;
   name: string;
   lottie: object;
+  description?: string;
+  link?: string;
 };
 
 interface FeaturedCarouselProps {
@@ -108,6 +110,12 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
                 if (!didDrag.current) router.push('/products');
               }}
             >
+              <div className="absolute inset-0 flex items-start justify-center pt-6 pointer-events-none">
+                <h3 className="text-3xl md:text-4xl font-semibold text-black drop-shadow-lg z-50">
+                 {item.name}
+                </h3>
+              </div>
+
               <LottieSlide json={item.lottie} />
             </div>
           );
