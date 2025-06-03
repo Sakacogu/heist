@@ -5,6 +5,7 @@ import FeaturedCarousel, { FeaturedItem } from '@/components/FeaturedCarousel';
 import BrandList           from '@/components/BrandList';
 import VoiceAssistantSection from '@/components/VoiceAssistantSection';
 import VideoList           from '@/components/VideoList';
+import Link from 'next/link';
 
 import goodnight from '@/lotties/goodnight.json';
 import energy    from '@/lotties/energy.json';
@@ -14,17 +15,18 @@ import unified   from '@/lotties/unified.json';
 import savings   from '@/lotties/savings.json';
 
 const slides: FeaturedItem[] = [
-  { id: 'goodnight', name: 'Goodnight',        lottie: goodnight, description: 'Wind down with smart home routines', link: '/goodnight' },
-  { id: 'energy',    name: 'Energy Saver',     lottie: energy, description: 'Save energy with smart devices' },
-  { id: 'security',  name: 'Security',         lottie: security, description: 'Protect your home with smart security' },
-  { id: 'morning',   name: 'Morning Routine',  lottie: morning, description: 'Start your day with smart home routines' },
-  { id: 'unified',   name: 'One App',          lottie: unified, description: 'Control all devices in one app' },
-  { id: 'savings',   name: 'Bill Savings',     lottie: savings, description: 'Save on bills with smart home devices' },
+  { id: 'goodnight', name: 'Goodnight',        lottie: goodnight, description: 'Wind down with smart home routines', link: '/products' },
+  { id: 'energy',    name: 'Energy Saver',     lottie: energy, description: 'Save energy with smart devices', link: '/products' },
+  { id: 'security',  name: 'Security',         lottie: security, description: 'Protect your home with smart security', link: '/products' },
+  { id: 'morning',   name: 'Morning Routine',  lottie: morning, description: 'Start your day with smart home routines', link: '/products' },
+  { id: 'unified',   name: 'One App',          lottie: unified, description: 'Control all devices in one app', link: '/products' },
+  { id: 'savings',   name: 'Bill Savings',     lottie: savings, description: 'Save on bills with smart home devices', link: '/products' },
 ];
 
-const { t } = useTranslation('home');
+
 
 export default function Home() {
+const { t } = useTranslation('home');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -40,14 +42,14 @@ export default function Home() {
 
       <FeaturedCarousel items={slides} />
 
-      <div className="md:flex md:items-start md:justify-center md:gap-8 px-4">
+      <div className="md:flex md:justify-center md:gap-8 px-4">
         <div className="md:w-2/3 mb-[50px]">
-          <h2 className="text-3xl font-semibold mb-6 mt-14 text-center bg-cyan-600 text-gray-100 py-4 rounded-3xl w-[500px] mx-auto">
+          <h2 className="text-3xl font-semibold mb-6 mt-14 text-center bg-cyan-600 text-gray-100 py-4 rounded-3xl max-w-xl mx-auto">
           {t('mainBrands')}
           </h2>
           <BrandList />
 
-          <h2 className="text-3xl font-semibold mt-[60px] mb-[30px] text-center bg-cyan-600 text-gray-100 py-4 rounded-3xl w-[500px] mx-auto">
+          <h2 className="text-3xl font-semibold mt-[60px] mb-[30px] text-center bg-cyan-600 text-gray-100 py-4 rounded-3xl max-w-3xl mx-auto">
             {t('voiceAI')}
           </h2>
           <VoiceAssistantSection />

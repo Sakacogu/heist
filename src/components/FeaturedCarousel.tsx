@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import LottieSlide from '@/components/LottieSlide';
+import Link from 'next/link';
 
 export type FeaturedItem = {
   id: string;
@@ -104,16 +105,20 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
                 zIndex,
                 transition: dragging.current
                   ? 'none'
-                  : 'transform 0.4s ease, z-index 0.4s ease',
+                  : 'transform 0.04s ease, z-index 0.04s ease',
               }}
               onClick={() => {
                 if (!didDrag.current) router.push('/products');
               }}
             >
-              <div className="absolute inset-0 flex items-start justify-center pt-6 pointer-events-none">
-                <h3 className="text-3xl md:text-4xl font-semibold text-black drop-shadow-lg z-50">
-                 {item.name}
-                </h3>
+              <div className="absolute inset-0 flex items-start justify-center pt-6 pointer-events-none z-50">
+                <Link
+                key={item.id}
+                href={item.link || '/products'}>
+                  <p className="text-xl md:text-xl text-black drop-shadow-lg z-50">
+                 {item.description}
+                 </p>
+                </Link>
               </div>
 
               <LottieSlide json={item.lottie} />
