@@ -7,7 +7,6 @@ import { useCart } from '@/app/karfa/lib/CartProvider';
 import { formatISK } from '@/utils/format';
 import { useTranslation } from 'react-i18next';
 
-
 type Product = {
   _id: string;
   title: string;
@@ -19,18 +18,18 @@ type Product = {
 };
 
 type Bundle = {
-  id:     number;
-  title:  string;
-  blurb:  string;
+  id: number;
+  title: string;
+  blurb: string;
   ribbon?: boolean;
   products: Product[];
 };
 
 function discountRate(totalQty: number, distinctBrands: number) {
   let pct = 0;
-  if (totalQty  >= 3) pct = 0.05;
-  if (totalQty  >= 5) pct = 0.10;
-  if (totalQty  >= 8) pct = 0.15;
+  if (totalQty >= 3) pct = 0.05;
+  if (totalQty >= 5) pct = 0.1;
+  if (totalQty >= 8) pct = 0.15;
   if (distinctBrands >= 3) pct += 0.05;
   return Math.min(pct, 0.25);
 }
@@ -38,27 +37,24 @@ function discountRate(totalQty: number, distinctBrands: number) {
 export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
   const { addItem } = useCart();
   const { t } = useTranslation('packages');
-  
+
   return (
     <main className="max-w-7xl mx-auto grid xl:grid-cols-4 md:grid-cols-2 gap-8 p-6">
       {bundles.map((b) => {
-        const qty     = b.products.length;
-        const brands  = new Set(b.products.map((p) => p.brand)).size;
-        const pct     = discountRate(qty, brands);
-        const sub     = b.products.reduce((s, p) => s + p.priceISK, 0);
-        const saving  = Math.round(sub * pct);
-        const total   = sub - saving;
-        const fnSet   = new Set(b.products.flatMap((p) => p.functions ?? []));
+        const qty = b.products.length;
+        const brands = new Set(b.products.map((p) => p.brand)).size;
+        const pct = discountRate(qty, brands);
+        const sub = b.products.reduce((s, p) => s + p.priceISK, 0);
+        const saving = Math.round(sub * pct);
+        const total = sub - saving;
+        const fnSet = new Set(b.products.flatMap((p) => p.functions ?? []));
 
         return (
-          <article key={b.id} className="relative flex flex-col bg-white rounded-3xl shadow ring-1 ring-gray-200 overflow-hidden">
-            {b.ribbon && (
-              <span className="absolute -top-3 left-6 bg-amber-500 text-white text-xs px-3 py-1 rounded-full shadow-lg">
-                Mest keypt
-              </span>
-            )}
-
-            <header className="h-32 bg-gradient-to-r from-cyan-600 to-blue-500 relative flex items-end">
+          <article
+            key={b.id}
+            className="relative flex flex-col mt-10 bg-white rounded-3xl shadow ring-1 ring-gray-200 overflow-hidden"
+          >
+            <header className="h-28 bg-gradient-to-r from-cyan-600 to-blue-500 relative flex items-end">
               <Zap className="absolute right-6 bottom-6 w-20 h-20 text-white/30 -rotate-12" />
               <h2 className="text-2xl font-semibold text-white drop-shadow pl-6 pb-4">
                 {b.title}
@@ -84,7 +80,7 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
                 })}
               </div>
 
-              <ul className="space-y-3">
+              <ul className="space-y-3 max-h-56 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300">
                 {b.products.map((p) => (
                   <li key={p._id} className="flex items-center gap-3">
                     <Image
@@ -95,7 +91,9 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
                       className="rounded object-cover"
                     />
                     <span className="flex-1">{p.title}</span>
-                    <span className="text-sm opacity-60">{formatISK(p.priceISK)} kr.</span>
+                    <span className="text-sm opacity-60">
+                      {formatISK(p.priceISK)} kr.
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -106,13 +104,17 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
                 }`}
               >
                 <span>
-                  {pct ? `Afsláttur ${Math.round(pct * 100)} %` : 'Enginn afsláttur'}
+                  {pct
+                    ? `Afsláttur ${Math.round(pct * 100)} %`
+                    : 'Enginn afsláttur'}
                 </span>
-                <span className="font-semibold">- {formatISK(saving)} kr.</span>
+                <span className="font-semibold">
+                  - {formatISK(saving)} kr.
+                </span>
               </div>
 
               <div className="mt-auto pt-4 border-t flex justify-between font-semibold text-lg">
-                <span>{t('total')}</span>
+                <span>{t('total') ?? 'Samtals'}</span>
                 <span>{formatISK(total)} kr.</span>
               </div>
             </section>
@@ -120,18 +122,16 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
             <button
               onClick={() =>
                 b.products.forEach((p) =>
-                  addItem(
-                    {
-                      id: p._id,
-                      name: p.title,
-                      price: Math.round(p.priceISK * (1 - pct)),
-                    },
-                  ),
+                  addItem({
+                    id: p._id,
+                    name: p.title,
+                    price: Math.round(p.priceISK * (1 - pct)),
+                  }),
                 )
               }
               className="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-4 transition"
             >
-              {t('addAll')}
+              {t('addAll') ?? 'Setja allt í körfu'}
             </button>
           </article>
         );
@@ -139,3 +139,4 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
     </main>
   );
 }
+
