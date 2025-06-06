@@ -63,3 +63,11 @@ body {
 .animate-blob{ animation:blob 12s infinite ease-in-out; }
 .animation-delay-2000{ animation-delay:2s; }
 
+@layer base {
+  .font-outline-2 {
+    -webkit-text-stroke: 0.5px white;
+  }
+  .font-outline-4 {
+    -webkit-text-stroke: 4px white;
+  }
+}

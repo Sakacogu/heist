@@ -24,6 +24,14 @@
        heroTag:    'Ljós, hitastýring, net og öryggi - allt undir einu þaki.',
        mainBrands: 'Helstu samstarfsmerki',
        voiceAI:    'Hægt að stjórna með gervigreind!',
+       videoList: 'Myndbönd með leiðbeiningum',
+       
+       goodnightDesc: 'Láttu snjöll heimakerfi vinna fyrir þig',
+       energyDesc: 'Stjórnaðu hverju sem er! Hugmyndarflugið eitt takmarkar þig',
+       securityDesc: 'Passaðu upp á heimilið með betri öryggislausnum',
+       morningDesc: 'Auðveldaðu þér að byrja daginn með snjöllum rútínum',
+       unifiedDesc: 'Allt heimilið í einu appi!',
+       savingsDesc: 'Lækkaðu rafmagnsreikninginn með snjall tækjunum',
      },
    
      packages: {
@@ -53,6 +61,7 @@
        email:    'Netfang',
        book:     'Bóka fund',
      },
+
    };
    
    const EN: Resource = {
@@ -76,6 +85,15 @@
        heroTag:    'Lights, climate, Wi-Fi and security - all in one app.',
        mainBrands: 'Our key partner brands',
        voiceAI:    'Voice-assistant ready!',
+       videoList: 'Video guides',
+
+       goodnightDesc: 'Wind down with smart home routines',
+       energyDesc: 'Control everything! Your imagination is the limit',
+       securityDesc: 'Protect your home with smart security',
+       morningDesc: 'Start your day with smart home routines',
+       unifiedDesc: 'Control all devices in one app',
+       savingsDesc: 'Save on bills with smart home devices',
+
      },
    
      packages: {
@@ -105,6 +123,7 @@
        email:    'Email',
        book:     'Book a meeting',
      },
+
    };
 
    i18n

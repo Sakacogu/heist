@@ -6,11 +6,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import LottieSlide from '@/components/LottieSlide';
 import Link from 'next/link';
 
+
 export type FeaturedItem = {
   id: string;
   name: string;
   lottie: object;
-  description?: string;
+  description: string;
   link?: string;
 };
 
@@ -115,9 +116,11 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
                 <Link
                 key={item.id}
                 href={item.link || '/products'}>
-                  <p className="text-xl md:text-xl text-black drop-shadow-lg z-50">
+                  <div className="flex flex-col border-1 bg-cyan-500 border-cyan-400 items-center justify-center shadow-md shadow-black-200 rounded-3xl p-6 m-2 w-full h-[8px]">
+                  <p className="text-xl md:text-xl text-gray-900 drop-shadow-lg z-50">
                  {item.description}
                  </p>
+                 </div>
                 </Link>
               </div>
 

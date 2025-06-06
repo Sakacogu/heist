@@ -14,19 +14,19 @@ import morning   from '@/lotties/morning.json';
 import unified   from '@/lotties/unified.json';
 import savings   from '@/lotties/savings.json';
 
-const slides: FeaturedItem[] = [
-  { id: 'goodnight', name: 'Goodnight',        lottie: goodnight, description: 'Wind down with smart home routines', link: '/products' },
-  { id: 'energy',    name: 'Energy Saver',     lottie: energy, description: 'Save energy with smart devices', link: '/products' },
-  { id: 'security',  name: 'Security',         lottie: security, description: 'Protect your home with smart security', link: '/products' },
-  { id: 'morning',   name: 'Morning Routine',  lottie: morning, description: 'Start your day with smart home routines', link: '/products' },
-  { id: 'unified',   name: 'One App',          lottie: unified, description: 'Control all devices in one app', link: '/products' },
-  { id: 'savings',   name: 'Bill Savings',     lottie: savings, description: 'Save on bills with smart home devices', link: '/products' },
-];
-
-
 
 export default function Home() {
-const { t } = useTranslation('home');
+
+  const { t } = useTranslation('home');
+
+  const slides: FeaturedItem[] = [
+    { id: 'goodnight', name: 'Goodnight',        lottie: goodnight, description: t('goodnightDesc'), link: '/products' },
+    { id: 'energy',    name: 'Energy Saver',     lottie: energy, description: t('energyDesc'), link: '/products' },
+    { id: 'security',  name: 'Security',         lottie: security, description: t('securityDesc'), link: '/products' },
+    { id: 'morning',   name: 'Morning Routine',  lottie: morning, description: t('morningDesc'), link: '/products' },
+    { id: 'unified',   name: 'One App',          lottie: unified, description: t('unifiedDesc'), link: '/products' },
+    { id: 'savings',   name: 'Bill Savings',     lottie: savings, description: t('savingsDesc'), link: '/products' },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -57,6 +57,9 @@ const { t } = useTranslation('home');
         
 
         <aside className="md:w-1/4">
+          <h2 className="text-3xl font-semibold mb-6 mt-14 text-center bg-cyan-600 text-gray-100 py-4 rounded-3xl max-w-xl mx-auto">
+            {t('videoList')}
+          </h2>
           <VideoList />
         </aside>
       </div>
