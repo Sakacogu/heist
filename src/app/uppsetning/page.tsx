@@ -37,7 +37,7 @@ export default function SetupPage() {
             { icon: Lightbulb, label: 'Lýsing' },
             { icon: Zap, label: 'Mesh dimming' },
           ]}
-          href="/products?brand=plejd"
+          href="/products?brand=Plejd"
         />
 
         <FeatureCard
@@ -49,7 +49,7 @@ export default function SetupPage() {
             { icon: Thermometer, label: 'Aflmæling' },
             { icon: Wifi, label: 'Wi-Fi rofar' },
           ]}
-          href="/products?brand=shelly"
+          href="/products?brand=Shelly"
         />
 
         <FeatureCard
@@ -61,7 +61,7 @@ export default function SetupPage() {
             { icon: Cpu, label: 'Sjálfvirkni' },
             { icon: Home, label: '2800+ tæki' },
           ]}
-          href="/products?brand=homeassistant"
+          href="/products?brand=HomeAssistant"
         />
 
         <FeatureCard
@@ -73,7 +73,7 @@ export default function SetupPage() {
             { icon: Wifi, label: 'Wi-Fi 6' },
             { icon: Camera, label: 'Protect vélar' },
           ]}
-          href="/products?brand=unify"
+          href="/products?brand=UniFi"
         />
       </section>
 
