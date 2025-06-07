@@ -32,6 +32,7 @@
        morningDesc: 'Auðveldaðu þér að byrja daginn með snjöllum rútínum',
        unifiedDesc: 'Allt heimilið í einu appi!',
        savingsDesc: 'Lækkaðu rafmagnsreikninginn með snjall tækjunum',
+       viewProductsBtn: 'Skoða vörur',
      },
    
      packages: {
@@ -52,6 +53,7 @@
        security: 'Öryggi',
        wifi:     'Wi-Fi',
        blinds:   'Rúllugardínur',
+       control:  'Stjórnstöð',
      },
    
      contact: {
@@ -93,7 +95,7 @@
        morningDesc: 'Start your day with smart home routines',
        unifiedDesc: 'Control all devices in one app',
        savingsDesc: 'Save on bills with smart home devices',
-
+       viewProductsBtn: 'View products',
      },
    
      packages: {
@@ -114,6 +116,7 @@
        security: 'Security',
        wifi:     'Wi-Fi',
        blinds:   'Blinds',
+       control:  'Control Hub',
      },
    
      contact: {

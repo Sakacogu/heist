@@ -16,7 +16,7 @@ type Product = {
 };
 
 const BRAND_KEYS = ['Plejd', 'Shelly', 'UniFi', 'HomeAssistant'] as const;
-const FN_KEYS    = ['lighting', 'heating', 'security', 'wifi', 'blinds'] as const;
+const FN_KEYS    = ['lighting', 'heating', 'security', 'wifi', 'blinds', 'control'] as const;
 
 export default function ProductsClient({
   products,
@@ -43,6 +43,7 @@ export default function ProductsClient({
     security:  t('security'),
     wifi:      t('wifi'),
     blinds:    t('blinds'),
+    control:    t('control'),
   };
 
   return (
