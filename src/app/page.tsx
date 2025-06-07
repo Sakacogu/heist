@@ -2,6 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Link from 'next/link';
 import FeaturedCarousel, { FeaturedItem } from '@/components/FeaturedCarousel';
 import BrandList            from '@/components/BrandList';
 import VoiceAssistantSection from '@/components/VoiceAssistantSection';
@@ -31,49 +32,84 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <section className="relative overflow-hidden">
+    <div className="overflow-x-clip bg-surface-50">
+      <section className="relative isolate overflow-hidden pb-24">
         <motion.div
           style={{ y: blobY }}
-          className="pointer-events-none absolute -top-64 left-1/2 -translate-x-1/2
-                     h-[40rem] w-[40rem] rounded-full opacity-30 blur-3xl
-                     bg-gradient-to-tr from-cyan-400 via-sky-500 to-indigo-600" />
-        <div className="relative z-10 max-w-3xl h-[230px] mx-auto flex flex-col
-                        items-center justify-center text-center gap-6 px-4">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
+          className="pointer-events-none absolute -top-[28rem] left-1/2 -translate-x-1/2
+                     h-[48rem] w-[48rem] rounded-full opacity-30 blur-[180px]
+                     bg-gradient-to-tr from-brand via-sky-400 to-indigo-500" />
+
+        <div className="relative z-10 max-w-3xl mx-auto px-4 pt-32 flex flex-col items-center text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: .8 }}
+            className="text-4xl md:text-6xl font-semibold tracking-tight text-gray-900">
             {t('heroTitle')}
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600">
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: .8, delay: .1 }}
+            className="mt-6 text-lg md:text-2xl text-gray-600">
             {t('heroTag')}
-          </p>
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: .8, delay: .2 }}
+            className="mt-10">
+            <Link
+              href="/products"
+              className="inline-flex gap-2 items-center rounded-full bg-brand px-8 py-3
+                         text-gray-800 font-medium shadow-lg shadow-brand/40
+                         hover:shadow-xl hover:-translate-y-[2px] active:shadow transition">
+              🛒 {t('viewProductsBtn')}
+            </Link>
+          </motion.div>
         </div>
       </section>
 
       <FeaturedCarousel items={slides} />
 
-      <div className="md:flex md:justify-center md:gap-8 px-4">
-        <div className="md:w-2/3 mb-16">
-          <h2 className="text-3xl font-semibold mb-6 mt-14 text-center
-                         bg-cyan-600 text-gray-100 py-4 rounded-3xl max-w-xl mx-auto">
-            {t('mainBrands')}
-          </h2>
+      <section
+        className="
+          mx-auto w-full max-w-7xl px-4
+          grid gap-y-24 gap-x-16
+          lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]
+          place-items-center
+        "
+      >
+        <div className="w-full max-w-[36rem]">
+          <SectionHeading>{t('mainBrands')}</SectionHeading>
           <BrandList />
-
-          <h2 className="text-3xl font-semibold mt-16 mb-8 text-center
-                         bg-cyan-600 text-gray-100 py-4 rounded-3xl max-w-3xl mx-auto">
-            {t('voiceAI')}
-          </h2>
-          <VoiceAssistantSection />
         </div>
 
-        <aside className="md:w-1/4">
-          <h2 className="text-3xl font-semibold mb-6 mt-14 text-center
-                         bg-cyan-600 text-gray-100 py-4 rounded-3xl max-w-xs mx-auto">
-            {t('videoList')}
-          </h2>
+        <div className="w-full max-w-[36rem]">
+          <SectionHeading>{t('videoList')}</SectionHeading>
           <VideoList />
-        </aside>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-4xl px-4 mt-24">
+        <SectionHeading>{t('voiceAI')}</SectionHeading>
+        <VoiceAssistantSection />
       </div>
     </div>
+  );
+}
+
+function SectionHeading({
+  children,
+  className = '',
+}: { children: React.ReactNode; className?: string }) {
+  return (
+    <h2
+      className={`my-10 rounded-3xl bg-brand py-4 text-center text-3xl font-semibold text-grey-50 ${className}`}>
+      {children}
+    </h2>
   );
 }

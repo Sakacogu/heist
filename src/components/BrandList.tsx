@@ -76,20 +76,14 @@ const BRANDS = [
 
 export default function BrandList() {
   return (
-    <section className="flex flex-wrap justify-between px-22 gap-8">
+    <ul className="flex flex-col items-center gap-16">
       {BRANDS.map((b) => (
-        <div key={b.name} className="flex flex-col items-center w-64 text-center">
-          <div
-            className="w-28 h-28 rounded-full flex items-center justify-center mb-4 shadow"
-            style={{ backgroundColor: 'white' }}
-          >
-            <Image
-              src={b.logo}
-              alt={b.name}
-              width={64}
-              height={64}
-              className="object-contain"
-            />
+        <li 
+          key={b.name}
+          className="w-72 flex flex-col items-center text-center"
+        >
+          <div className="w-28 h-28 rounded-full flex items-center justify-center mb-4 shadow bg-white">
+            <Image src={b.logo} alt={b.name} width={64} height={64} priority />
           </div>
 
           <a
@@ -102,24 +96,18 @@ export default function BrandList() {
             {b.name}
           </a>
 
-          <p className="text-gray-700 text-sm mb-4 leading-relaxed">
-            {b.description}
-          </p>
+          <p className="text-gray-700 text-sm mb-4 leading-relaxed">{b.description}</p>
 
           <div className="flex flex-wrap justify-center gap-4">
             {b.features.map(({ icon: Icon, label }) => (
-              <div
-                key={label}
-                className="flex flex-col items-center text-gray-600 hover:text-cyan-600 transition text-xs"
-                title={label}
-              >
+              <span key={label} className="flex flex-col items-center text-xs text-gray-600 hover:text-cyan-600 transition">
                 <Icon className="w-5 h-5" />
                 <span className="mt-0.5">{label}</span>
-              </div>
+              </span>
             ))}
           </div>
-        </div>
+        </li>
       ))}
-    </section>
+    </ul>
   );
 }
