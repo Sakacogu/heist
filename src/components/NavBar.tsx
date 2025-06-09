@@ -6,13 +6,18 @@ import { Search, ShoppingCart, User2 } from 'lucide-react';
 import { useCart } from '@/app/karfa/lib/CartProvider';
 import { useAuth } from '@/lib/auth-context';
 import i18next from '@/app/i18n';
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
 
 export default function NavBar() {
   const { items }  = useCart();
   const { user }   = useAuth();
   const { t }      = useTranslation('common');
+  const [open, setOpen] = useState(false);
 
   const totalCount = items.reduce((s, r) => s + r.qty, 0);
+
+  const SearchSheet = dynamic(() => import('./SearchSheet'), { ssr: false });
 
   const navItem =
     'px-3 py-2 rounded-lg hover:bg-cyan-100 transition-colors font-medium text-gray-900';
@@ -46,8 +51,8 @@ export default function NavBar() {
             {i18next.language === 'is' ? 'EN' : 'IS'}
           </button>
 
-          <button className="p-2 rounded-lg hover:bg-cyan-200">
-            <Search className="w-5 h-5" />
+          <button onClick={() => setOpen(true)} className="p-2 rounded-lg hover:bg-gray-200">
+           <Search className="w-5 h-5" />
           </button>
 
           <Link
@@ -68,6 +73,7 @@ export default function NavBar() {
           </Link>
         </div>
       </div>
+      {open && <SearchSheet onClose={() => setOpen(false)} />}
     </header>
   );
 }
