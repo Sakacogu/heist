@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 import { useAuth } from '@/lib/auth-context';
-import { useCart } from '@/app/karfa/lib/CartProvider';
+import { useCart } from '@/app/karfa/lib/Cart-Provider';
 
 type OrderItem = {
   id: string;

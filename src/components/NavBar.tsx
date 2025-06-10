@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { Search, ShoppingCart, User2 } from 'lucide-react';
-import { useCart } from '@/app/karfa/lib/CartProvider';
+import { useCart } from '@/app/karfa/lib/Cart-Provider';
 import { useAuth } from '@/lib/auth-context';
 import i18next from '@/app/i18n';
 import { useState } from 'react';
@@ -17,7 +17,7 @@ export default function NavBar() {
 
   const totalCount = items.reduce((s, r) => s + r.qty, 0);
 
-  const SearchSheet = dynamic(() => import('./SearchSheet'), { ssr: false });
+  const SearchSheet = dynamic(() => import('./Search-Sheet'), { ssr: false });
 
   const navItem =
     'px-3 py-2 rounded-lg hover:bg-cyan-100 transition-colors font-medium text-gray-900';

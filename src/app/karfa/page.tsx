@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { nanoid }  from 'nanoid';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { useCart, discountTiers } from './lib/CartProvider';
+import { useCart, discountTiers } from './lib/Cart-Provider';
 import { useAuth }  from '@/lib/auth-context';
 import { useTranslation } from 'react-i18next';
 import Modal from '@/components/Modal';

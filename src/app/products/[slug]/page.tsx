@@ -2,7 +2,7 @@
    import Image from 'next/image';
    import { notFound } from 'next/navigation';
    import { sanity } from '@/lib/sanity';
-   import AddToCartButton from '@/components/AddToCartButton';
+   import AddToCartButton from '@/components/Add-To-Cart-Button';
    
    export const revalidate = 3600;
    

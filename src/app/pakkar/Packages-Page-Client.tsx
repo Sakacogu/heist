@@ -3,8 +3,8 @@
 import Image from 'next/image';
 import { Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useCart } from '@/app/karfa/lib/CartProvider';
-import { fnIcons, fnLabels } from '@/utils/functionIcons';
+import { useCart } from '@/app/karfa/lib/Cart-Provider';
+import { fnIcons, fnLabels } from '@/utils/function-Icons';
 import { formatISK } from '@/utils/format';
 
 type Product = {
