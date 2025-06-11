@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Zap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useCart } from "@/app/karfa/cart-provider";
-import { fnIcons, fnLabels } from "@/utils/function-Icons";
+import { fnIcons, fnLabels } from "@/utils/functionIcons";
 import { formatISK } from "@/utils/format";
 
 type Product = {

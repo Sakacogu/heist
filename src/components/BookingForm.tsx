@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/lib/AuthContexts";
 
 export default function BookingForm() {
   const [date, setDate] = useState<Date | null>(null);
