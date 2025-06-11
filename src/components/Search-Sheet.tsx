@@ -1,8 +1,8 @@
-'use client';
-import { useState, useEffect, useRef } from 'react';
-import Fuse from 'fuse.js';
-import { X, Search } from 'lucide-react';
-import Link from 'next/link';
+"use client";
+import { useState, useEffect, useRef } from "react";
+import Fuse from "fuse.js";
+import { X, Search } from "lucide-react";
+import Link from "next/link";
 
 type Product = {
   _id: string;
@@ -14,21 +14,21 @@ type Product = {
 };
 
 export default function SearchSheet({ onClose }: { onClose: () => void }) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<Product[]>([]);
   const [fuse, setFuse] = useState<Fuse<Product>>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch("/api/products")
       .then((r) => r.json())
       .then((data: Product[]) => {
         setFuse(
           new Fuse(data, {
             keys: [
-              { name: 'title',     weight: 0.5 },
-              { name: 'brand',     weight: 0.3 },
-              { name: 'functions', weight: 0.2 },
+              { name: "title", weight: 0.5 },
+              { name: "brand", weight: 0.3 },
+              { name: "functions", weight: 0.2 },
             ],
             threshold: 0.35,
           }),
@@ -40,7 +40,12 @@ export default function SearchSheet({ onClose }: { onClose: () => void }) {
 
   useEffect(() => {
     if (!fuse || !query.trim()) return setResults([]);
-    setResults(fuse.search(query).map((r) => r.item).slice(0, 8));
+    setResults(
+      fuse
+        .search(query)
+        .map((r) => r.item)
+        .slice(0, 8),
+    );
   }, [query, fuse]);
 
   return (
@@ -63,7 +68,9 @@ export default function SearchSheet({ onClose }: { onClose: () => void }) {
         {query && (
           <ul className="max-h-[64vh] overflow-auto divide-y">
             {results.length === 0 && (
-              <li className="p-6 text-center text-gray-600">Engar niðurstöður 😕</li>
+              <li className="p-6 text-center text-gray-600">
+                Engar niðurstöður 😕
+              </li>
             )}
 
             {results.map((p) => (
@@ -75,7 +82,8 @@ export default function SearchSheet({ onClose }: { onClose: () => void }) {
                 >
                   <p className="font-medium text-gray-700">{p.title}</p>
                   <p className="text-sm text-gray-600 mt-0.5">
-                    {p.brand} · {p.functions?.length ? ` · ${(p.functions).join(', ')}` : ''}
+                    {p.brand} ·{" "}
+                    {p.functions?.length ? ` · ${p.functions.join(", ")}` : ""}
                   </p>
                 </Link>
               </li>

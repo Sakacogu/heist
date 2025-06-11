@@ -1,5 +1,4 @@
-
-import type { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from "lucide-react";
 
 interface Feature {
   icon: LucideIcon;
@@ -21,7 +20,7 @@ export default function FeatureCard({
   features,
   href,
 }: FeatureCardProps) {
-  const Wrapper = href ? 'a' : 'div';
+  const Wrapper = href ? "a" : "div";
 
   return (
     <Wrapper

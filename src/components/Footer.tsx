@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Mail, Phone, Facebook, Linkedin } from 'lucide-react';
+import Link from "next/link";
+import { Mail, Phone, Facebook, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -10,18 +10,34 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-semibold text-white mb-4">Heist</h3>
           <p className="text-sm leading-relaxed">
-            Smarthome lausnir sem virka saman — lýsing, hitastýring, öryggi
-            og Wi-Fi, allt í einni appi.
+            Smarthome lausnir sem virka saman — lýsing, hitastýring, öryggi og
+            Wi-Fi, allt í einni appi.
           </p>
         </div>
 
         <div>
           <h4 className="font-medium text-white mb-3">Flýtileiðir</h4>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/products"   className="hover:underline">Vörur</Link></li>
-            <li><Link href="/pakkar"     className="hover:underline">Pakkar</Link></li>
-            <li><Link href="/uppsetning" className="hover:underline">Uppsetning</Link></li>
-            <li><Link href="/samband"    className="hover:underline">Hafa samband</Link></li>
+            <li>
+              <Link href="/products" className="hover:underline">
+                Vörur
+              </Link>
+            </li>
+            <li>
+              <Link href="/pakkar" className="hover:underline">
+                Pakkar
+              </Link>
+            </li>
+            <li>
+              <Link href="/uppsetning" className="hover:underline">
+                Uppsetning
+              </Link>
+            </li>
+            <li>
+              <Link href="/samband" className="hover:underline">
+                Hafa samband
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -42,13 +58,21 @@ export default function Footer() {
             </li>
             <li className="flex items-center gap-2">
               <Facebook className="w-4 h-4" />
-              <a href="https://facebook.com/heist" target="_blank" className="hover:underline">
+              <a
+                href="https://facebook.com/heist"
+                target="_blank"
+                className="hover:underline"
+              >
                 facebook.com/heist
               </a>
             </li>
             <li className="flex items-center gap-2">
               <Linkedin className="w-4 h-4" />
-              <a href="https://linkedin.com/company/heist" target="_blank" className="hover:underline">
+              <a
+                href="https://linkedin.com/company/heist"
+                target="_blank"
+                className="hover:underline"
+              >
                 LinkedIn
               </a>
             </li>

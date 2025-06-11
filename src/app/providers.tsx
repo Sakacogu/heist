@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { CartProvider } from '@/app/karfa/lib/Cart-Provider';
-import { AuthProvider } from '@/lib/auth-context';
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { CartProvider } from "@/app/karfa/cart-provider";
+import { AuthProvider } from "@/lib/auth-context";
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 );
 
 export default function Providers({ children }: { children: React.ReactNode }) {

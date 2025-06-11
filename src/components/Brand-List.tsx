@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
+import Image from "next/image";
 import {
   Lightbulb,
   Thermometer,
@@ -12,64 +12,64 @@ import {
   Shield,
   Cpu,
   Bluetooth,
-} from 'lucide-react';
+} from "lucide-react";
 
 const BRANDS = [
   {
-    name: 'Plejd',
-    logo: '/logos/plejd.png',
-    color: '#00bbcf',
-    url:  'https://plejd.com/',
+    name: "Plejd",
+    logo: "/logos/plejd.png",
+    color: "#00bbcf",
+    url: "https://plejd.com/",
     description:
-      'Bluetooth-mesh dimmers & relays for lighting, heating loops and motorised window coverings.',
+      "Bluetooth-mesh dimmers & relays for lighting, heating loops and motorised window coverings.",
     features: [
-      { icon: Lightbulb, label: 'Lights' },
-      { icon: Thermometer, label: 'Heat' },
-      { icon: AlignVerticalJustifyCenter, label: 'Blinds' },
-      { icon: Bluetooth, label: 'BT-Mesh' },
+      { icon: Lightbulb, label: "Lights" },
+      { icon: Thermometer, label: "Heat" },
+      { icon: AlignVerticalJustifyCenter, label: "Blinds" },
+      { icon: Bluetooth, label: "BT-Mesh" },
     ],
   },
   {
-    name: 'Shelly',
-    logo: '/logos/shelly.png',
-    color: '#0076bf',
-    url:  'https://shelly.com/',
+    name: "Shelly",
+    logo: "/logos/shelly.png",
+    color: "#0076bf",
+    url: "https://shelly.com/",
     description:
-      'Wi-Fi relays with power metering, roller-shutter control and upcoming Z-Wave LR sensors.',
+      "Wi-Fi relays with power metering, roller-shutter control and upcoming Z-Wave LR sensors.",
     features: [
-      { icon: Lightbulb, label: 'Lights' },
-      { icon: Thermometer, label: 'Heat' },
-      { icon: AlignVerticalJustifyCenter, label: 'Blinds' },
-      { icon: Activity, label: 'kWh Meter' },
-      { icon: Zap, label: 'Relays' },
+      { icon: Lightbulb, label: "Lights" },
+      { icon: Thermometer, label: "Heat" },
+      { icon: AlignVerticalJustifyCenter, label: "Blinds" },
+      { icon: Activity, label: "kWh Meter" },
+      { icon: Zap, label: "Relays" },
     ],
   },
   {
-    name: 'Home Assistant',
-    logo: '/logos/homeassistant.png',
-    color: '#03A9F4',
-    url:  'https://www.home-assistant.io/',
+    name: "Home Assistant",
+    logo: "/logos/homeassistant.png",
+    color: "#03A9F4",
+    url: "https://www.home-assistant.io/",
     description:
-      'Open-source hub with 2800 + integrations, advanced automations and local voice.',
+      "Open-source hub with 2800 + integrations, advanced automations and local voice.",
     features: [
-      { icon: Cpu, label: 'Automation' },
-      { icon: Wifi, label: 'Matter / Zigbee' },
-      { icon: Lightbulb, label: 'Lights' },
-      { icon: Thermometer, label: 'Climate' },
-      { icon: Camera, label: 'Cams' },
+      { icon: Cpu, label: "Automation" },
+      { icon: Wifi, label: "Matter / Zigbee" },
+      { icon: Lightbulb, label: "Lights" },
+      { icon: Thermometer, label: "Climate" },
+      { icon: Camera, label: "Cams" },
     ],
   },
   {
-    name: 'UniFi',
-    logo: '/logos/unify.png',
-    color: '#2984cf',
-    url:  'https://ui.com/',
+    name: "UniFi",
+    logo: "/logos/unify.png",
+    color: "#2984cf",
+    url: "https://ui.com/",
     description:
-      'Enterprise-grade Wi-Fi 6, PoE switching and Protect AI cameras for a rock-solid backbone.',
+      "Enterprise-grade Wi-Fi 6, PoE switching and Protect AI cameras for a rock-solid backbone.",
     features: [
-      { icon: Wifi, label: 'Wi-Fi 6' },
-      { icon: Camera, label: 'Protect Cam' },
-      { icon: Shield, label: 'Door Access' },
+      { icon: Wifi, label: "Wi-Fi 6" },
+      { icon: Camera, label: "Protect Cam" },
+      { icon: Shield, label: "Door Access" },
     ],
   },
 ] as const;
@@ -78,7 +78,7 @@ export default function BrandList() {
   return (
     <ul className="flex flex-col items-center gap-16">
       {BRANDS.map((b) => (
-        <li 
+        <li
           key={b.name}
           className="w-72 flex flex-col items-center text-center"
         >
@@ -96,11 +96,16 @@ export default function BrandList() {
             {b.name}
           </a>
 
-          <p className="text-gray-700 text-sm mb-4 leading-relaxed">{b.description}</p>
+          <p className="text-gray-700 text-sm mb-4 leading-relaxed">
+            {b.description}
+          </p>
 
           <div className="flex flex-wrap justify-center gap-4">
             {b.features.map(({ icon: Icon, label }) => (
-              <span key={label} className="flex flex-col items-center text-xs text-gray-600 hover:text-cyan-600 transition">
+              <span
+                key={label}
+                className="flex flex-col items-center text-xs text-gray-600 hover:text-cyan-600 transition"
+              >
                 <Icon className="w-5 h-5" />
                 <span className="mt-0.5">{label}</span>
               </span>

@@ -1,4 +1,4 @@
-import FeatureCard from '@/components/Feature-Card';
+import FeatureCard from "@/components/Feature-Card";
 import {
   Zap,
   Lightbulb,
@@ -8,11 +8,11 @@ import {
   Activity,
   Camera,
   Home,
-} from 'lucide-react';
-import Link from 'next/link';
+} from "lucide-react";
+import Link from "next/link";
 
 export const metadata = {
-  title: 'Heist - Uppsetning',
+  title: "Heist - Uppsetning",
 };
 
 export default function SetupPage() {
@@ -34,8 +34,8 @@ export default function SetupPage() {
           description="Bluetooth-mesh dimmers & relays sem rafvirkjar treysta fyrir
           lýsingu, raf­tenglum og stemningu."
           features={[
-            { icon: Lightbulb, label: 'Lýsing' },
-            { icon: Zap, label: 'Mesh dimming' },
+            { icon: Lightbulb, label: "Lýsing" },
+            { icon: Zap, label: "Mesh dimming" },
           ]}
           href="/products?brand=Plejd"
         />
@@ -46,8 +46,8 @@ export default function SetupPage() {
           description="Wi-Fi rofar og afl­mælar sem sýna rafmagns­notkun í rauntíma og
           lækka orkukostnað strax."
           features={[
-            { icon: Thermometer, label: 'Aflmæling' },
-            { icon: Wifi, label: 'Wi-Fi rofar' },
+            { icon: Thermometer, label: "Aflmæling" },
+            { icon: Wifi, label: "Wi-Fi rofar" },
           ]}
           href="/products?brand=Shelly"
         />
@@ -58,8 +58,8 @@ export default function SetupPage() {
           description="Opinn, staðbundinn hub með 2800+ samþættingum – sameinar Plejd,
           Shelly, UniFi og raddaðstoð."
           features={[
-            { icon: Cpu, label: 'Sjálfvirkni' },
-            { icon: Home, label: '2800+ tæki' },
+            { icon: Cpu, label: "Sjálfvirkni" },
+            { icon: Home, label: "2800+ tæki" },
           ]}
           href="/products?brand=HomeAssistant"
         />
@@ -70,8 +70,8 @@ export default function SetupPage() {
           description="Enterprise-Wi-Fi 6 og Protect myndavélar – hraðvirk og stöðug
           nettenging fyrir alla snjalltæki."
           features={[
-            { icon: Wifi, label: 'Wi-Fi 6' },
-            { icon: Camera, label: 'Protect vélar' },
+            { icon: Wifi, label: "Wi-Fi 6" },
+            { icon: Camera, label: "Protect vélar" },
           ]}
           href="/products?brand=UniFi"
         />
@@ -93,15 +93,22 @@ export default function SetupPage() {
             </thead>
             <tbody className="divide-y">
               {[
-                ['Plejd', '✓', '', '', '✓ (Fyrir reglur)', ''],
-                ['Shelly', '✓', '✓', '', '✓', ''],
-                ['Home Assistant', '✓ (í gegnum Plejd)', '✓ (í gegnum Shelly)', '', '✓✓✓', '✓ (Protect + ONVIF)'],
-                ['UniFi', '', '', '✓', '', '✓✓✓'],
+                ["Plejd", "✓", "", "", "✓ (Fyrir reglur)", ""],
+                ["Shelly", "✓", "✓", "", "✓", ""],
+                [
+                  "Home Assistant",
+                  "✓ (í gegnum Plejd)",
+                  "✓ (í gegnum Shelly)",
+                  "",
+                  "✓✓✓",
+                  "✓ (Protect + ONVIF)",
+                ],
+                ["UniFi", "", "", "✓", "", "✓✓✓"],
               ].map((row) => (
                 <tr key={row[0]} className="hover:bg-gray-50">
                   {row.map((cell, idx) => (
                     <td key={idx} className="p-3">
-                      {cell || '—'}
+                      {cell || "—"}
                     </td>
                   ))}
                 </tr>

@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { redirect }           from 'next/navigation';
-import Image                  from 'next/image';
+import { useState, useEffect } from "react";
+import { redirect } from "next/navigation";
+import Image from "next/image";
 import {
   ChevronDown,
   ShoppingCart,
   CalendarClock,
   History,
   Receipt,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { useAuth } from '@/lib/auth-context';
-import { useCart } from '@/app/karfa/lib/Cart-Provider';
+import { useAuth } from "@/lib/auth-context";
+import { useCart } from "@/app/karfa/cart-provider";
 
 type OrderItem = {
   id: string;
@@ -22,7 +22,7 @@ type OrderItem = {
   image?: string;
 };
 
-export type OrderStatus = 'pending' | 'paid' | 'canceled';
+export type OrderStatus = "pending" | "paid" | "canceled";
 
 export type Order = {
   id: string;
@@ -35,30 +35,30 @@ export type Order = {
 type Meeting = { when: string; name?: string };
 
 export default function ProfileClient() {
-  const { user, logout }           = useAuth();
+  const { user, logout } = useAuth();
   const { items: cartItems, addItem } = useCart();
-  if (!user) redirect('/innskraning?next=/profile');
+  if (!user) redirect("/innskraning?next=/profile");
 
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    const raw = localStorage.getItem(`heist-orders-${user.email}`) || '[]';
+    const raw = localStorage.getItem(`heist-orders-${user.email}`) || "[]";
     const parsed = JSON.parse(raw) as unknown[];
 
     const cleaned: Order[] = parsed.map((row) => {
       const o = row as Partial<Order>;
 
       const status: OrderStatus =
-        o.status === 'paid'
-          ? 'paid'
-          : o.status === 'canceled'
-          ? 'canceled'
-          : 'pending';
+        o.status === "paid"
+          ? "paid"
+          : o.status === "canceled"
+            ? "canceled"
+            : "pending";
 
       return {
-        id:    o.id    ?? crypto.randomUUID(),
+        id: o.id ?? crypto.randomUUID(),
         total: o.total ?? 0,
-        date:  o.date  ?? new Date().toISOString(),
+        date: o.date ?? new Date().toISOString(),
         items: o.items ?? [],
         status,
       };
@@ -72,54 +72,53 @@ export default function ProfileClient() {
     localStorage.setItem(`heist-orders-${user.email}`, JSON.stringify(next));
   };
 
-const toStatus = (s: OrderStatus): OrderStatus => s;
+  const toStatus = (s: OrderStatus): OrderStatus => s;
 
-const finishPay = (id: string) => {
-  const next: Order[] = orders.map((o) =>
-    o.id === id ? { ...o, status: toStatus('paid') } : o,
-  );
-  persistOrders(next);
-  alert('(stub) Stripe checkout would open now');
-};
-
-const cancelOrder = (id: string) => {
-  const next: Order[] = orders.map((o) =>
-    o.id === id ? { ...o, status: toStatus('canceled') } : o,
-  );
-  persistOrders(next);
-
-  next
-    .find((o) => o.id === id)
-    ?.items.forEach((it) =>
-      addItem(
-        { id: it.id, name: it.name, price: it.price, image: it.image },
-        it.qty,
-      ),
+  const finishPay = (id: string) => {
+    const next: Order[] = orders.map((o) =>
+      o.id === id ? { ...o, status: toStatus("paid") } : o,
     );
-};
+    persistOrders(next);
+    alert("(stub) Stripe checkout would open now");
+  };
 
+  const cancelOrder = (id: string) => {
+    const next: Order[] = orders.map((o) =>
+      o.id === id ? { ...o, status: toStatus("canceled") } : o,
+    );
+    persistOrders(next);
+
+    next
+      .find((o) => o.id === id)
+      ?.items.forEach((it) =>
+        addItem(
+          { id: it.id, name: it.name, price: it.price, image: it.image },
+          it.qty,
+        ),
+      );
+  };
 
   const meetings: Meeting[] = JSON.parse(
-    localStorage.getItem(`heist-meet-${user.email}`) || '[]',
+    localStorage.getItem(`heist-meet-${user.email}`) || "[]",
   );
-  const now       = new Date();
-  const upcoming  = meetings.filter((m) => new Date(m.when) >  now);
-  const past      = meetings.filter((m) => new Date(m.when) <= now);
+  const now = new Date();
+  const upcoming = meetings.filter((m) => new Date(m.when) > now);
+  const past = meetings.filter((m) => new Date(m.when) <= now);
 
   const [openId, setOpenId] = useState<string | null>(null);
 
   const badge = (s: OrderStatus) =>
     ({
-      paid:     'bg-green-100 text-green-700',
-      canceled: 'bg-red-100 text-red-600',
-      pending:  'bg-gray-100 text-gray-600',
-    }[s]);
+      paid: "bg-green-100 text-green-700",
+      canceled: "bg-red-100 text-red-600",
+      pending: "bg-gray-100 text-gray-600",
+    })[s];
 
   return (
     <main className="max-w-5xl mx-auto py-12 px-6 space-y-14">
       <header className="rounded-3xl bg-gradient-to-r from-cyan-600 to-blue-500 text-white p-8 shadow-lg relative overflow-hidden">
         <h1 className="text-3xl font-semibold">
-          👋 {user.email.split('@')[0]}
+          👋 {user.email.split("@")[0]}
         </h1>
         <p className="opacity-90">
           Manage your cart, bookings and orders in one place.
@@ -166,7 +165,7 @@ const cancelOrder = (id: string) => {
           {upcoming.length === 0 && <p>Nothing booked.</p>}
           {upcoming.map((m, i) => (
             <div key={i} className="meeting-row bg-cyan-50/40">
-              {new Date(m.when).toLocaleString('is-IS')}
+              {new Date(m.when).toLocaleString("is-IS")}
             </div>
           ))}
         </div>
@@ -179,10 +178,10 @@ const cancelOrder = (id: string) => {
           {past.length === 0 && <p>—</p>}
           {past.map((m, i) => (
             <div key={i} className="meeting-row opacity-60">
-              {new Date(m.when).toLocaleDateString('is-IS')}{' '}
-              {new Date(m.when).toLocaleTimeString('is-IS', {
-                hour: '2-digit',
-                minute: '2-digit',
+              {new Date(m.when).toLocaleDateString("is-IS")}{" "}
+              {new Date(m.when).toLocaleTimeString("is-IS", {
+                hour: "2-digit",
+                minute: "2-digit",
               })}
             </div>
           ))}
@@ -203,16 +202,15 @@ const cancelOrder = (id: string) => {
               className="w-full flex items-center justify-between py-3 gap-4 hover:bg-gray-50"
             >
               <span>
-                {new Date(o.date).toLocaleDateString('is-IS')} •{' '}
-                {o.total.toLocaleString('is-IS')} kr.
+                {new Date(o.date).toLocaleDateString("is-IS")} •{" "}
+                {o.total.toLocaleString("is-IS")} kr.
               </span>
 
               <span className={`badge ${badge(o.status)}`}>{o.status}</span>
 
               <ChevronDown
-                className={`w-5 h-5 transition-transform ${
-                  openId === o.id ? 'rotate-180' : ''
-                }`}
+                className={`w-5 h-5 transition-transform ${openId === o.id ? "rotate-180" : ""
+                  }`}
               />
             </button>
 
@@ -232,12 +230,12 @@ const cancelOrder = (id: string) => {
                     <span className="flex-1">{it.name}</span>
                     <span className="text-gray-500">× {it.qty}</span>
                     <span className="font-medium">
-                      {(it.price * it.qty).toLocaleString('is-IS')} kr.
+                      {(it.price * it.qty).toLocaleString("is-IS")} kr.
                     </span>
                   </div>
                 ))}
 
-                {o.status === 'pending' && (
+                {o.status === "pending" && (
                   <div className="flex gap-4 pt-3">
                     <button
                       onClick={() => finishPay(o.id)}
@@ -261,4 +259,3 @@ const cancelOrder = (id: string) => {
     </main>
   );
 }
-

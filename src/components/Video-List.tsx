@@ -1,37 +1,39 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
-import YouTube, { YouTubePlayer } from 'react-youtube';
+import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import YouTube, { YouTubePlayer } from "react-youtube";
 
 type Video = { id: string; title: string; thumb: string };
 
 const VIDEOS: Video[] = [
   {
-    id: 'XxUvLBE6wow',
-    title: 'Plejd Dimmer demo – living-room scene',
-    thumb: 'https://img.youtube.com/vi/XxUvLBE6wow/hqdefault.jpg',
+    id: "XxUvLBE6wow",
+    title: "Plejd Dimmer demo – living-room scene",
+    thumb: "https://img.youtube.com/vi/XxUvLBE6wow/hqdefault.jpg",
   },
   {
-    id: '3gUm0pcvefI',
-    title: 'Shelly power metering – live savings',
-    thumb: 'https://img.youtube.com/vi/3gUm0pcvefI/hqdefault.jpg',
+    id: "3gUm0pcvefI",
+    title: "Shelly power metering – live savings",
+    thumb: "https://img.youtube.com/vi/3gUm0pcvefI/hqdefault.jpg",
   },
   {
-    id: 'TBMQkY1M_ng',
-    title: 'UniFi Protect AI cameras overview',
-    thumb: 'https://img.youtube.com/vi/TBMQkY1M_ng/hqdefault.jpg',
+    id: "TBMQkY1M_ng",
+    title: "UniFi Protect AI cameras overview",
+    thumb: "https://img.youtube.com/vi/TBMQkY1M_ng/hqdefault.jpg",
   },
   {
-    id: 'WqjOW3mY4PA',
-    title: 'Home Assistant quick tour',
-    thumb: 'https://img.youtube.com/vi/WqjOW3mY4PA/hqdefault.jpg',
+    id: "WqjOW3mY4PA",
+    title: "Home Assistant quick tour",
+    thumb: "https://img.youtube.com/vi/WqjOW3mY4PA/hqdefault.jpg",
   },
 ];
 
 export default function VideoList() {
-  const [playingId, setPlayingId]   = useState<string | null>(null);
-  const [expanded, setExpanded]     = useState<{ id: string; t: number } | null>(null);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<{ id: string; t: number } | null>(
+    null,
+  );
   const players = useRef<Record<string, YouTubePlayer>>({});
 
   useEffect(() => {
@@ -42,8 +44,8 @@ export default function VideoList() {
   }, [expanded]);
 
   const inlineOpts = {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     playerVars: { autoplay: 1, rel: 0, modestbranding: 1 },
   };
 
@@ -51,7 +53,7 @@ export default function VideoList() {
     <>
       <section className="flex flex-col gap-4 p-4 md:p-8 max-w-3xl mx-auto">
         {VIDEOS.map((v) => {
-          const isPlaying  = playingId === v.id;
+          const isPlaying = playingId === v.id;
 
           return (
             <div
@@ -69,7 +71,9 @@ export default function VideoList() {
 
                   <button
                     onClick={() => {
-                      const t = Math.floor(players.current[v.id]?.getCurrentTime() ?? 0);
+                      const t = Math.floor(
+                        players.current[v.id]?.getCurrentTime() ?? 0,
+                      );
                       setExpanded({ id: v.id, t });
                     }}
                     className="absolute top-2 right-10 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm"
@@ -87,7 +91,10 @@ export default function VideoList() {
                   </button>
                 </>
               ) : (
-                <button onClick={() => setPlayingId(v.id)} className="group absolute inset-0">
+                <button
+                  onClick={() => setPlayingId(v.id)}
+                  className="group absolute inset-0"
+                >
                   <Image
                     src={v.thumb}
                     alt={v.title}
@@ -95,7 +102,12 @@ export default function VideoList() {
                     className="object-cover group-hover:scale-105 transition"
                   />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                    <svg width="68" height="48" viewBox="0 0 68 48" className="fill-white">
+                    <svg
+                      width="68"
+                      height="48"
+                      viewBox="0 0 68 48"
+                      className="fill-white"
+                    >
                       <path d="M66.52 7.87A8.27 8.27 0 0 0 60.6 2...Z" />
                     </svg>
                   </div>
@@ -118,8 +130,8 @@ export default function VideoList() {
             <YouTube
               videoId={expanded.id}
               opts={{
-                width: '100%',
-                height: '100%',
+                width: "100%",
+                height: "100%",
                 playerVars: {
                   autoplay: 1,
                   rel: 0,

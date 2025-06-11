@@ -1,11 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import LottieSlide from '@/components/Lottie-Slide';
-import Link from 'next/link';
-
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import LottieSlide from "@/components/Lottie-Slide";
+import Link from "next/link";
 
 export type FeaturedItem = {
   id: string;
@@ -77,7 +76,6 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
 
   return (
     <div className="relative w-full h-full bg-gray-50">
-
       <div
         className="relative h-[520px] overflow-hidden w-full flex items-center justify-center"
         onPointerDown={onDragStart}
@@ -87,7 +85,6 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
         onMouseEnter={() => (hoverPause.current = true)}
         onMouseLeave={() => (hoverPause.current = false)}
       >
-        
         {itemsList.map((item, i) => {
           const diff = diffFor(i);
           const abs = Math.abs(diff);
@@ -105,22 +102,20 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
                 transform: `translate(calc(-50% + ${xOffset}px), -50%) scale(${scale})`,
                 zIndex,
                 transition: dragging.current
-                  ? 'none'
-                  : 'transform 0.04s ease, z-index 0.04s ease',
+                  ? "none"
+                  : "transform 0.04s ease, z-index 0.04s ease",
               }}
               onClick={() => {
-                if (!didDrag.current) router.push('/products');
+                if (!didDrag.current) router.push("/products");
               }}
             >
               <div className="absolute inset-0 flex items-start justify-center pt-6 pointer-events-none z-50">
-                <Link
-                key={item.id}
-                href={item.link || '/products'}>
+                <Link key={item.id} href={item.link || "/products"}>
                   <div className="flex flex-col border-1 bg-cyan-500 border-cyan-400 items-center justify-center shadow-md shadow-black-200 rounded-3xl p-6 m-2 w-full h-[8px]">
-                  <p className="text-xl md:text-xl text-gray-900 drop-shadow-lg z-50">
-                 {item.description}
-                 </p>
-                 </div>
+                    <p className="text-xl md:text-xl text-gray-900 drop-shadow-lg z-50">
+                      {item.description}
+                    </p>
+                  </div>
                 </Link>
               </div>
 
@@ -129,7 +124,6 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
           );
         })}
       </div>
-
 
       <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-6">
         <button

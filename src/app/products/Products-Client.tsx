@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link  from 'next/link';
-import { useTranslation } from 'react-i18next';
-import { formatISK } from '@/utils/format';
+import Image from "next/image";
+import Link from "next/link";
+import { useTranslation } from "react-i18next";
+import { formatISK } from "@/utils/format";
 
 type Product = {
   _id: string;
@@ -15,8 +15,15 @@ type Product = {
   functions?: string[];
 };
 
-const BRAND_KEYS = ['Plejd', 'Shelly', 'UniFi', 'HomeAssistant'] as const;
-const FN_KEYS    = ['lighting', 'heating', 'security', 'wifi', 'blinds', 'control'] as const;
+const BRAND_KEYS = ["Plejd", "Shelly", "UniFi", "HomeAssistant"] as const;
+const FN_KEYS = [
+  "lighting",
+  "heating",
+  "security",
+  "wifi",
+  "blinds",
+  "control",
+] as const;
 
 export default function ProductsClient({
   products,
@@ -27,44 +34,42 @@ export default function ProductsClient({
   brand?: string;
   fn?: string;
 }) {
-
-  const { t } = useTranslation('products');
+  const { t } = useTranslation("products");
 
   const brandLabels: Record<string, string> = {
-    Plejd:         'Plejd',
-    Shelly:        'Shelly',
-    UniFi:         'UniFi',
-    HomeAssistant: 'Home Assistant',
+    Plejd: "Plejd",
+    Shelly: "Shelly",
+    UniFi: "UniFi",
+    HomeAssistant: "Home Assistant",
   };
 
   const fnLabels: Record<string, string> = {
-    lighting:  t('lighting'),
-    heating:   t('heating'),
-    security:  t('security'),
-    wifi:      t('wifi'),
-    blinds:    t('blinds'),
-    control:    t('control'),
+    lighting: t("lighting"),
+    heating: t("heating"),
+    security: t("security"),
+    wifi: t("wifi"),
+    blinds: t("blinds"),
+    control: t("control"),
   };
 
   return (
     <main className="max-w-7xl mx-auto p-16 space-y-6">
-
       <div className="flex flex-wrap justify-center gap-4">
         <Link
           href="/products"
           className={`px-4 py-2 rounded-full border text-base font-medium ${
-            !brand ? 'bg-cyan-600 text-white' : 'bg-white'
+            !brand ? "bg-cyan-600 text-white" : "bg-white"
           }`}
         >
-          {t('allBrands')}
+          {t("allBrands")}
         </Link>
 
         {BRAND_KEYS.map((b) => (
           <Link
             key={b}
-            href={`/products?brand=${b}${fn ? `&fn=${fn}` : ''}`}
+            href={`/products?brand=${b}${fn ? `&fn=${fn}` : ""}`}
             className={`px-4 py-2 rounded-full border text-base font-medium ${
-              brand === b ? 'bg-cyan-600 text-white' : 'bg-white'
+              brand === b ? "bg-cyan-600 text-white" : "bg-white"
             }`}
           >
             {brandLabels[b]}
@@ -74,20 +79,20 @@ export default function ProductsClient({
 
       <div className="flex flex-wrap justify-center gap-3">
         <Link
-          href={brand ? `/products?brand=${brand}` : '/products'}
+          href={brand ? `/products?brand=${brand}` : "/products"}
           className={`px-3 py-1 rounded-full border text-sm ${
-            !fn ? 'bg-cyan-100 text-cyan-800' : 'bg-white'
+            !fn ? "bg-cyan-100 text-cyan-800" : "bg-white"
           }`}
         >
-          {t('allFunctions')}
+          {t("allFunctions")}
         </Link>
 
         {FN_KEYS.map((k) => (
           <Link
             key={k}
-            href={`/products?${brand ? `brand=${brand}&` : ''}fn=${k}`}
+            href={`/products?${brand ? `brand=${brand}&` : ""}fn=${k}`}
             className={`px-3 py-1 rounded-full border text-sm ${
-              fn === k ? 'bg-cyan-100 text-cyan-800' : 'bg-white'
+              fn === k ? "bg-cyan-100 text-cyan-800" : "bg-white"
             }`}
           >
             {fnLabels[k]}
@@ -124,7 +129,7 @@ export default function ProductsClient({
             </div>
 
             <span className="t-auto text-cyan-600 font-semibold">
-            {formatISK(p.priceISK)} kr.
+              {formatISK(p.priceISK)} kr.
             </span>
           </Link>
         ))}

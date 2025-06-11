@@ -1,5 +1,5 @@
-import { sanity } from '@/lib/sanity';
-export const runtime = 'edge';
+import { sanity } from "@/lib/sanity";
+export const runtime = "edge";
 
 export async function GET() {
   const data = await sanity.fetch(`*[_type=="product"]{

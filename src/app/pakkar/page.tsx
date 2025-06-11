@@ -1,7 +1,7 @@
-import { sanity }            from '@/lib/sanity';
-import PackagesPageClient    from './Packages-Page-Client';
+import { sanity } from "@/lib/sanity";
+import PackagesPageClient from "./packages-page";
 
-const TIERS = ['Starter', 'Comfort', 'Pro', 'Ultimate'] as const;
+const TIERS = ["Starter", "Comfort", "Pro", "Ultimate"] as const;
 
 export const revalidate = 3600;
 
@@ -9,9 +9,14 @@ const query = `*[_type=="product" && defined(bundleTier)]{
     _id,title,priceISK,slug,brand,functions,image{asset->{url}},bundleTier
 }`;
 type Row = {
-  _id:string;title:string;priceISK:number;slug:{current:string};
-  brand?:string;functions?:string[];image:{asset:{url:string}};
-  bundleTier:(typeof TIERS)[number];
+  _id: string;
+  title: string;
+  priceISK: number;
+  slug: { current: string };
+  brand?: string;
+  functions?: string[];
+  image: { asset: { url: string } };
+  bundleTier: (typeof TIERS)[number];
 };
 
 async function getGrouped() {
@@ -23,23 +28,33 @@ async function getGrouped() {
 }
 
 function buildBundles(groups: Record<string, Row[]>) {
+  //breyta í const blurb
+
   return TIERS.map((t, i) => ({
-    id     : i + 1,
-    title  : t === 'Starter' ? 'Starter ljós'
-           : t === 'Comfort' ? 'Comfort heimili'
-           : t === 'Pro'     ? 'Öryggispakki'
-           :                   'Mix & Match',
-    blurb  : t === 'Starter' ? 'Plug-and-play dimming in any room.'
-           : t === 'Comfort' ? 'Lights + climate control + basic automations.'
-           : t === 'Pro'     ? 'Motion, entry sensors & AI doorbell video.'
-           :                   'Everything above + Wi-Fi 6 backbone.',
-    ribbon : t === 'Comfort',
+    id: i + 1,
+    title:
+      t === "Starter"
+        ? "Starter ljós"
+        : t === "Comfort"
+          ? "Comfort heimili"
+          : t === "Pro"
+            ? "Öryggispakki"
+            : "Mix & Match",
+    blurb:
+      t === "Starter"
+        ? "Plug-and-play dimming in any room."
+        : t === "Comfort"
+          ? "Lights + climate control + basic automations."
+          : t === "Pro"
+            ? "Motion, entry sensors & AI doorbell video."
+            : "Everything above + Wi-Fi 6 backbone.",
+    ribbon: t === "Comfort",
     products: groups[t] ?? [],
   }));
 }
 
 export default async function PackagesPage() {
-  const groups  = await getGrouped();
+  const groups = await getGrouped();
   const bundles = buildBundles(groups);
   return <PackagesPageClient bundles={bundles} />;
 }

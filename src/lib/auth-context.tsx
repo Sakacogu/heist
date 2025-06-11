@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   createContext,
@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
   type ReactNode,
-} from 'react';
+} from "react";
 
 type User = { email: string };
 
@@ -24,13 +24,13 @@ const AuthContext = createContext<AuthCtx>({
 
 export const useAuth = () => useContext(AuthContext);
 
-const LS_KEY = 'heist-user';
+const LS_KEY = "heist-user";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const raw = typeof window !== 'undefined' && localStorage.getItem(LS_KEY);
+    const raw = typeof window !== "undefined" && localStorage.getItem(LS_KEY);
     if (raw) setUser(JSON.parse(raw));
   }, []);
 
@@ -42,10 +42,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (email: string) => {
     setUser({ email });
 
-    const guestCart = localStorage.getItem('heist-cart-guest');
+    const guestCart = localStorage.getItem("heist-cart-guest");
     if (guestCart) {
       localStorage.setItem(`heist-cart-${email}`, guestCart);
-      localStorage.removeItem('heist-cart-guest');
+      localStorage.removeItem("heist-cart-guest");
     }
   };
 
