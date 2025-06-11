@@ -3,10 +3,10 @@
 import { useTranslation } from "react-i18next";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-import FeaturedCarousel, { FeaturedItem } from "@/components/Featured-Carousel";
-import BrandList from "@/components/Brand-List";
-import VoiceAssistantSection from "@/components/Voice-Assistant-Section";
-import VideoList from "@/components/Video-List";
+import FeaturedCarousel, { FeaturedItem } from "@/components/FeaturedCarousel";
+import BrandList from "@/components/BrandList";
+import VoiceAssistantSection from "@/components/VoiceAssistant";
+import VideoList from "@/components/VideoList";
 
 import goodnight from "@/lotties/goodnight.json";
 import energy from "@/lotties/energy.json";

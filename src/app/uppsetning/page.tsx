@@ -1,4 +1,4 @@
-import FeatureCard from "@/components/Feature-Card";
+import FeatureCard from "@/components/FeatureCard";
 import {
   Zap,
   Lightbulb,

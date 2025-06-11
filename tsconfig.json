@@ -31,7 +31,7 @@
     "src/app/pages/ProductDetailPage.jsx",
     "src/app/pages/PackagesPage.jsx",
     "src/app/pages/CartPage.jsx",
-    "src/components/Product-Card.jsx",
+    "src/components/ProductCard.tsx",
     "src/components/NavBar.tsx,",
     "**/*.{ts,tsx,js,jsx}",
     ".next/types/**/*.ts",

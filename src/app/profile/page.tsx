@@ -1,4 +1,4 @@
-import ProfileClient from "./Profile-Client";
+import ProfileClient from "./profiles-client";
 
 export const metadata = { title: "Heist – Profile" };
 

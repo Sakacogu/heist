@@ -17,7 +17,7 @@ export default function NavBar() {
 
   const totalCount = items.reduce((s, r) => s + r.qty, 0);
 
-  const SearchSheet = dynamic(() => import("./Search-Sheet"), { ssr: false });
+  const SearchSheet = dynamic(() => import("./SearchSheet"), { ssr: false });
 
   const navItem =
     "px-3 py-2 rounded-lg hover:bg-cyan-100 transition-colors font-medium text-gray-900";
