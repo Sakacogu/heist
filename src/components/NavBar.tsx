@@ -37,16 +37,16 @@ export default function NavBar() {
         </Link>
 
         <nav className="hidden md:flex items-center text-xl gap-4 text-gray-900">
-          <Link href="/pakkar" className={navItem}>
+          <Link href="/packages" className={navItem}>
             {t("packages")}
           </Link>
-          <Link href="/uppsetning" className={navItem}>
+          <Link href="/setup" className={navItem}>
             {t("setup")}
           </Link>
           <Link href="/products" className={navItem}>
             {t("products")}
           </Link>
-          <Link href="/samband" className={navItem}>
+          <Link href="/contact" className={navItem}>
             {t("contact")}
           </Link>
         </nav>
