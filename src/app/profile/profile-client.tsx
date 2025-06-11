@@ -11,7 +11,7 @@ import {
   Receipt,
 } from "lucide-react";
 
-import { useAuth } from "@/lib/AuthContexts";
+import { useAuth } from "@/lib/AuthContext";
 import { useCart } from "@/app/karfa/cart-provider";
 
 type OrderItem = {

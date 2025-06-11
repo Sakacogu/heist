@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { nanoid } from "nanoid";
-import { useAuth } from "@/lib/AuthContexts";
+import { useAuth } from "@/lib/AuthContext";
 
 export type CartItem = {
   id: string;

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { nanoid } from "nanoid";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useCart, discountTiers } from "./cart-provider";
-import { useAuth } from "@/lib/AuthContexts";
+import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "react-i18next";
 import Modal from "@/components/Modal";
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@/lib/AuthContexts";
+import { useAuth } from "@/lib/AuthContext";
 import { useRouter } from "next/navigation";
 
 export default function LoginPageClient() {
