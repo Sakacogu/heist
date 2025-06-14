@@ -1,21 +1,37 @@
-"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { FC } from "react";
 
-import React from "react";
-import { Link } from "react-router-dom";
+type Product = {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+};
 
-export default function ProductCard({ product }) {
+type ProductCardProps = {
+  product: Product;
+};
+
+const ProductCard: FC<ProductCardProps> = ({ product }) => {
   return (
-    <Link
-      href={`/products/${product.id}`}
-      className="bg-white rounded-xl shadow hover:shadow-lg transition p-4 flex flex-col"
-    >
-      <div className="h-40 bg-cyan-50 rounded-lg mb-3 flex items-center justify-center">
-        <span className="font-semibold text-cyan-600">{product.name}</span>
+    <Link href={`/products/${product.id}`} className="block group">
+      <div className="relative w-full h-64 overflow-hidden rounded-xl shadow-sm">
+        <Image
+          src={product.image}
+          alt={product.name}
+          layout="fill"
+          objectFit="cover"
+          className="transition-transform duration-300 group-hover:scale-105"
+          priority
+        />
       </div>
-      <span className="text-gray-800 font-medium">{product.name}</span>
-      <span className="mt-auto text-cyan-600 font-semibold">
-        {product.price} kr.
-      </span>
+      <div className="mt-2">
+        <h3 className="text-lg font-semibold">{product.name}</h3>
+        <p className="text-gray-600">${product.price.toFixed(2)}</p>
+      </div>
     </Link>
   );
-}
+};
+
+export default ProductCard;
