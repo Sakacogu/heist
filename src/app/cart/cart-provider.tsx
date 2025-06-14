@@ -2,7 +2,6 @@
 
 import {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useState,
@@ -21,17 +20,21 @@ export type CartItem = {
   cartId: string;
 };
 
+
 export const discountTiers = [
   { min: 3, pct: 0.05 },
   { min: 5, pct: 0.1 },
   { min: 8, pct: 0.15 },
 ];
 
-export const computeDiscount = (qty: number) =>
-  discountTiers
-    .filter((t) => qty >= t.min)
-    .map((t) => t.pct)
-    .at(-1) ?? 0;
+export function computeDiscount(quantity: number): number {
+  return (
+    discountTiers
+      .filter((t) => quantity >= t.min)
+      .map((t) => t.pct)
+      .at(-1) ?? 0
+  );
+}
 
 /** Free gift logic is **client only** – it is not written back to the server, this is temporary/in testing */
 const freeGift: CartItem = {
@@ -45,7 +48,8 @@ const freeGift: CartItem = {
 
 type CartCtx = {
   items: CartItem[];
-  addItem(item: Omit<CartItem, "qty" | "cartId">, qty?: number): void;
+  addItem(p: Omit<CartItem, "qty" | "cartId">, qty?: number): void;
+  addItems(batch: Array<Omit<CartItem, "cartId">>): void;
   removeItem(cartId: string): void;
   updateQty(cartId: string, qty: number): void;
   clearCart(): void;
@@ -54,80 +58,80 @@ type CartCtx = {
 const CartContext = createContext<CartCtx>({} as CartCtx);
 export const useCart = () => useContext(CartContext);
 
+const storageKey = (email?: string | null) => `heist-cart-${email ?? "guest"}`;
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
+  const key = storageKey(user?.email);
+
   const [items, setItems] = useState<CartItem[]>([]);
 
-  /* --- helpers that speak to the server --- */
-
-  const sync = async (next: CartItem[]) => {
-
-    await Promise.all(
-      items.map((i) => fetch("/api/cart", { method: "DELETE", body: JSON.stringify({ id: i.id }) })),
-    );
-    await Promise.all(
-      next.map((i) => fetch("/api/cart", { method: "POST", body: JSON.stringify(i) })),
-    );
-    setItems(next);
-  };
-
-  const fetchInitial = useCallback(async () => {
-    const res = await fetch("/api/cart");
-    if (!res.ok) return;
-    const data = (await res.json()) as CartItem[];
-    // Ensure every row has a cartId
-    setItems(
-      data.map((row) => ({ ...row, cartId: row.cartId ?? nanoid() })),
-    );
-  }, []);
-
   useEffect(() => {
-    fetchInitial();
-  }, [fetchInitial]);
+    const raw = localStorage.getItem(key);
+    if (!raw) return;
+    const parsed: CartItem[] = JSON.parse(raw);
+    setItems(parsed.map((r) => ({ ...r, cartId: r.cartId ?? nanoid() })));
+  }, [key]);
 
-  /** Inject / remove the free gift purely on the client */
+  useEffect(
+    () => localStorage.setItem(key, JSON.stringify(items)),
+    [items, key],
+  );
+
   useEffect(() => {
     const total = items.reduce((s, r) => s + r.price * r.qty, 0);
     const hasGift = items.some((i) => i.id === freeGift.id);
 
-    if (total >= 80_000 && !hasGift) setItems((c) => [...c, freeGift]);
-    if (total < 75_000 && hasGift) setItems((c) => c.filter((i) => i.id !== freeGift.id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (total >= 80_000 && !hasGift) {
+      setItems((c) => [...c, freeGift]);
+    }
+    if (total < 75_000 && hasGift) {
+      setItems((c) => c.filter((i) => i.id !== freeGift.id));
+    }
   }, [items]);
 
-  const addItem = async (
-    product: Omit<CartItem, "qty" | "cartId">,
-    qty = 1,
-  ) => {
-    const existing = items.find((r) => r.id === product.id);
-    const next = existing
-      ? items.map((r) =>
-          r.id === product.id ? { ...r, qty: r.qty + qty } : r,
-        )
-      : [...items, { ...product, qty, cartId: nanoid() }];
+  /** add / bump a single item */
+  const addItem = (p: Omit<CartItem, "qty" | "cartId">, qty = 1) =>
+    setItems((cur) => {
+      const existing = cur.find((r) => r.id === p.id);
+      return existing
+        ? cur.map((r) =>
+            r.id === p.id ? { ...r, qty: r.qty + qty } : r,
+          )
+        : [...cur, { ...p, qty, cartId: nanoid() }];
+    });
 
-    await sync(next);
-  };
+  /** merge a batch of items in one state update (used in cancelOrder) */
+  const addItems = (batch: Array<Omit<CartItem, "cartId">>) =>
+    setItems((cur) => {
+      const map = new Map<string, CartItem>();
 
-  const removeItem = async (cartId: string) => {
-    const next = items.filter((r) => r.cartId !== cartId);
-    await sync(next);
-  };
+      cur.forEach((it) => map.set(it.id, it));
 
-  const updateQty = async (cartId: string, qty: number) => {
-    const next = items.map((r) =>
-      r.cartId === cartId ? { ...r, qty } : r,
-    );
-    await sync(next);
-  };
+      batch.forEach((it) => {
+        const existing = map.get(it.id);
+        map.set(
+          it.id,
+          existing
+            ? { ...existing, qty: existing.qty + it.qty }
+            : { ...it, cartId: nanoid() },
+        );
+      });
 
-  const clearCart = async () => {
-    await sync([]);
-  };
+      return Array.from(map.values());
+    });
+
+  const removeItem = (cartId: string) =>
+    setItems((c) => c.filter((r) => r.cartId !== cartId));
+
+  const updateQty = (cartId: string, qty: number) =>
+    setItems((c) => c.map((r) => (r.cartId === cartId ? { ...r, qty } : r)));
+
+  const clearCart = () => setItems([]);
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, updateQty, clearCart }}
+      value={{ items, addItem, addItems, removeItem, updateQty, clearCart }}
     >
       {children}
     </CartContext.Provider>

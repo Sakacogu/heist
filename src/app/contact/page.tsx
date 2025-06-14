@@ -9,24 +9,28 @@ export default function ContactPage() {
   const { t } = useTranslation("contact");
 
   return (
-      <section className="text-center space-y-2">
+    <main className="mx-auto max-w-4xl px-6 py-12 space-y-12">
+      <header className="text-center space-y-2">
         <h1 className="text-4xl font-bold">{t("heading")}</h1>
         <p className="text-gray-700">{t("subtitle")}</p>
-      </section>
+      </header>
 
       <section className="grid gap-6 md:grid-cols-2">
-        <div className="flex items-center gap-4 bg-white p-6 rounded-xl shadow">
-          <Phone className="w-8 h-8 text-cyan-600" />
+        <article className="flex items-center gap-4 rounded-xl bg-white p-6 shadow">
+          <Phone className="h-8 w-8 text-cyan-600" />
           <div>
             <p className="font-semibold">{t("phone")}</p>
-            <a href="tel:+3545551234" className="text-cyan-700 hover:underline">
-              +354 555 1234
+            <a
+              href="tel:+3545551234"
+              className="text-cyan-700 hover:underline"
+            >
+              555-1234
             </a>
           </div>
-        </div>
+        </article>
 
-        <div className="flex items-center gap-4 bg-white p-6 rounded-xl shadow">
-          <Mail className="w-8 h-8 text-cyan-600" />
+        <article className="flex items-center gap-4 rounded-xl bg-white p-6 shadow">
+          <Mail className="h-8 w-8 text-cyan-600" />
           <div>
             <p className="font-semibold">{t("email")}</p>
             <a
@@ -36,11 +40,11 @@ export default function ContactPage() {
               sales@heist.is
             </a>
           </div>
-        </div>
+        </article>
       </section>
 
       <section>
-        <h2 className="text-2xl font-semibold mb-4">{t("book")}</h2>
+        <h2 className="mb-4 text-2xl font-semibold">{t("book")}</h2>
         <BookingForm />
       </section>
     </main>

@@ -1,52 +1,54 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/lib/AuthContext";
 
-export default function LoginPageClient() {
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default function LoginEmailPage() {
   const { t } = useTranslation();
-  const [email, setEmail] = useState("");
-  const { login } = useAuth();
   const router = useRouter();
+  const { login } = useAuth();
 
-  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const [email, setEmail] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!isValidEmail) return;
+    if (!emailPattern.test(email)) return;
 
     login(email);
     router.push("/profile");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <main className="flex min-h-screen items-center justify-center p-6">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-xl shadow max-w-md w-full space-y-6"
+        className="w-full max-w-md space-y-6 rounded-xl bg-white p-8 shadow"
       >
-        <h1 className="text-2xl font-semibold text-center">{t("login")}</h1>
+        <h1 className="text-center text-2xl font-semibold">{t("login")}</h1>
 
         <input
           type="email"
-          required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={t("enterEmail")}
-          className="w-full border rounded px-4 py-3"
+          required
+          className="w-full rounded border px-4 py-3"
         />
 
         <button
           type="submit"
-          disabled={!isValidEmail}
-          className="w-full bg-cyan-600 text-white py-3 rounded-lg font-medium hover:bg-cyan-700 disabled:opacity-50"
+          disabled={!emailPattern.test(email)}
+          className="w-full rounded-lg bg-cyan-600 py-3 font-medium text-white
+                     hover:bg-cyan-700 disabled:opacity-50"
         >
           {t("continue")}
         </button>
       </form>
-    </div>
+    </main>
   );
 }

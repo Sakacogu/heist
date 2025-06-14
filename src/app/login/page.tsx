@@ -2,12 +2,14 @@
 
 import { Mail, CheckCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/lib/AuthContext";
 
-export default function LoginPage() {
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default function MagicLinkLoginPage() {
   const { t } = useTranslation();
   const { login } = useAuth();
   const router = useRouter();
@@ -15,41 +17,32 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [phase, setPhase] = useState<"idle" | "sending" | "done">("idle");
 
-  const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!isValid) return;
+    if (!emailPattern.test(email)) return;
 
     setPhase("sending");
-    await new Promise((r) => setTimeout(r, 1200));
-
+    await new Promise((r) => setTimeout(r, 1200)); // sim API
     login(email);
     setPhase("done");
-
     setTimeout(() => router.push("/profile"), 1200);
-  };
+  }
 
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center
-                    bg-gradient-to-br from-cyan-50 to-indigo-50 p-6"
+    <main
+      className="flex min-h-screen flex-col items-center justify-center
+                 bg-gradient-to-br from-cyan-50 to-indigo-50 p-6"
     >
       <form
         onSubmit={handleSubmit}
-        className="relative w-full max-w-md px-10 py-12 bg-white/80 backdrop-blur
-                   rounded-3xl shadow-lg overflow-hidden"
+        className="relative w-full max-w-md overflow-hidden rounded-3xl
+                   bg-white/80 px-10 py-12 shadow-lg backdrop-blur"
       >
-        <span
-          className="pointer-events-none absolute -top-20 -left-20 w-72 h-72
-                         bg-cyan-300/20 animate-blob rounded-full"
-        />
-        <span
-          className="pointer-events-none absolute -bottom-24 -right-24 w-72 h-72
-                         bg-indigo-300/20 animate-blob animation-delay-2000 rounded-full"
-        />
+        {/* decorative blobs */}
+        <span className="pointer-events-none absolute -top-20 -left-20 h-72 w-72 animate-blob rounded-full bg-cyan-300/20" />
+        <span className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 animate-blob rounded-full bg-indigo-300/20 animation-delay-2000" />
 
-        <h1 className="relative z-10 text-3xl font-semibold text-center mb-8">
+        <h1 className="relative z-10 mb-8 text-center text-3xl font-semibold">
           {phase === "done" ? t("checkInbox") : t("login")}
         </h1>
 
@@ -58,17 +51,14 @@ export default function LoginPage() {
             <>
               <label className="block">
                 <span className="sr-only">{t("Email")}</span>
-                <div
-                  className="flex items-center gap-3 border rounded-lg px-4 py-3
-                                focus-within:ring-2 focus-within:ring-cyan-600"
-                >
-                  <Mail className="w-5 h-5 opacity-50" />
+                <div className="flex items-center gap-3 rounded-lg border px-4 py-3 focus-within:ring-2 focus-within:ring-cyan-600">
+                  <Mail className="h-5 w-5 opacity-50" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={t("Email")}
-                    className="flex-1 outline-none placeholder-gray-400 bg-transparent"
+                    className="flex-1 bg-transparent outline-none placeholder-gray-400"
                     required
                   />
                 </div>
@@ -76,10 +66,10 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                disabled={!isValid || phase === "sending"}
-                className="w-full flex items-center justify-center gap-2
-                           bg-cyan-600 hover:bg-cyan-700 disabled:opacity-50
-                           text-white font-medium py-3 rounded-lg transition"
+                disabled={!emailPattern.test(email) || phase === "sending"}
+                className="flex w-full items-center justify-center gap-2 rounded-lg
+                           bg-cyan-600 py-3 font-medium text-white transition
+                           hover:bg-cyan-700 disabled:opacity-50"
               >
                 {phase === "sending" ? (
                   <>
@@ -103,8 +93,8 @@ export default function LoginPage() {
       </form>
 
       <p className="mt-10 text-xs text-gray-500">
-        Made with&nbsp;<span className="animate-pulse">❤️</span>&nbsp;by Heist
+        Made with <span className="animate-pulse">❤️</span> by Heist
       </p>
-    </div>
+    </main>
   );
 }

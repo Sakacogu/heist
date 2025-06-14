@@ -37,7 +37,7 @@ type Meeting = { when: string; name?: string };
 export default function ProfileClient() {
   const router = useRouter();
   const { user, logout } = useAuth();
-  const { items: cartItems, addItem } = useCart();
+  const { items: cartItems, addItems } = useCart();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
@@ -46,10 +46,11 @@ export default function ProfileClient() {
     if (!user) router.replace("/login?next=/profile");
   }, [user, router]);
 
+  /* load orders on mount/user change */
   useEffect(() => {
     if (!user) return;
 
-    const raw = localStorage.getItem(`heist-orders-${user.email}`) || "[]";
+    const raw = localStorage.getItem(`heist-orders-${user.email}`) ?? "[]";
     const parsed = JSON.parse(raw) as unknown[];
 
     const cleaned: Order[] = parsed.map((row) => {
@@ -88,21 +89,25 @@ export default function ProfileClient() {
     alert("(stub) Stripe checkout would open now");
   };
 
+  /** cancel -> mark order + batch-restore its items */
   const cancelOrder = (id: string) => {
     const next = orders.map((o) =>
       o.id === id ? { ...o, status: "canceled" as OrderStatus } : o,
     );
     persistOrders(next);
 
-    next
-      .find((o) => o.id === id)
-      ?.items.forEach((it) =>
-        addItem(
-          { id: it.id, name: it.name, price: it.price, image: it.image },
-          it.qty,
-        ),
+    const canceled = next.find((o) => o.id === id);
+    if (canceled) {
+      // map OrderItem → CartItem-like for addItems
+      addItems(
+        canceled.items.map((it) => ({
+          ...it,
+          cartId: "", // placeholder, provider will replace with nanoid()
+        })),
       );
+    }
   };
+
 
   const meetings: Meeting[] = JSON.parse(
     localStorage.getItem(`heist-meet-${user.email}`) || "[]",
@@ -135,7 +140,7 @@ export default function ProfileClient() {
           onClick={handleLogout}
           className="absolute top-6 right-6 text-sm bg-white/10 hover:bg-white/20 transition px-3 py-1.5 rounded-full"
         >
-          Log&nbsp;out
+          Log out
         </button>
       </header>
 
