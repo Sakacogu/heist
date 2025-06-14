@@ -27,7 +27,7 @@ type Bundle = {
 const rate = (qty: number, brands: number) =>
   Math.min(
     (qty >= 8 ? 0.15 : qty >= 5 ? 0.1 : qty >= 3 ? 0.05 : 0) +
-    (brands >= 3 ? 0.05 : 0),
+      (brands >= 3 ? 0.05 : 0),
     0.25,
   );
 
@@ -110,10 +110,11 @@ export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
 
               <div
                 className={`rounded-lg p-4 text-sm flex justify-between
-                               ${pct
-                    ? "bg-emerald-50 text-emerald-700"
-                    : "bg-gray-50 text-gray-600"
-                  }`}
+                               ${
+                                 pct
+                                   ? "bg-emerald-50 text-emerald-700"
+                                   : "bg-gray-50 text-gray-600"
+                               }`}
               >
                 <span>
                   {pct
