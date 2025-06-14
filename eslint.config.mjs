@@ -27,6 +27,8 @@ export default [
             "external",
             "internal",
             ["parent", "sibling", "index"],
+            "object",
+            "type",
           ],
           "newlines-between": "always",
           alphabetize: { order: "asc", caseInsensitive: true },
@@ -38,7 +40,7 @@ export default [
   {
     files: [
       "*.config.{js,cjs,mjs}",
-      "*/**/*.config.{js,cjs,mjs}",
+      "**/*.config.{js,cjs,mjs}",
       "tailwind.config.{js,cjs}",
       "postcss.config.{js,mjs}",
     ],
