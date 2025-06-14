@@ -48,10 +48,12 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
 
   useEffect(() => {
     const id = setInterval(() => {
-      if (!dragging.current && !hoverPause.current) next();
+      if (!dragging.current && !hoverPause.current) {
+        setCurrent((c) => (c + 1) % N);
+      }
     }, 6000);
     return () => clearInterval(id);
-  }, []);
+  }, [N]);
 
   const onDragStart = (e: React.PointerEvent<HTMLDivElement>) => {
     dragging.current = true;
@@ -110,9 +112,9 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
               }}
             >
               <div className="absolute inset-0 flex items-start justify-center pt-6 pointer-events-none z-50">
-                <Link key={item.id} href={item.link || "/products"}>
-                  <div className="flex flex-col border-1 bg-cyan-500 border-cyan-400 items-center justify-center shadow-md shadow-black-200 rounded-3xl p-6 m-2 w-full h-[8px]">
-                    <p className="text-xl md:text-xl text-gray-900 drop-shadow-lg z-50">
+                <Link href={item.link || "/products"}>
+                  <div className="flex flex-col border-1 bg-cyan-500 border-cyan-400 items-center justify-center shadow-md rounded-3xl p-6 m-2 w-full h-[8px]">
+                    <p className="text-xl text-gray-900 drop-shadow-lg">
                       {item.description}
                     </p>
                   </div>
