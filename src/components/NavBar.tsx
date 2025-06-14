@@ -17,7 +17,6 @@ export default function NavBar() {
   const [open, setOpen] = useState(false);
 
   const totalCount = items.reduce((s, r) => s + r.qty, 0);
-
   const SearchSheet = dynamic(() => import("./SearchSheet"), { ssr: false });
 
   const navItem =
@@ -25,6 +24,8 @@ export default function NavBar() {
 
   const toggleLang = () =>
     i18next.changeLanguage(i18next.language === "is" ? "en" : "is");
+
+  const profileHref = user ? "/profile" : "/login";
 
   return (
     <header className="fixed top-0 inset-x-0 h-22 bg-gray-50 shadow-sm z-50">
@@ -68,7 +69,7 @@ export default function NavBar() {
           </button>
 
           <Link
-            href="/login"
+            href={profileHref}
             title={user ? user.email : t("login")}
             className="p-2 rounded-lg hover:bg-cyan-200"
           >
@@ -88,6 +89,7 @@ export default function NavBar() {
           </Link>
         </div>
       </div>
+
       {open && <SearchSheet onClose={() => setOpen(false)} />}
     </header>
   );

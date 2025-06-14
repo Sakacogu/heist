@@ -1,8 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { redirect } from "next/navigation";
-import Image from "next/image";
 import {
   ChevronDown,
   ShoppingCart,
@@ -10,9 +7,12 @@ import {
   History,
   Receipt,
 } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
-import { useAuth } from "@/lib/AuthContext";
 import { useCart } from "@/app/cart/cart-provider";
+import { useAuth } from "@/lib/AuthContext";
 
 type OrderItem = {
   id: string;
@@ -35,19 +35,25 @@ export type Order = {
 type Meeting = { when: string; name?: string };
 
 export default function ProfileClient() {
+  const router = useRouter();
   const { user, logout } = useAuth();
   const { items: cartItems, addItem } = useCart();
-  if (!user) redirect("/innskraning?next=/profile");
 
   const [orders, setOrders] = useState<Order[]>([]);
+  const [openId, setOpenId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!user) router.replace("/login?next=/profile");
+  }, [user, router]);
+
+  useEffect(() => {
+    if (!user) return;
+
     const raw = localStorage.getItem(`heist-orders-${user.email}`) || "[]";
     const parsed = JSON.parse(raw) as unknown[];
 
     const cleaned: Order[] = parsed.map((row) => {
       const o = row as Partial<Order>;
-
       const status: OrderStatus =
         o.status === "paid"
           ? "paid"
@@ -65,26 +71,26 @@ export default function ProfileClient() {
     });
 
     setOrders(cleaned);
-  }, [user.email]);
+  }, [user]);
+
+  if (!user) return null;
 
   const persistOrders = (next: Order[]) => {
     setOrders(next);
     localStorage.setItem(`heist-orders-${user.email}`, JSON.stringify(next));
   };
 
-  const toStatus = (s: OrderStatus): OrderStatus => s;
-
   const finishPay = (id: string) => {
-    const next: Order[] = orders.map((o) =>
-      o.id === id ? { ...o, status: toStatus("paid") } : o,
+    const next = orders.map((o) =>
+      o.id === id ? { ...o, status: "paid" as OrderStatus } : o,
     );
     persistOrders(next);
     alert("(stub) Stripe checkout would open now");
   };
 
   const cancelOrder = (id: string) => {
-    const next: Order[] = orders.map((o) =>
-      o.id === id ? { ...o, status: toStatus("canceled") } : o,
+    const next = orders.map((o) =>
+      o.id === id ? { ...o, status: "canceled" as OrderStatus } : o,
     );
     persistOrders(next);
 
@@ -105,8 +111,6 @@ export default function ProfileClient() {
   const upcoming = meetings.filter((m) => new Date(m.when) > now);
   const past = meetings.filter((m) => new Date(m.when) <= now);
 
-  const [openId, setOpenId] = useState<string | null>(null);
-
   const badge = (s: OrderStatus) =>
     ({
       paid: "bg-green-100 text-green-700",
@@ -114,6 +118,10 @@ export default function ProfileClient() {
       pending: "bg-gray-100 text-gray-600",
     })[s];
 
+  const handleLogout = () => {
+    logout();
+    router.replace("/login");
+  };
   return (
     <main className="max-w-5xl mx-auto py-12 px-6 space-y-14">
       <header className="rounded-3xl bg-gradient-to-r from-cyan-600 to-blue-500 text-white p-8 shadow-lg relative overflow-hidden">
@@ -124,7 +132,7 @@ export default function ProfileClient() {
           Manage your cart, bookings and orders in one place.
         </p>
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="absolute top-6 right-6 text-sm bg-white/10 hover:bg-white/20 transition px-3 py-1.5 rounded-full"
         >
           Log&nbsp;out
@@ -209,8 +217,9 @@ export default function ProfileClient() {
               <span className={`badge ${badge(o.status)}`}>{o.status}</span>
 
               <ChevronDown
-                className={`w-5 h-5 transition-transform ${openId === o.id ? "rotate-180" : ""
-                  }`}
+                className={`w-5 h-5 transition-transform ${
+                  openId === o.id ? "rotate-180" : ""
+                }`}
               />
             </button>
 
