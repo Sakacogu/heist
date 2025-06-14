@@ -68,7 +68,7 @@ export default function NavBar() {
           </button>
 
           <Link
-            href="/profile"
+            href="/login"
             title={user ? user.email : t("login")}
             className="p-2 rounded-lg hover:bg-cyan-200"
           >
@@ -76,7 +76,7 @@ export default function NavBar() {
           </Link>
 
           <Link
-            href="/karfa"
+            href="/cart"
             className="relative p-2 rounded-lg hover:bg-cyan-200"
           >
             <ShoppingCart className="w-5 h-5" />
