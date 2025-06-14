@@ -1,130 +1,136 @@
 "use client";
 
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { nanoid } from "nanoid";
 import Image from "next/image";
+import { nanoid } from "nanoid";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import Modal from "@/components/Modal";
 import { useAuth } from "@/lib/AuthContext";
+import { useCart, discountTiers } from "@/app/cart/cart-provider";
 
-import { useCart, discountTiers } from "./cart-provider";
-
+/** Cart page – fully client side because of Stripe.js */
 export default function CartPage() {
   const { items, removeItem, updateQty, clearCart } = useCart();
   const { user } = useAuth();
-
   useTranslation("products");
 
   const stripe = useStripe();
   const elements = useElements();
 
-  const total = items.reduce((s, r) => s + r.price * r.qty, 0);
-  const itemQty = items.reduce((s, r) => s + r.qty, 0);
+  const totalISK = items.reduce((sum, r) => sum + r.price * r.qty, 0);
+  const totalQty = items.reduce((sum, r) => sum + r.qty, 0);
+  const nextTier = discountTiers.find((t) => totalQty < t.min);
 
-  const [modal, setModal] = useState<string | null>(null);
+  const [modalMsg, setModalMsg] = useState<string | null>(null);
 
   const handleCheckout = () => {
     if (!stripe || !elements) return;
+
     if (!user) {
-      setModal("Vinsamlegast skráðu þig inn áður en þú klárar pöntun 🙂");
+      setModalMsg("Vinsamlegast skráðu þig inn áður en þú klárar pöntun 🙂");
       return;
     }
+
+    // checkout endpoint (add l8er).
     const order = {
       id: nanoid(),
-      total,
+      total: totalISK,
       date: new Date().toISOString(),
       items,
       status: "pending",
     };
     const key = `heist-orders-${user.email}`;
-    const hist = JSON.parse(localStorage.getItem(key) || "[]");
-    localStorage.setItem(key, JSON.stringify([order, ...hist]));
+    const history = JSON.parse(localStorage.getItem(key) || "[]") as typeof order[];
+    localStorage.setItem(key, JSON.stringify([order, ...history]));
+
     clearCart();
-    setModal(
+    setModalMsg(
       "Stripe greiðslusíða er væntanleg 😊\nPöntunin þín var vistuð á prófílnum.",
     );
   };
 
-  const nextTier = discountTiers.find((t) => itemQty < t.min);
 
   return (
-    <div className="max-w-6xl mx-auto md:flex md:gap-10 p-16">
-      <Modal open={!!modal} onClose={() => setModal(null)}>
-        <p className="whitespace-pre-line text-center">{modal}</p>
+    <div className="mx-auto max-w-6xl p-16 md:flex md:gap-10">
+      <Modal open={!!modalMsg} onClose={() => setModalMsg(null)}>
+        <p className="whitespace-pre-line text-center">{modalMsg}</p>
       </Modal>
 
+      {/* cart items */}
       <div className="flex-1 space-y-4">
-        {items.map((i) => (
+        {items.length === 0 && (
+          <p className="flex justify-center pt-10">Karfan er tóm 🤷‍♂️</p>
+        )}
+
+        {items.map((row) => (
           <div
-            key={i.cartId}
-            className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
+            key={row.cartId}
+            className="flex items-center justify-between rounded-xl bg-white p-4 shadow"
           >
-            {i.image && (
+            {row.image && (
               <Image
-                src={i.image}
-                alt={i.name}
+                src={row.image}
+                alt={row.name}
                 width={64}
                 height={64}
-                className="w-16 h-16 object-cover rounded"
+                className="h-16 w-16 rounded object-cover"
                 unoptimized
               />
             )}
 
-            <span className="flex-1 px-4">{i.name}</span>
+            <span className="flex-1 px-4">{row.name}</span>
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => updateQty(i.cartId, Math.max(1, i.qty - 1))}
-                className="px-3 py-1 bg-gray-100 rounded"
+                onClick={() =>
+                  updateQty(row.cartId, Math.max(1, row.qty - 1))
+                }
+                className="rounded bg-gray-100 px-3 py-1"
               >
-                −
+                -
               </button>
-              <span className="min-w-[2ch] text-center">{i.qty}</span>
+              <span className="min-w-[2ch] text-center">{row.qty}</span>
               <button
-                onClick={() => updateQty(i.cartId, i.qty + 1)}
-                className="px-3 py-1 bg-gray-100 rounded"
+                onClick={() => updateQty(row.cartId, row.qty + 1)}
+                className="rounded bg-gray-100 px-3 py-1"
               >
                 +
               </button>
             </div>
 
             <span className="w-24 text-right font-medium">
-              {(i.price * i.qty).toLocaleString("is-IS")} kr.
+              {(row.price * row.qty).toLocaleString("is-IS")} kr.
             </span>
 
             <button
-              onClick={() => removeItem(i.cartId)}
-              className="text-red-500 text-lg ml-4"
+              onClick={() => removeItem(row.cartId)}
+              className="ml-4 text-lg text-red-500"
               title="Remove item"
             >
               ✕
             </button>
           </div>
         ))}
-
-        {items.length === 0 && (
-          <p className="flex justify-center pt-10">Karfan er tóm 🤷‍♂️</p>
-        )}
       </div>
 
-      <aside className="md:w-80 mt-10 md:mt-0">
-        <div className="bg-white p-6 rounded-xl shadow space-y-4 sticky top-24">
+      <aside className="sticky top-24 mt-10 md:mt-0 md:w-80">
+        <div className="space-y-4 rounded-xl bg-white p-6 shadow">
           {nextTier && (
-            <div
-              className="mb-2 bg-cyan-50 p-3 rounded-lg text-sm text-cyan-800
-                          flex justify-between items-center"
-            >
+            <div className="mb-2 flex items-center justify-between rounded-lg bg-cyan-50 p-3 text-sm text-cyan-800">
               <span>
-                {nextTier.min - itemQty} vör
-                {nextTier.min - itemQty === 1 ? "u" : "ur"} til viðbótar →
+                {nextTier.min - totalQty} vör
+                {nextTier.min - totalQty === 1 ? "u" : "ur"} til viðbótar →
                 <strong> {nextTier.pct * 100}% afsláttur</strong>
               </span>
-              <span className="h-2 w-24 bg-cyan-100 rounded-full overflow-hidden">
+
+              <span className="h-2 w-24 overflow-hidden rounded-full bg-cyan-100">
                 <span
-                  style={{ width: `${(itemQty / nextTier.min) * 100}%` }}
                   className="block h-full bg-cyan-600 transition-all"
+                  style={{
+                    width: `${(totalQty / nextTier.min) * 100}%`,
+                  }}
                 />
               </span>
             </div>
@@ -133,21 +139,20 @@ export default function CartPage() {
           <input
             type="text"
             placeholder="Afsláttarkóði"
-            className="w-full border rounded p-2"
+            className="w-full rounded border p-2"
           />
 
-          <div className="flex justify-between font-medium pt-2">
+          <div className="flex justify-between pt-2 font-medium">
             <span>Samtals</span>
-            <span>{total.toLocaleString("is-IS")} kr.</span>
+            <span>{totalISK.toLocaleString("is-IS")} kr.</span>
           </div>
 
-          <CardElement className="p-3 border rounded" />
+          <CardElement className="rounded border p-3" />
 
           <button
             onClick={handleCheckout}
             disabled={!stripe || items.length === 0}
-            className="w-full bg-cyan-600 text-white py-3 rounded-lg font-medium
-                       shadow hover:bg-cyan-700 disabled:opacity-50"
+            className="w-full rounded-lg bg-cyan-600 py-3 font-medium text-white shadow hover:bg-cyan-700 disabled:opacity-50"
           >
             Ganga frá pöntun
           </button>
