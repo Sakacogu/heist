@@ -7,19 +7,21 @@ import { useCart, discountTiers } from "./cart-provider";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "react-i18next";
 import Modal from "@/components/Modal";
+import Image from "next/image";
 
 export default function CartPage() {
   const { items, removeItem, updateQty, clearCart } = useCart();
   const { user } = useAuth();
 
+  useTranslation("products");
+
   const stripe = useStripe();
   const elements = useElements();
+
   const total = items.reduce((s, r) => s + r.price * r.qty, 0);
   const itemQty = items.reduce((s, r) => s + r.qty, 0);
 
   const [modal, setModal] = useState<string | null>(null);
-
-  const { t } = useTranslation("products");
 
   const handleCheckout = () => {
     if (!stripe || !elements) return;
@@ -58,12 +60,16 @@ export default function CartPage() {
             className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
           >
             {i.image && (
-              <img
+              <Image
                 src={i.image}
                 alt={i.name}
+                width={64}
+                height={64}
                 className="w-16 h-16 object-cover rounded"
+                unoptimized
               />
             )}
+
             <span className="flex-1 px-4">{i.name}</span>
 
             <div className="flex items-center gap-2">
@@ -106,7 +112,7 @@ export default function CartPage() {
           {nextTier && (
             <div
               className="mb-2 bg-cyan-50 p-3 rounded-lg text-sm text-cyan-800
-                            flex justify-between items-center"
+                          flex justify-between items-center"
             >
               <span>
                 {nextTier.min - itemQty} vör
@@ -139,7 +145,7 @@ export default function CartPage() {
             onClick={handleCheckout}
             disabled={!stripe || items.length === 0}
             className="w-full bg-cyan-600 text-white py-3 rounded-lg font-medium
-                             shadow hover:bg-cyan-700 disabled:opacity-50"
+                       shadow hover:bg-cyan-700 disabled:opacity-50"
           >
             Ganga frá pöntun
           </button>
