@@ -1,7 +1,8 @@
 import { sanity } from "@/lib/sanity";
-export const runtime = "edge";
+export const runtime = "edge"; // run close to the user for faster response
 
 export async function GET() {
+    // fetch the minimal fields needed for the product list
   const data = await sanity.fetch(`*[_type=="product"]{
     _id,
     title,
