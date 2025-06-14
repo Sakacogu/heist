@@ -1,14 +1,15 @@
 "use client";
 
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import Image from "next/image";
 import { nanoid } from "nanoid";
+import Image from "next/image";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useCart, discountTiers } from "@/app/cart/cart-provider";
 import Modal from "@/components/Modal";
 import { useAuth } from "@/lib/AuthContext";
-import { useCart, discountTiers } from "@/app/cart/cart-provider";
+
 
 /** Cart page – fully client side because of Stripe.js */
 export default function CartPage() {
