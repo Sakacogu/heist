@@ -1,4 +1,5 @@
 import { sanity } from "@/lib/sanity";
+
 import PackagesPageClient from "./packages-page";
 
 const TIERS = ["Starter", "Comfort", "Pro", "Ultimate"] as const;

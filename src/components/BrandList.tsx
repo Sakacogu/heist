@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
   Lightbulb,
   Thermometer,
@@ -13,6 +12,7 @@ import {
   Cpu,
   Bluetooth,
 } from "lucide-react";
+import Image from "next/image";
 
 const BRANDS = [
   {

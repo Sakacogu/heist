@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+
 import { formatISK } from "@/utils/format";
 
 type Product = {

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { useState, useRef, useEffect } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 
 type Video = { id: string; title: string; thumb: string };

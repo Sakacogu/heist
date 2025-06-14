@@ -2,9 +2,10 @@
 
 import { useState, useMemo, useEffect } from "react";
 import DatePicker from "react-datepicker";
+
 import "react-datepicker/dist/react-datepicker.css";
-import { useAuth } from "@/lib/AuthContext";
 import Modal from "@/components/Modal";
+import { useAuth } from "@/lib/AuthContext";
 
 const ALL_TIMES = ["09:00", "11:00", "13:00", "15:00", "17:00"];
 

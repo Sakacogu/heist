@@ -1,19 +1,19 @@
 "use client";
 
-import { useTranslation } from "react-i18next";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-import FeaturedCarousel, { FeaturedItem } from "@/components/FeaturedCarousel";
-import BrandList from "@/components/BrandList";
-import VoiceAssistantSection from "@/components/VoiceAssistant";
-import VideoList from "@/components/VideoList";
+import { useTranslation } from "react-i18next";
 
-import goodnight from "@/lotties/goodnight.json";
+import BrandList from "@/components/BrandList";
+import FeaturedCarousel, { FeaturedItem } from "@/components/FeaturedCarousel";
+import VideoList from "@/components/VideoList";
+import VoiceAssistantSection from "@/components/VoiceAssistant";
 import energy from "@/lotties/energy.json";
-import security from "@/lotties/security.json";
+import goodnight from "@/lotties/goodnight.json";
 import morning from "@/lotties/morning.json";
-import unified from "@/lotties/unified.json";
 import savings from "@/lotties/savings.json";
+import security from "@/lotties/security.json";
+import unified from "@/lotties/unified.json";
 
 export default function Home() {
   const { t } = useTranslation("home");

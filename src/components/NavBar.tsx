@@ -1,13 +1,14 @@
 "use client";
 
-import Link from "next/link";
-import { useTranslation } from "react-i18next";
 import { Search, ShoppingCart, User2 } from "lucide-react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import { useCart } from "@/app/cart/cart-provider";
 import { useAuth } from "@/lib/AuthContext";
 import i18next from "@/lib/i18n";
-import { useState } from "react";
-import dynamic from "next/dynamic";
 
 export default function NavBar() {
   const { items } = useCart();

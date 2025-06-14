@@ -1,5 +1,6 @@
 "use client";
 
+import { nanoid } from "nanoid";
 import {
   createContext,
   useContext,
@@ -7,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { nanoid } from "nanoid";
+
 import { useAuth } from "@/lib/AuthContext";
 
 export type CartItem = {

@@ -1,4 +1,5 @@
 import { sanity } from "@/lib/sanity";
+
 import ProductsClient from "./products-client";
 
 export const revalidate = 3600;

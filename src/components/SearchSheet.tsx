@@ -1,8 +1,8 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
 import Fuse from "fuse.js";
 import { X, Search } from "lucide-react";
 import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
 
 type Product = {
   _id: string;

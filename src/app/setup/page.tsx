@@ -1,4 +1,3 @@
-import FeatureCard from "@/components/FeatureCard";
 import {
   Zap,
   Lightbulb,
@@ -10,6 +9,8 @@ import {
   Home,
 } from "lucide-react";
 import Link from "next/link";
+
+import FeatureCard from "@/components/FeatureCard";
 
 export const metadata = {
   title: "Heist - Uppsetning",

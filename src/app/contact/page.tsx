@@ -1,8 +1,9 @@
 "use client";
 
-import { useTranslation } from "react-i18next";
-import BookingForm from "@/components/BookingForm";
 import { Phone, Mail } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
+import BookingForm from "@/components/BookingForm";
 
 export default function ContactPage() {
   const { t } = useTranslation("contact");

@@ -2,6 +2,7 @@
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+
 import { CartProvider } from "@/app/cart/cart-provider";
 import { AuthProvider } from "@/lib/AuthContext";
 

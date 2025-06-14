@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { nanoid } from "nanoid";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { useCart, discountTiers } from "./cart-provider";
-import { useAuth } from "@/lib/AuthContext";
-import { useTranslation } from "react-i18next";
-import Modal from "@/components/Modal";
+import { nanoid } from "nanoid";
 import Image from "next/image";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import Modal from "@/components/Modal";
+import { useAuth } from "@/lib/AuthContext";
+
+import { useCart, discountTiers } from "./cart-provider";
 
 export default function CartPage() {
   const { items, removeItem, updateQty, clearCart } = useCart();

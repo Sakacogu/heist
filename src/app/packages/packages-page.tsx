@@ -1,11 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { Zap } from "lucide-react";
+import Image from "next/image";
 import { useTranslation } from "react-i18next";
+
 import { useCart } from "@/app/cart/cart-provider";
-import { fnIcons, fnLabels } from "@/utils/functionIcons";
 import { formatISK } from "@/utils/format";
+import { fnIcons, fnLabels } from "@/utils/functionIcons";
 
 type Product = {
   _id: string;

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import LottieSlide from "@/components/LottieSlide";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+
+import LottieSlide from "@/components/LottieSlide";
 
 export type FeaturedItem = {
   id: string;
