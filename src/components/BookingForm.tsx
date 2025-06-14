@@ -6,6 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useAuth } from "@/lib/AuthContext";
 import Modal from "@/components/Modal";
 
+const ALL_TIMES = ["09:00", "11:00", "13:00", "15:00", "17:00"];
+
 export default function BookingForm() {
   const [date, setDate] = useState<Date | null>(null);
   const [time, setTime] = useState("09:00");
@@ -17,19 +19,18 @@ export default function BookingForm() {
   const { user } = useAuth();
   const email = user?.email;
 
-  const today = new Date();
-  const allTimes = ["09:00", "11:00", "13:00", "15:00", "17:00"];
+  const today = useMemo(() => new Date(), []);
 
   const validTimes = useMemo(() => {
-    if (!date) return allTimes;
-    if (date.toDateString() !== today.toDateString()) return allTimes;
+    if (!date) return ALL_TIMES;
+    if (date.toDateString() !== today.toDateString()) return ALL_TIMES;
 
     const nowMins = today.getHours() * 60 + today.getMinutes();
-    return allTimes.filter((t) => {
+    return ALL_TIMES.filter((t) => {
       const [h, m] = t.split(":").map(Number);
       return h * 60 + m > nowMins;
     });
-  }, [date]);
+  }, [date, today]);
 
   useEffect(() => {
     if (date && !validTimes.includes(time)) {
@@ -39,12 +40,10 @@ export default function BookingForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!user) {
       setModal("Vinsamlegast skráðu þig inn áður en þú bókar fund 🙂");
       return;
     }
-
     if (!date || !time) return;
 
     const [h, m] = time.split(":").map(Number);
