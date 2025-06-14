@@ -41,7 +41,7 @@ export default function ContactPage() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-semibold mb-4">{t("bookMeeting")}</h2>
+        <h2 className="text-2xl font-semibold mb-4">{t("book")}</h2>
         <BookingForm />
       </section>
     </main>
