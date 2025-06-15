@@ -3,7 +3,7 @@ import ProductsClient from './products-client';
 
 export const revalidate = 3600; // regenerate at most hourly
 
-async function getProducts(brand?: string, fn?: string) {
+/** Build GROQ filter based on optional brand/fn query parameters */
 function buildProductQuery(brand?: string, fn?: string) {
   const filters: string[] = [];
   const params: Record<string, string> = {};
