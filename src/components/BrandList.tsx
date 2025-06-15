@@ -1,20 +1,31 @@
 "use client";
 
-import {
-  Lightbulb,
-  Thermometer,
-  AlignVerticalJustifyCenter,
-  Activity,
-  Zap,
-  Wifi,
-  Camera,
-  Shield,
-  Cpu,
-  Bluetooth,
-} from "lucide-react";
 import Image from "next/image";
+import {
+  Activity,
+  AlignVerticalJustifyCenter,
+  Bluetooth,
+  Camera,
+  Cpu,
+  Lightbulb,
+  Shield,
+  Thermometer,
+  Wifi,
+  Zap,
+} from "lucide-react";
 
-const BRANDS = [
+type Feature = { icon: React.FC<React.SVGProps<SVGSVGElement>>; label: string };
+
+type Brand = {
+  name: string;
+  logo: string;
+  color: string;
+  url: string;
+  description: string;
+  features: readonly Feature[];
+};
+
+const BRANDS: readonly Brand[] = [
   {
     name: "Plejd",
     logo: "/logos/plejd.png",
@@ -72,36 +83,41 @@ const BRANDS = [
       { icon: Shield, label: "Door Access" },
     ],
   },
-] as const;
+];
 
 export default function BrandList() {
   return (
+    /* one column on mobile */
     <ul className="flex flex-col items-center gap-16">
-      {BRANDS.map((b) => (
-        <li
-          key={b.name}
-          className="w-72 flex flex-col items-center text-center"
-        >
-          <div className="w-28 h-28 rounded-full flex items-center justify-center mb-4 shadow bg-white">
-            <Image src={b.logo} alt={b.name} width={64} height={64} priority />
+      {BRANDS.map(brand => (
+        <li key={brand.name} className="flex w-72 flex-col items-center text-center">
+          <div className="mb-4 flex h-28 w-28 items-center justify-center rounded-full bg-white shadow">
+            <Image
+              src={brand.logo}
+              alt={brand.name}
+              width={64}
+              height={64}
+              priority
+            />
           </div>
 
+          {/* external link to vendor site, colour-coded by brand */}
           <a
-            href={b.url}
+            href={brand.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-lg mb-1 hover:underline"
-            style={{ color: b.color }}
+            className="mb-1 font-semibold text-lg hover:underline"
+            style={{ color: brand.color }}
           >
-            {b.name}
+            {brand.name}
           </a>
 
           <p className="text-gray-700 text-sm mb-4 leading-relaxed">
-            {b.description}
+            {brand.description}
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
-            {b.features.map(({ icon: Icon, label }) => (
+            {brand.features.map(({ icon: Icon, label }) => (
               <span
                 key={label}
                 className="flex flex-col items-center text-xs text-gray-600 hover:text-cyan-600 transition"
