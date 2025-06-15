@@ -4,9 +4,9 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 
-type Video = { id: string; title: string; thumb: string };
+type VideoMeta = { id: string; title: string; thumb: string };
 
-const VIDEOS: Video[] = [
+const VIDEOS: VideoMeta[] = [
   {
     id: "XxUvLBE6wow",
     title: "Plejd Dimmer demo – living-room scene",
@@ -31,19 +31,19 @@ const VIDEOS: Video[] = [
 
 export default function VideoList() {
   const [playingId, setPlayingId] = useState<string | null>(null);
-  const [expanded, setExpanded] = useState<{ id: string; t: number } | null>(
-    null,
-  );
+  const [modal, setModal] = useState<{ id: string; t: number } | null>(null);
+
+  // Keeping a handle to each embedded player so we can query its time.
   const players = useRef<Record<string, YouTubePlayer>>({});
 
+  // Pause inline video when we pop it out to the modal
   useEffect(() => {
-    if (expanded) {
-      const p = players.current[expanded.id];
-      p?.pauseVideo();
+    if (modal) {
+      players.current[modal.id]?.pauseVideo();
     }
-  }, [expanded]);
+  }, [modal]);
 
-  const inlineOpts = {
+  const inlinePlayerOpts = {
     width: "100%",
     height: "100%",
     playerVars: { autoplay: 1, rel: 0, modestbranding: 1 },
@@ -51,32 +51,29 @@ export default function VideoList() {
 
   return (
     <>
-      <section className="flex flex-col gap-4 p-4 md:p-8 max-w-3xl mx-auto">
-        {VIDEOS.map((v) => {
-          const isPlaying = playingId === v.id;
+      <section className="mx-auto flex max-w-3xl flex-col gap-4 p-4 md:p-8">
+        {VIDEOS.map((video) => {
+          const isCurrentlyPlaying = playingId === video.id;
 
           return (
-            <div
-              key={v.id}
-              className="relative w-full aspect-video overflow-hidden rounded-xl shadow"
-            >
-              {isPlaying ? (
+            <div key={video.id} className="relative aspect-video w-full overflow-hidden rounded-xl shadow">
+              {isCurrentlyPlaying ? (
                 <>
                   <YouTube
-                    videoId={v.id}
-                    opts={inlineOpts}
-                    onReady={(e) => (players.current[v.id] = e.target)}
                     className="w-full h-full rounded-xl"
+                    videoId={video.id}
+                    opts={inlinePlayerOpts}
+                    onReady={(e) => (players.current[video.id] = e.target)}
                   />
 
                   <button
-                    onClick={() => {
-                      const t = Math.floor(
-                        players.current[v.id]?.getCurrentTime() ?? 0,
-                      );
-                      setExpanded({ id: v.id, t });
-                    }}
                     className="absolute top-2 right-10 bg-black/60 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm"
+                    onClick={() =>
+                      setModal({
+                        id: video.id,
+                        t: Math.floor(players.current[video.id]?.getCurrentTime() ?? 0),
+                      })
+                    }
                     aria-label="Expand video"
                   >
                     ⤢
@@ -92,14 +89,14 @@ export default function VideoList() {
                 </>
               ) : (
                 <button
-                  onClick={() => setPlayingId(v.id)}
+                  onClick={() => setPlayingId(video.id)}
                   className="group absolute inset-0"
                 >
                   <Image
-                    src={v.thumb}
-                    alt={v.title}
+                    src={video.thumb}
+                    alt={video.title}
                     fill
-                    className="object-cover group-hover:scale-105 transition"
+                    className="object-cover transition group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
                     <svg
@@ -118,17 +115,18 @@ export default function VideoList() {
         })}
       </section>
 
-      {expanded && (
+      {/* modal player */}
+      {modal && (
         <div
-          className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
-          onClick={() => setExpanded(null)}
+          onClick={() => setModal(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
         >
           <div
             className="relative w-full max-w-4xl aspect-video"
             onClick={(e) => e.stopPropagation()}
           >
             <YouTube
-              videoId={expanded.id}
+              videoId={modal.id}
               opts={{
                 width: "100%",
                 height: "100%",
@@ -136,14 +134,14 @@ export default function VideoList() {
                   autoplay: 1,
                   rel: 0,
                   modestbranding: 1,
-                  start: expanded.t,
+                  start: modal.t,
                 },
               }}
               className="w-full h-full rounded-lg"
             />
             <button
-              onClick={() => setExpanded(null)}
               className="absolute -top-4 -right-4 bg-white text-gray-900 rounded-full w-10 h-10 shadow"
+              onClick={() => setModal(null)}
               aria-label="Close modal"
             >
               ✕
