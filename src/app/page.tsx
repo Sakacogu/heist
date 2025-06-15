@@ -15,11 +15,15 @@ import savings from "@/lotties/savings.json";
 import security from "@/lotties/security.json";
 import unified from "@/lotties/unified.json";
 
-export default function Home() {
+/** Landing page – all client-side - framer-motion & i18n hooks */
+export default function HomePage() {
   const { t } = useTranslation("home");
+
+  /* parallax for the coloured “blob” behind the hero, in progress */
   const { scrollY } = useScroll();
   const blobY = useTransform(scrollY, [0, 600], [0, 120]);
 
+  /* Slides for the feature carousel */
   const slides: FeaturedItem[] = [
     {
       id: "goodnight",
@@ -74,8 +78,7 @@ export default function Home() {
                      h-[48rem] w-[48rem] rounded-full opacity-30 blur-[180px]
                      bg-gradient-to-tr from-brand via-sky-400 to-indigo-500"
         />
-
-        <div className="relative z-10 max-w-3xl mx-auto px-4 pt-32 flex flex-col items-center text-center">
+        <div className="relative z-10 max-w-3xl mx-auto px-4 pt-32 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -141,17 +144,10 @@ export default function Home() {
   );
 }
 
-function SectionHeading({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+/* keep h2 styling consistent */
+function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2
-      className={`my-10 rounded-3xl bg-brand py-4 text-center text-3xl font-semibold text-grey-50 ${className}`}
-    >
+    <h2 className="my-10 rounded-3xl bg-brand py-4 text-center text-3xl font-semibold text-grey-50">
       {children}
     </h2>
   );
