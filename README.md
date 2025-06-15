@@ -30,6 +30,7 @@ The result: a bilingual (🇮🇸/🇬🇧) e-commerce experience for smart-home
 
 ## 🗂 Project structure
 
+```text
 src/
 │
 ├── app/ # Next.js app router
