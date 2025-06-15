@@ -1,16 +1,19 @@
 "use client";
-import { ReactNode } from "react";
 
-export default function Modal({
-  open,
-  onClose,
-  children,
-}: {
+import type { FC, ReactNode, MouseEvent } from "react";
+
+interface ModalProps {
   open: boolean;
-  onClose(): void;
+  onClose: () => void;
   children: ReactNode;
-}) {
+}
+
+// clicks inside the white card are stopped with `e.stopPropagation()`.
+const Modal: FC<ModalProps> = ({ open, onClose, children }) => {
   if (!open) return null;
+
+  // Stops backdrop click from propagating
+  const stop: React.MouseEventHandler = (e: MouseEvent) => e.stopPropagation();
 
   return (
     <div
@@ -19,18 +22,21 @@ export default function Modal({
       onClick={onClose}
     >
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-xl shadow-xl w-full max-w-md p-8 space-y-6"
+        onClick={stop}
+        role="dialog"
+        aria-modal="true"
+        className="w-full max-w-md space-y-6 rounded-xl bg-white p-8 shadow-xl"
       >
         {children}
         <button
           onClick={onClose}
-          className="mt-2 w-full bg-cyan-600 text-white py-2 rounded-lg
-                     hover:bg-cyan-700"
+          className="mt-2 w-full rounded-lg bg-cyan-600 py-2 text-white hover:bg-cyan-700"
         >
           OK
         </button>
       </div>
     </div>
   );
-}
+};
+
+export default Modal;
