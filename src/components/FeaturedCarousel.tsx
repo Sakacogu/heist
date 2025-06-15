@@ -125,7 +125,7 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
               <div className="absolute inset-0 z-10 flex items-start justify-center pt-6 pointer-events-none">
                 <Link
                   href={item.link ?? "/products"}
-                  className="pointer-events-auto block w-full mx-2 rounded-3xl
+                  className="pointer-events-auto block w-full mx-20 rounded-3xl
                              bg-cyan-500/90 px-6 py-4 text-center shadow-lg"
                 >
                   <p className="text-xl text-gray-900">{item.description}</p>
