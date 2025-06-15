@@ -1,6 +1,7 @@
-import type { LucideIcon } from "lucide-react";
+import Link from 'next/link';
+import type { LucideIcon } from 'lucide-react';
 
-interface Feature {
+export interface Feature {
   icon: LucideIcon;
   label: string;
 }
@@ -13,43 +14,40 @@ interface FeatureCardProps {
   href?: string;
 }
 
-export default function FeatureCard({
-  title,
-  description,
-  icon: BrandIcon,
-  features,
-  href,
-}: FeatureCardProps) {
-  const Wrapper = href ? "a" : "div";
+export default function FeatureCard(props: FeatureCardProps) {
+  const { title, description, icon: BrandIcon, features, href } = props;
+
+  // choose wrapper tag based on the presence of a link
+  const Wrapper: React.ElementType = href ? Link : 'div';
 
   return (
     <Wrapper
-      href={href}
+      {...(href ? { href } : {})}
       className="
         group block p-6 bg-white rounded-2xl shadow-lg transition
         hover:shadow-2xl hover:-translate-y-1
       "
     >
-      <div className="flex items-center gap-3 mb-4">
-        <BrandIcon className="w-8 h-8 text-cyan-600" />
+      <header className="mb-4 flex items-center gap-3">
+        <BrandIcon className="h-8 w-8 text-cyan-600" />
         <h3 className="text-xl font-semibold group-hover:text-cyan-600">
           {title}
         </h3>
-      </div>
+      </header>
 
       <p className="text-gray-700 leading-relaxed mb-4">{description}</p>
 
-      <div className="flex flex-wrap gap-4">
+      <ul className="flex flex-wrap gap-4">
         {features.map(({ icon: FIcon, label }) => (
-          <div
+          <li
             key={label}
-            className="flex items-center gap-2 text-gray-700 group-hover:text-cyan-600"
+            className="flex items-center gap-2 text-gray-700 transition group-hover:text-cyan-600"
           >
             <FIcon className="w-5 h-5" />
             <span className="text-sm">{label}</span>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </Wrapper>
   );
 }
