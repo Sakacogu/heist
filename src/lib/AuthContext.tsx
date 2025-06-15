@@ -5,43 +5,55 @@ import {
   useContext,
   useEffect,
   useState,
-  type ReactNode,
+  ReactNode,
 } from "react";
 
-type User = { email: string };
+interface User {
+  email: string;
+}
 
-type AuthCtx = {
+interface AuthContextValue {
   user: User | null;
-  login(email: string): void;
-  logout(): void;
+  login: (email: string) => void;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+export const useAuth = (): AuthContextValue => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used inside <AuthProvider>");
+  }
+  return ctx;
 };
 
-const AuthContext = createContext<AuthCtx>({
-  user: null,
-  login: () => {},
-  logout: () => {},
-});
-
-export const useAuth = () => useContext(AuthContext);
-
-const LS_KEY = "heist-user";
+const STORAGE_KEY = "heist-user";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
+  //  Hydrate user on first client render
   useEffect(() => {
-    const raw = typeof window !== "undefined" && localStorage.getItem(LS_KEY);
-    if (raw) setUser(JSON.parse(raw));
+    if (typeof window === "undefined") return;          // safety for SSR
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) setUser(JSON.parse(stored) as User);
   }, []);
 
+  // Persist user whenever it changes
   useEffect(() => {
-    if (user) localStorage.setItem(LS_KEY, JSON.stringify(user));
-    else localStorage.removeItem(LS_KEY);
+    if (typeof window === "undefined") return;
+    if (user) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
   }, [user]);
 
   const login = (email: string) => {
     setUser({ email });
 
+    // migrate any “guest” cart items → user cart
     const guestCart = localStorage.getItem("heist-cart-guest");
     if (guestCart) {
       localStorage.setItem(`heist-cart-${email}`, guestCart);
