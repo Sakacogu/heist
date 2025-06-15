@@ -10,18 +10,24 @@ import { useAuth } from "@/lib/AuthContext";
 const ALL_TIMES = ["09:00", "11:00", "13:00", "15:00", "17:00"];
 
 export default function BookingForm() {
+  const { user } = useAuth();
+
   const [date, setDate] = useState<Date | null>(null);
-  const [time, setTime] = useState("09:00");
-  const [name, setName] = useState("");
+  const [time, setTime] = useState<typeof ALL_TIMES[number]>(ALL_TIMES[0]);
+  const [name, setName] = useState('');
+  const [modal, setModal] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
-  const [modal, setModal] = useState<string | null>(null);
-
-  const { user } = useAuth();
+  
   const email = user?.email;
 
   const today = useMemo(() => new Date(), []);
 
+  /**
+   *  Valid times depend on selected date:
+   *  – any future date  → all slots
+   *  – today      → only slots after `now`
+   */
   const validTimes = useMemo(() => {
     if (!date) return ALL_TIMES;
     if (date.toDateString() !== today.toDateString()) return ALL_TIMES;
@@ -33,14 +39,16 @@ export default function BookingForm() {
     });
   }, [date, today]);
 
+  /* reset selected time if it became invalid */
   useEffect(() => {
     if (date && !validTimes.includes(time)) {
-      setTime(validTimes[0] ?? "");
+      setTime(validTimes[0] ?? '');
     }
   }, [date, validTimes, time]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
     if (!user) {
       setModal("Vinsamlegast skráðu þig inn áður en þú bókar fund 🙂");
       return;
@@ -50,7 +58,7 @@ export default function BookingForm() {
     const [h, m] = time.split(":").map(Number);
     const when = new Date(date);
     when.setHours(h, m, 0, 0);
-    if (when <= new Date()) return;
+    if (when <= new Date()) return; // if past slot then ignore
 
     setSending(true);
     const res = await fetch("/api/book", {
@@ -86,19 +94,16 @@ export default function BookingForm() {
         <p className="whitespace-pre-line text-center">{modal}</p>
       </Modal>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4 bg-white p-6 rounded-xl shadow"
-      >
-        <h3 className="text-lg font-semibold mb-2">Bóka fund</h3>
+      <form onSubmit={handleSubmit} className="space-y-4 rounded-xl bg-white p-6 shadow">
+        <h3 className="mb-2 text-lg font-semibold">Bóka fund</h3>
 
         <label className="block text-sm">
           Nafn
           <input
             required
             value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="mt-1 w-full border rounded px-3 py-2"
+            onChange={e => setName(e.target.value)}
+            className="mt-1 w-full rounded border px-3 py-2"
           />
         </label>
 
@@ -120,14 +125,14 @@ export default function BookingForm() {
           Tími
           <select
             value={time}
-            onChange={(e) => setTime(e.target.value)}
-            className="mt-1 w-full border rounded px-3 py-2"
+            onChange={e => setTime(e.target.value as typeof ALL_TIMES[number])}
+            className="mt-1 w-full rounded border px-3 py-2"
             required
           >
             {validTimes.length === 0 ? (
               <option value="">— Enginn tími laus í dag —</option>
             ) : (
-              validTimes.map((t) => <option key={t}>{t}</option>)
+              validTimes.map(t => <option key={t}>{t}</option>)
             )}
           </select>
         </label>
