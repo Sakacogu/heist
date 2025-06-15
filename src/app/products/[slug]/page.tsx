@@ -4,24 +4,22 @@ import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 import { sanity } from "@/lib/sanity";
 
-export const revalidate = 3600;
+export const revalidate = 3600; // ISR – refresh once per hour
+
+/** Sanity GROQ fetch wrapped in a helper so the query text is not inlined */
+async function getProduct(slug: string) {
+  const query = `*[_type == "product" && slug.current == $slug][0]{
+    _id, title, priceISK, blurb, image{asset->{url}}
+  }`;
+  return sanity.fetch(query, { slug });
+}
 
 export default async function ProductDetail({
-  params: { slug },
+  params,
 }: {
   params: { slug: string };
 }) {
-  const product = await sanity.fetch(
-    `*[_type == "product" && slug.current == $slug][0]{
-         _id,
-         title,
-         priceISK,
-         blurb,
-         image{asset->{url}}
-       }`,
-    { slug },
-  );
-
+  const product = await getProduct(params.slug);
   if (!product) return notFound();
 
   const cartItem = {
@@ -30,7 +28,7 @@ export default async function ProductDetail({
     price: product.priceISK,
     image: `${product.image.asset.url}?w=160&h=120&fit=crop&auto=format`,
     qty: 1,
-    cartId: `${product._id}-${Date.now()}`,
+    cartId: '', // Default cart ID
   };
 
   return (
@@ -46,6 +44,7 @@ export default async function ProductDetail({
 
       <section className="md:w-1/2 mt-8 md:mt-0 flex flex-col text-center md:text-left">
         <h1 className="text-3xl font-semibold mb-4">{product.title}</h1>
+
         {product.blurb && (
           <p className="mb-6 text-gray-700 leading-relaxed">{product.blurb}</p>
         )}

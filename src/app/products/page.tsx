@@ -1,10 +1,10 @@
-import { sanity } from "@/lib/sanity";
+import { sanity } from '@/lib/sanity';
+import ProductsClient from './products-client';
 
-import ProductsClient from "./products-client";
-
-export const revalidate = 3600;
+export const revalidate = 3600; // regenerate at most hourly
 
 async function getProducts(brand?: string, fn?: string) {
+function buildProductQuery(brand?: string, fn?: string) {
   const filters: string[] = [];
   const params: Record<string, string> = {};
 
@@ -23,6 +23,11 @@ async function getProducts(brand?: string, fn?: string) {
       image{asset->{url}}
     } | order(title asc)`;
 
+  return { query, params };
+}
+
+async function getProducts(brand?: string, fn?: string) {
+  const { query, params } = buildProductQuery(brand, fn);
   return sanity.fetch(query, params);
 }
 
@@ -31,9 +36,9 @@ export default async function ProductsPage({
 }: {
   searchParams: { brand?: string; fn?: string };
 }) {
-  let { brand, fn } = searchParams;
-  if (brand === "undefined") brand = undefined;
-  if (fn === "undefined") fn = undefined;
+  /* Next automatically stringifies undefined, so tidy that up */
+  const brand = searchParams.brand === 'undefined' ? undefined : searchParams.brand;
+  const fn = searchParams.fn === 'undefined' ? undefined : searchParams.fn;
 
   const products = await getProducts(brand, fn);
 

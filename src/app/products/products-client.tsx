@@ -55,6 +55,7 @@ export default function ProductsClient({
 
   return (
     <main className="max-w-7xl mx-auto p-16 space-y-6">
+      {/* Brand filter bar */}
       <div className="flex flex-wrap justify-center gap-4">
         <Link
           href="/products"
@@ -78,6 +79,7 @@ export default function ProductsClient({
         ))}
       </div>
 
+      {/* Function filter bar */}
       <div className="flex flex-wrap justify-center gap-3">
         <Link
           href={brand ? `/products?brand=${brand}` : "/products"}
@@ -101,6 +103,7 @@ export default function ProductsClient({
         ))}
       </div>
 
+      {/* Product grid */}
       <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((p) => (
           <Link
@@ -129,7 +132,7 @@ export default function ProductsClient({
               ))}
             </div>
 
-            <span className="t-auto text-cyan-600 font-semibold">
+            <span className="mt-auto text-cyan-600 font-semibold">
               {formatISK(p.priceISK)} kr.
             </span>
           </Link>
