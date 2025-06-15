@@ -2,30 +2,30 @@
 
 import Image from "next/image";
 
-type Assistant = {
+interface AssistantBrand {
   id: string;
   label: string;
-  src: string;
+  logo: string;
   url: string;
 };
 
-const assistants: Assistant[] = [
+const ASSISTANT_BRANDS: AssistantBrand[] = [
   {
     id: "alexa",
     label: "Alexa",
-    src: "/assistants/alexa.png",
+    logo: "/assistants/alexa.png",
     url: "https://www.amazon.com/alexa",
   },
   {
     id: "siri",
     label: "Siri",
-    src: "/assistants/siri.png",
+    logo: "/assistants/siri.png",
     url: "https://www.apple.com/siri/",
   },
   {
     id: "bixby",
     label: "Bixby",
-    src: "/assistants/bixby.png",
+    logo: "/assistants/bixby.png",
     url: "https://www.samsung.com/us/apps/bixby/",
   },
 ];
@@ -34,20 +34,22 @@ export default function VoiceAssistantSection() {
   return (
     <section className="py-6 text-center">
       <div className="flex justify-center gap-10">
-        {assistants.map((a) => (
-          <div
-            key={a.id}
-            className="h-[100] w-[140] flex items-center justify-center hover:shadow-lg transition"
+        {ASSISTANT_BRANDS.map(({ id, label, logo, url }) => (
+          <button
+            // open link in new tab & keep semantic focus ring
+            key={id}
+            onClick={() => window.open(url, "_blank")}
+            className="h-[100px] w-[140px] rounded-lg transition hover:shadow-lg focus-visible:outline focus-visible:outline-cyan-600"
+            aria-label={label}
           >
             <Image
-              src={a.src}
-              alt={a.label}
-              onClick={() => window.open(a.url, "_blank")}
+              src={logo}
+              alt={label}
               width={140}
               height={100}
               className="object-contain"
             />
-          </div>
+          </button>
         ))}
       </div>
     </section>
