@@ -1,5 +1,6 @@
 "use client";
 
+import { nanoid } from "nanoid";
 import {
   createContext,
   useContext,
@@ -7,7 +8,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { nanoid } from "nanoid";
 
 import { useAuth } from "@/lib/AuthContext";
 
@@ -19,7 +19,6 @@ export type CartItem = {
   qty: number;
   cartId: string;
 };
-
 
 export const discountTiers = [
   { min: 3, pct: 0.05 },
@@ -95,9 +94,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((cur) => {
       const existing = cur.find((r) => r.id === p.id);
       return existing
-        ? cur.map((r) =>
-            r.id === p.id ? { ...r, qty: r.qty + qty } : r,
-          )
+        ? cur.map((r) => (r.id === p.id ? { ...r, qty: r.qty + qty } : r))
         : [...cur, { ...p, qty, cartId: nanoid() }];
     });
 

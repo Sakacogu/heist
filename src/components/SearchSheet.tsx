@@ -12,19 +12,19 @@ interface Product {
   functions: string[];
   slug: { current: string };
   priceISK: number;
-};
+}
 
 export default function SearchSheet({ onClose }: { onClose: () => void }) {
   // Full-text index – set once when data arrives
   const [searchIndex, setSearchIndex] = useState<Fuse<Product>>();
-  // Current input value 
+  // Current input value
   const [query, setQuery] = useState("");
   // Top N matches (derived from query)
   const [matches, setMatches] = useState<Product[]>([]);
-  // Grab focus when component mounts 
+  // Grab focus when component mounts
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // fetch products → build fuzzy index 
+  // fetch products → build fuzzy index
   useEffect(() => {
     fetch("/api/products")
       .then((response) => response.json())
@@ -45,13 +45,16 @@ export default function SearchSheet({ onClose }: { onClose: () => void }) {
     return () => clearTimeout(focusTimer);
   }, []);
 
-  // update result list whenever query or index changes 
+  // update result list whenever query or index changes
   useEffect(() => {
     if (!query.trim() || !searchIndex) {
       setMatches([]);
       return;
     }
-    const topHits = searchIndex.search(query).slice(0, 8).map((r) => r.item);
+    const topHits = searchIndex
+      .search(query)
+      .slice(0, 8)
+      .map((match) => match.item);
     setMatches(topHits);
   }, [query, searchIndex]);
 
@@ -63,7 +66,7 @@ export default function SearchSheet({ onClose }: { onClose: () => void }) {
           <input
             ref={inputRef}
             value={query}
-            onChange={e => setQuery(e.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Leitaðu að vöru, tegund eða eiginleika…"
             className="flex-1 text-[17px] text-gray-900 placeholder-gray-400 outline-none"
           />
@@ -90,7 +93,9 @@ export default function SearchSheet({ onClose }: { onClose: () => void }) {
                   <p className="font-medium text-gray-700">{product.title}</p>
                   <p className="mt-0.5 text-sm text-gray-600">
                     {product.brand}
-                    {product.functions?.length ? ` · ${product.functions.join(", ")}` : ""}
+                    {product.functions?.length
+                      ? ` · ${product.functions.join(", ")}`
+                      : ""}
                   </p>
                 </Link>
               </li>

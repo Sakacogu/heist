@@ -13,12 +13,12 @@ export default function BookingForm() {
   const { user } = useAuth();
 
   const [date, setDate] = useState<Date | null>(null);
-  const [time, setTime] = useState<typeof ALL_TIMES[number]>(ALL_TIMES[0]);
-  const [name, setName] = useState('');
+  const [time, setTime] = useState<(typeof ALL_TIMES)[number]>(ALL_TIMES[0]);
+  const [name, setName] = useState("");
   const [modal, setModal] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
-  
+
   const email = user?.email;
 
   const today = useMemo(() => new Date(), []);
@@ -42,7 +42,7 @@ export default function BookingForm() {
   /* reset selected time if it became invalid */
   useEffect(() => {
     if (date && !validTimes.includes(time)) {
-      setTime(validTimes[0] ?? '');
+      setTime(validTimes[0] ?? "");
     }
   }, [date, validTimes, time]);
 
@@ -78,7 +78,7 @@ export default function BookingForm() {
       }
       setDone(true);
     }
-  };
+  }
 
   if (done) {
     return (
@@ -94,7 +94,10 @@ export default function BookingForm() {
         <p className="whitespace-pre-line text-center">{modal}</p>
       </Modal>
 
-      <form onSubmit={handleSubmit} className="space-y-4 rounded-xl bg-white p-6 shadow">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 rounded-xl bg-white p-6 shadow"
+      >
         <h3 className="mb-2 text-lg font-semibold">Bóka fund</h3>
 
         <label className="block text-sm">
@@ -102,7 +105,7 @@ export default function BookingForm() {
           <input
             required
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             className="mt-1 w-full rounded border px-3 py-2"
           />
         </label>
@@ -125,14 +128,16 @@ export default function BookingForm() {
           Tími
           <select
             value={time}
-            onChange={e => setTime(e.target.value as typeof ALL_TIMES[number])}
+            onChange={(e) =>
+              setTime(e.target.value as (typeof ALL_TIMES)[number])
+            }
             className="mt-1 w-full rounded border px-3 py-2"
             required
           >
             {validTimes.length === 0 ? (
               <option value="">— Enginn tími laus í dag —</option>
             ) : (
-              validTimes.map(t => <option key={t}>{t}</option>)
+              validTimes.map((t) => <option key={t}>{t}</option>)
             )}
           </select>
         </label>

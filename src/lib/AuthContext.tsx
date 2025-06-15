@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   //  Hydrate user on first client render
   useEffect(() => {
-    if (typeof window === "undefined") return;          // safety for SSR
+    if (typeof window === "undefined") return; // safety for SSR
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) setUser(JSON.parse(stored) as User);
   }, []);

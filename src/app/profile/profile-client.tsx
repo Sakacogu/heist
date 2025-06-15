@@ -63,8 +63,8 @@ export default function ProfileClient() {
         o.status === "paid"
           ? "paid"
           : o.status === "canceled"
-          ? "canceled"
-          : "pending",
+            ? "canceled"
+            : "pending",
     }));
 
     setOrders(cleaned);

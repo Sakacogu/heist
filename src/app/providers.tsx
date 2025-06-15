@@ -7,7 +7,9 @@ import { CartProvider } from "@/app/cart/cart-provider";
 import { AuthProvider } from "@/lib/AuthContext";
 
 /* Only initialise Stripe on the client */
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+);
 
 /**
  * Wraps *all* global context providers.

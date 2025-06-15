@@ -29,34 +29,68 @@ body {
 
 @layer components {
   /* generic cards & headings */
-  .section-card     { @apply bg-white rounded-3xl shadow p-6 space-y-4; }
-  .section-heading  { @apply text-xl font-semibold flex items-center mb-4; }
+  .section-card {
+    @apply bg-white rounded-3xl shadow p-6 space-y-4;
+  }
+  .section-heading {
+    @apply text-xl font-semibold flex items-center mb-4;
+  }
 
-  .item-row         { @apply flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-gray-50 transition; }
-  .meeting-row      { @apply border rounded p-3; }
+  .item-row {
+    @apply flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-gray-50 transition;
+  }
+  .meeting-row {
+    @apply border rounded p-3;
+  }
 
-  .badge            { @apply px-2 py-0.5 text-xs rounded-full capitalize select-none; }
-  .badge-neutral    { @apply bg-gray-100 text-gray-600 text-xs rounded-full px-2 py-0.5; }
+  .badge {
+    @apply px-2 py-0.5 text-xs rounded-full capitalize select-none;
+  }
+  .badge-neutral {
+    @apply bg-gray-100 text-gray-600 text-xs rounded-full px-2 py-0.5;
+  }
 
-  .btn-primary      { @apply bg-cyan-600 text-white py-2 rounded-lg hover:bg-cyan-700 transition; }
-  .btn-neutral      { @apply bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition; }
+  .btn-primary {
+    @apply bg-cyan-600 text-white py-2 rounded-lg hover:bg-cyan-700 transition;
+  }
+  .btn-neutral {
+    @apply bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition;
+  }
 
   /* fade-in helper */
   @keyframes fade-in {
-    from { opacity: 0; transform: translateY(-4px); }
-    to   { opacity: 1; transform: translateY(0);  }
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  .animate-fade-in  { animation: fade-in 0.25s ease-out; }
+  .animate-fade-in {
+    animation: fade-in 0.25s ease-out;
+  }
 
   /* bundle-specific helpers */
-  .bundle-card   { @apply bg-white rounded-3xl shadow-lg flex flex-col overflow-hidden; }
-  .bundle-header { @apply relative h-32 bg-gradient-to-r from-cyan-600 to-blue-500; }
-  .bundle-body   { @apply flex-1 p-6 space-y-4; }
+  .bundle-card {
+    @apply bg-white rounded-3xl shadow-lg flex flex-col overflow-hidden;
+  }
+  .bundle-header {
+    @apply relative h-32 bg-gradient-to-r from-cyan-600 to-blue-500;
+  }
+  .bundle-body {
+    @apply flex-1 p-6 space-y-4;
+  }
 }
 
 @layer utilities {
-  .scrollbar-thin::-webkit-scrollbar       { width: 6px; }
-  .scrollbar-thin::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full; }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
 
   .scrollbar-thin {
     scrollbar-width: thin;
@@ -66,22 +100,43 @@ body {
 
 /* Hero “blob” animation (landing page) */
 @keyframes blob {
-  0%,100% { transform: translate(0) scale(1); }
-  33%     { transform: translate(20px,-30px) scale(1.1); }
-  66%     { transform: translate(-30px,20px) scale(.9);  }
+  0%,
+  100% {
+    transform: translate(0) scale(1);
+  }
+  33% {
+    transform: translate(20px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-30px, 20px) scale(0.9);
+  }
 }
-.animate-blob         { animation: blob 12s infinite ease-in-out; }
-.animation-delay-2000 { animation-delay: 2s; }
+.animate-blob {
+  animation: blob 12s infinite ease-in-out;
+}
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
 
 /* Outline text helpers, not currently in use */
 @layer base {
-  .font-outline-2 { -webkit-text-stroke: .5px white; }
-  .font-outline-4 { -webkit-text-stroke: 4px  white; }
+  .font-outline-2 {
+    -webkit-text-stroke: 0.5px white;
+  }
+  .font-outline-4 {
+    -webkit-text-stroke: 4px white;
+  }
 }
 
 /* Menu slider */
 @keyframes slide-in-right {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(0);    }
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
-.animate-slide-in-right { animation: slide-in-right 0.25s ease-out forwards; }
+.animate-slide-in-right {
+  animation: slide-in-right 0.25s ease-out forwards;
+}

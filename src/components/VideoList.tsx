@@ -56,7 +56,10 @@ export default function VideoList() {
           const isCurrentlyPlaying = playingId === video.id;
 
           return (
-            <div key={video.id} className="relative aspect-video w-full overflow-hidden rounded-xl shadow">
+            <div
+              key={video.id}
+              className="relative aspect-video w-full overflow-hidden rounded-xl shadow"
+            >
               {isCurrentlyPlaying ? (
                 <>
                   <YouTube
@@ -71,7 +74,9 @@ export default function VideoList() {
                     onClick={() =>
                       setModal({
                         id: video.id,
-                        t: Math.floor(players.current[video.id]?.getCurrentTime() ?? 0),
+                        t: Math.floor(
+                          players.current[video.id]?.getCurrentTime() ?? 0,
+                        ),
                       })
                     }
                     aria-label="Expand video"

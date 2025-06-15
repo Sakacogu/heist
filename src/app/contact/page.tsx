@@ -20,10 +20,7 @@ export default function ContactPage() {
           <Phone className="h-8 w-8 text-cyan-600" />
           <div>
             <p className="font-semibold">{t("phone")}</p>
-            <a
-              href="tel:+3545551234"
-              className="text-cyan-700 hover:underline"
-            >
+            <a href="tel:+3545551234" className="text-cyan-700 hover:underline">
               555-1234
             </a>
           </div>

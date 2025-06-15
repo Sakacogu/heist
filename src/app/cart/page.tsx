@@ -10,7 +10,6 @@ import { useCart, discountTiers } from "@/app/cart/cart-provider";
 import Modal from "@/components/Modal";
 import { useAuth } from "@/lib/AuthContext";
 
-
 /** Cart page – fully client side because of Stripe.js */
 export default function CartPage() {
   const { items, removeItem, updateQty, clearCart } = useCart();
@@ -43,7 +42,9 @@ export default function CartPage() {
       status: "pending",
     };
     const key = `heist-orders-${user.email}`;
-    const history = JSON.parse(localStorage.getItem(key) || "[]") as typeof order[];
+    const history = JSON.parse(
+      localStorage.getItem(key) || "[]",
+    ) as (typeof order)[];
     localStorage.setItem(key, JSON.stringify([order, ...history]));
 
     clearCart();
@@ -51,7 +52,6 @@ export default function CartPage() {
       "Stripe greiðslusíða er væntanleg 😊\nPöntunin þín var vistuð á prófílnum.",
     );
   };
-
 
   return (
     <div className="mx-auto max-w-6xl p-16 md:flex md:gap-10">
@@ -85,9 +85,7 @@ export default function CartPage() {
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() =>
-                  updateQty(row.cartId, Math.max(1, row.qty - 1))
-                }
+                onClick={() => updateQty(row.cartId, Math.max(1, row.qty - 1))}
                 className="rounded bg-gray-100 px-3 py-1"
               >
                 -

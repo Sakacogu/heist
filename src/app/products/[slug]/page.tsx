@@ -2,7 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import AddToCartButton from "@/components/AddToCartButton";
-import { sanity } from "@/lib/sanity";
+import { sanity } from "@/lib/sanityClient";
 
 export const revalidate = 3600; // ISR – refresh once per hour
 
@@ -28,7 +28,7 @@ export default async function ProductDetail({
     price: product.priceISK,
     image: `${product.image.asset.url}?w=160&h=120&fit=crop&auto=format`,
     qty: 1,
-    cartId: '', // Default cart ID
+    cartId: "", // Default cart ID
   };
 
   return (

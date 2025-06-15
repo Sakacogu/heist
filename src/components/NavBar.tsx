@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import dynamic from "next/dynamic";
-import { useTranslation } from "react-i18next";
 import { Menu, X, Search, ShoppingCart, User2 } from "lucide-react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useCart } from "@/app/cart/cart-provider";
 import { useAuth } from "@/lib/AuthContext";
@@ -17,7 +17,9 @@ const navLinks = [
   { href: "/contact", i18n: "contact" },
 ] as const;
 
-const MobileSearchSheet = dynamic(() => import("./SearchSheet"), { ssr: false });
+const MobileSearchSheet = dynamic(() => import("./SearchSheet"), {
+  ssr: false,
+});
 
 export default function NavBar() {
   const { items } = useCart();
@@ -32,10 +34,10 @@ export default function NavBar() {
   const toggleLanguage = () =>
     i18next.changeLanguage(i18next.language === "is" ? "en" : "is");
 
-  // profile route depends on auth 
+  // profile route depends on auth
   const profileHref = user ? "/profile" : "/login";
 
-  // helper so every mobile-link also closes the drawer 
+  // helper so every mobile-link also closes the drawer
   const NavItem = ({ href, label }: { href: string; label: string }) => (
     <Link
       href={href}
@@ -59,7 +61,6 @@ export default function NavBar() {
           <span className="text-5xl">💡</span>
           <span className="text-4xl">HEIST</span>
         </Link>
-
 
         <nav className="hidden md:flex items-center gap-4 text-xl">
           {navLinks.map((l) => (
@@ -90,7 +91,10 @@ export default function NavBar() {
             <User2 className="w-5 h-5" />
           </Link>
 
-          <Link href="/cart" className="relative rounded-lg p-2 hover:bg-cyan-200">
+          <Link
+            href="/cart"
+            className="relative rounded-lg p-2 hover:bg-cyan-200"
+          >
             <ShoppingCart className="h-5 w-5" />
             {totalQty > 0 && (
               <span
@@ -143,7 +147,11 @@ export default function NavBar() {
 
             <nav className="flex flex-col border-t py-4 text-gray-900">
               {navLinks.map((link) => (
-                <NavItem key={link.href} href={link.href} label={t(link.i18n)} />
+                <NavItem
+                  key={link.href}
+                  href={link.href}
+                  label={t(link.i18n)}
+                />
               ))}
             </nav>
           </aside>

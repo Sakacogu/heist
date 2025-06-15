@@ -25,7 +25,7 @@ export default function Footer() {
               { href: "/packages", label: "Pakkar" },
               { href: "/setup", label: "Uppsetning" },
               { href: "/contact", label: "Hafa samband" },
-            ].map(link => (
+            ].map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="hover:underline">
                   {link.label}

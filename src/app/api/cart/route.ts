@@ -8,7 +8,7 @@ const ONE_HOUR = 60 * 60; // seconds
 
 // Read the cart from the cookie
 const readCart = async (): Promise<CartItem[]> => {
-  const store = await cookies();               // async in ≥ 13.5, sync before that
+  const store = await cookies(); // async in ≥ 13.5, sync before that
   const raw = store.get(CART_COOKIE)?.value;
   if (!raw) return [];
 

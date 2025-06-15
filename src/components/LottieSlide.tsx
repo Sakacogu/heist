@@ -1,7 +1,8 @@
 "use client";
 
-import type { FC } from "react";
 import Lottie from "lottie-react";
+
+import type { FC } from "react";
 
 interface LottieSlideProps {
   // Raw Lottie JSON

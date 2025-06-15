@@ -1,5 +1,6 @@
-import Link from 'next/link';
-import type { LucideIcon } from 'lucide-react';
+import Link from "next/link";
+
+import type { LucideIcon } from "lucide-react";
 
 export interface Feature {
   icon: LucideIcon;
@@ -18,7 +19,7 @@ export default function FeatureCard(props: FeatureCardProps) {
   const { title, description, icon: BrandIcon, features, href } = props;
 
   // choose wrapper tag based on the presence of a link
-  const Wrapper: React.ElementType = href ? Link : 'div';
+  const Wrapper: React.ElementType = href ? Link : "div";
 
   return (
     <Wrapper

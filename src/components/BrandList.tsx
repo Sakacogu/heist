@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
   Activity,
   AlignVerticalJustifyCenter,
@@ -13,6 +12,7 @@ import {
   Wifi,
   Zap,
 } from "lucide-react";
+import Image from "next/image";
 
 type Feature = { icon: React.FC<React.SVGProps<SVGSVGElement>>; label: string };
 
@@ -89,8 +89,11 @@ export default function BrandList() {
   return (
     /* one column on mobile */
     <ul className="flex flex-col items-center gap-16">
-      {BRANDS.map(brand => (
-        <li key={brand.name} className="flex w-72 flex-col items-center text-center">
+      {BRANDS.map((brand) => (
+        <li
+          key={brand.name}
+          className="flex w-72 flex-col items-center text-center"
+        >
           <div className="mb-4 flex h-28 w-28 items-center justify-center rounded-full bg-white shadow">
             <Image
               src={brand.logo}

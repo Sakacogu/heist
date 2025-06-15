@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 import LottieSlide from "@/components/LottieSlide";
 
@@ -13,7 +13,7 @@ export interface FeaturedItem {
   description: string;
   lottie: object;
   link?: string;
-};
+}
 
 interface FeaturedCarouselProps {
   items: FeaturedItem[];
@@ -36,8 +36,8 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
   const router = useRouter();
 
   // prev / next helpers
-  const prev = () => setCurrent(c => (c - 1 + total) % total);
-  const next = () => setCurrent(c => (c + 1) % total);
+  const prev = () => setCurrent((c) => (c - 1 + total) % total);
+  const next = () => setCurrent((c) => (c + 1) % total);
 
   // distance from current slide (shortest path in circular list)
   const diffFor = (i: number) => {
@@ -76,7 +76,7 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
 
     // convert drag distance to slide count
     const moved = Math.round(-dragX / STEP_PX);
-    setCurrent(c => (c + moved + total) % total);
+    setCurrent((c) => (c + moved + total) % total);
     setDragX(0);
   };
 
@@ -111,13 +111,17 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
                   ? "none"
                   : "transform 0.04s ease, z-index 0.04s ease",
               }}
-              onClick={() => !didDrag.current && router.push(item.link ?? "/products")}
+              onClick={() =>
+                !didDrag.current && router.push(item.link ?? "/products")
+              }
             >
               {/* description banner */}
               <div className="pointer-events-none absolute inset-0 z-50 flex items-start justify-center pt-6">
                 <Link href={item.link ?? "/products"}>
                   <div className="m-2 w-full rounded-3xl border border-cyan-400 bg-cyan-500 p-6 shadow-md">
-                    <p className="drop-shadow-lg text-xl text-gray-900">{item.description}</p>
+                    <p className="drop-shadow-lg text-xl text-gray-900">
+                      {item.description}
+                    </p>
                   </div>
                 </Link>
               </div>

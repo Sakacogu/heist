@@ -1,5 +1,6 @@
-import { sanity } from '@/lib/sanity';
-import ProductsClient from './products-client';
+import { sanity } from "@/lib/sanityClient";
+
+import ProductsClient from "./products-client";
 
 export const revalidate = 3600; // regenerate at most hourly
 
@@ -37,8 +38,9 @@ export default async function ProductsPage({
   searchParams: { brand?: string; fn?: string };
 }) {
   /* Next automatically stringifies undefined, so tidy that up */
-  const brand = searchParams.brand === 'undefined' ? undefined : searchParams.brand;
-  const fn = searchParams.fn === 'undefined' ? undefined : searchParams.fn;
+  const brand =
+    searchParams.brand === "undefined" ? undefined : searchParams.brand;
+  const fn = searchParams.fn === "undefined" ? undefined : searchParams.fn;
 
   const products = await getProducts(brand, fn);
 

@@ -11,7 +11,7 @@ interface Product {
 
 interface ProductCardProps {
   product: Product;
-};
+}
 
 /** Small product tile used on /packages etc. */
 const ProductCard: FC<ProductCardProps> = ({ product }) => (

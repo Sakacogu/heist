@@ -7,7 +7,7 @@ interface AssistantBrand {
   label: string;
   logo: string;
   url: string;
-};
+}
 
 const ASSISTANT_BRANDS: AssistantBrand[] = [
   {

@@ -1,68 +1,153 @@
-import { sanity } from "@/lib/sanity";
+"use client";
 
-import PackagesPageClient from "./packages-page";
+import { Zap } from "lucide-react";
+import Image from "next/image";
+import { useTranslation } from "react-i18next";
 
-/* The four tiers stored in Sanity */
-const TIERS = ["Starter", "Comfort", "Pro", "Ultimate"] as const;
+import { useCart } from "@/app/cart/cart-provider";
+import { formatISK } from "@/utils/format";
+import { fnIcons, fnLabels } from "@/utils/functionIcons";
 
-export const revalidate = 3600;
-
-const query = `*[_type=="product" && defined(bundleTier)]{
-    _id,title,priceISK,slug,brand,functions,image{asset->{url}},bundleTier
-}`;
-
-type Row = {
+type Product = {
   _id: string;
   title: string;
   priceISK: number;
   brand?: string;
   functions?: string[];
   image: { asset: { url: string } };
-  bundleTier: (typeof TIERS)[number];
 };
 
-async function getProductsGroupedByTier() {
-  const rows: Row[] = await sanity.fetch(query);
+type Bundle = {
+  id: number;
+  title: string;
+  blurb: string;
+  ribbon?: boolean;
+  products: Product[];
+};
 
-  return rows.reduce<Record<string, Row[]>>((acc, row) => {
-    (acc[row.bundleTier] ??= []).push(row);
-    return acc;
-  }, {});
-}
+/** percentage discount based on item count + unique brands */
+const bundleDiscountRate = (qty: number, brandCount: number): number =>
+  Math.min(
+    (qty >= 8 ? 0.15 : qty >= 5 ? 0.1 : qty >= 3 ? 0.05 : 0) +
+      (brandCount >= 3 ? 0.05 : 0),
+    0.25,
+  );
 
-function buildBundles(groups: Record<string, Row[]>) {
-  const COPY: Record<(typeof TIERS)[number], { title: string; blurb: string }> =
-    {
-      Starter: {
-        title: 'Starter ljós',
-        blurb: 'Plug-and-play dimming in any room.',
-      },
-      Comfort: {
-        title: 'Comfort heimili',
-        blurb: 'Lights + climate control + basic automations.',
-      },
-      Pro: {
-        title: 'Öryggispakki',
-        blurb: 'Motion, entry sensors & AI doorbell video.',
-      },
-      Ultimate: {
-        title: 'Mix & Match',
-        blurb: 'Everything above + Wi-Fi 6 backbone.',
-      },
-    };
+export default function PackagesPageClient({ bundles }: { bundles: Bundle[] }) {
+  const { addItems } = useCart();
+  const { t } = useTranslation("packages");
 
-  return TIERS.map((tier, idx) => ({
-    id: idx + 1,
-    title: COPY[tier].title,
-    blurb: COPY[tier].blurb,
-    ribbon: tier === 'Comfort',
-    products: groups[tier] ?? [],
-  }));
-}
+  return (
+    <main className="max-w-7xl mx-auto grid xl:grid-cols-4 md:grid-cols-2 gap-8 p-6">
+      {bundles.map((bundle) => {
+        const qty = bundle.products.length;
+        const brandCount = new Set(bundle.products.map((p) => p.brand)).size;
+        const pct = bundleDiscountRate(qty, brandCount);
 
-export default async function PackagesPage() {
-  const grouped = await getProductsGroupedByTier();
-  const bundles = buildBundles(grouped);
+        const subtotal = bundle.products.reduce((s, p) => s + p.priceISK, 0);
+        const saving = Math.round(subtotal * pct);
+        const totalISK = subtotal - saving;
 
-  return <PackagesPageClient bundles={bundles} />;
+        const functionSet = new Set(
+          bundle.products.flatMap((p) => p.functions ?? []),
+        );
+
+        return (
+          <article
+            key={bundle.id}
+            className="relative flex flex-col mt-10 bg-white rounded-3xl shadow ring-1 ring-gray-200 overflow-hidden"
+          >
+            {bundle.ribbon && (
+              <span className="absolute -top-3 left-6 bg-amber-500 text-white text-xs px-3 py-1 rounded-full shadow-lg">
+                Mest&nbsp;keypt
+              </span>
+            )}
+
+            <header className="h-28 bg-gradient-to-r from-cyan-600 to-blue-500 relative flex items-end">
+              <Zap className="absolute right-6 bottom-6 w-20 h-20 text-white/30 -rotate-12" />
+              <h2 className="text-2xl font-semibold text-white drop-shadow pl-6 pb-4">
+                {bundle.title}
+              </h2>
+            </header>
+
+            <section className="flex-1 flex flex-col p-6 gap-6 max-h-[26rem] overflow-y-auto">
+              <p className="text-gray-700">{bundle.blurb}</p>
+
+              <div className="flex gap-2">
+                {Array.from(functionSet).map((fn) => {
+                  const Icon = fnIcons[fn];
+                  return Icon ? (
+                    <span
+                      key={fn}
+                      title={fnLabels[fn]}
+                      className="h-8 w-8 rounded-full bg-cyan-50 text-cyan-700 flex items-center justify-center"
+                    >
+                      <Icon className="w-4 h-4" />
+                    </span>
+                  ) : null;
+                })}
+              </div>
+
+              <ul className="space-y-3">
+                {bundle.products.map((p) => (
+                  <li key={p._id} className="flex items-center gap-3">
+                    <Image
+                      src={`${p.image.asset.url}?w=60&h=45&fit=crop&auto=format`}
+                      alt={p.title}
+                      width={60}
+                      height={45}
+                      className="rounded object-cover"
+                    />
+                    <span className="flex-1">{p.title}</span>
+                    <span className="text-sm opacity-60">
+                      {formatISK(p.priceISK)} kr.
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <div
+                className={`rounded-lg p-4 text-sm flex justify-between
+                               ${
+                                 pct
+                                   ? "bg-emerald-50 text-emerald-700"
+                                   : "bg-gray-50 text-gray-600"
+                               }`}
+              >
+                <span>
+                  {pct
+                    ? `Afsláttur ${Math.round(pct * 100)} %`
+                    : "Enginn afsláttur"}
+                </span>
+                <span className="font-semibold">− {formatISK(saving)} kr.</span>
+              </div>
+            </section>
+
+            <div className="flex justify-between font-semibold text-lg px-6 py-4 border-t">
+              <span>{t("total")}</span>
+              <span>{formatISK(totalISK)} kr.</span>
+            </div>
+
+            <button
+              onClick={() =>
+                addItems(
+                  bundle.products.map((p) => ({
+                    id: p._id,
+                    name: p.title,
+                    price: Math.round(p.priceISK * (1 - pct)),
+                    image: p.image.asset.url,
+                    qty: 1,
+                    cartId: "", // provider will replace with nanoid()
+                  })),
+                )
+              }
+              className="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-4 transition"
+            >
+              {t("addAll")}
+            </button>
+          </article>
+        );
+      })}
+    </main>
+  );
 }
