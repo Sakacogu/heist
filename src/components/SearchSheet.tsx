@@ -1,10 +1,11 @@
 "use client";
+
 import Fuse from "fuse.js";
 import { X, Search } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
-type Product = {
+interface Product {
   _id: string;
   title: string;
   brand: string;
@@ -14,51 +15,57 @@ type Product = {
 };
 
 export default function SearchSheet({ onClose }: { onClose: () => void }) {
+  // Full-text index – set once when data arrives
+  const [searchIndex, setSearchIndex] = useState<Fuse<Product>>();
+  // Current input value 
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Product[]>([]);
-  const [fuse, setFuse] = useState<Fuse<Product>>();
+  // Top N matches (derived from query)
+  const [matches, setMatches] = useState<Product[]>([]);
+  // Grab focus when component mounts 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // fetch products → build fuzzy index 
   useEffect(() => {
     fetch("/api/products")
-      .then((r) => r.json())
-      .then((data: Product[]) => {
-        setFuse(
-          new Fuse(data, {
+      .then((response) => response.json())
+      .then((products: Product[]) =>
+        setSearchIndex(
+          new Fuse(products, {
+            threshold: 0.35,
             keys: [
               { name: "title", weight: 0.5 },
               { name: "brand", weight: 0.3 },
               { name: "functions", weight: 0.2 },
             ],
-            threshold: 0.35,
           }),
-        );
-      });
-    const t = setTimeout(() => inputRef.current?.focus(), 150);
-    return () => clearTimeout(t);
+        ),
+      );
+
+    const focusTimer = setTimeout(() => inputRef.current?.focus(), 150);
+    return () => clearTimeout(focusTimer);
   }, []);
 
+  // update result list whenever query or index changes 
   useEffect(() => {
-    if (!fuse || !query.trim()) return setResults([]);
-    setResults(
-      fuse
-        .search(query)
-        .map((r) => r.item)
-        .slice(0, 8),
-    );
-  }, [query, fuse]);
+    if (!query.trim() || !searchIndex) {
+      setMatches([]);
+      return;
+    }
+    const topHits = searchIndex.search(query).slice(0, 8).map((r) => r.item);
+    setMatches(topHits);
+  }, [query, searchIndex]);
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex flex-col">
-      <div className="mx-auto w-full max-w-xl bg-white rounded-b-xl shadow-xl">
-        <div className="flex items-center gap-2 px-4 py-3 border-b">
-          <Search className="w-5 h-5 text-gray-500 shrink-0" />
+    <div className="fixed inset-0 z-60 flex flex-col bg-black/50 backdrop-blur-sm">
+      <div className="mx-auto w-full max-w-xl rounded-b-xl bg-white shadow-xl">
+        <div className="flex items-center gap-2 border-b px-4 py-3">
+          <Search className="h-5 w-5 text-gray-500" />
           <input
             ref={inputRef}
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={e => setQuery(e.target.value)}
             placeholder="Leitaðu að vöru, tegund eða eiginleika…"
-            className="flex-1 outline-none text-[17px] text-gray-900 placeholder:text-gray-400"
+            className="flex-1 text-[17px] text-gray-900 placeholder-gray-400 outline-none"
           />
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
             <X className="w-5 h-5 text-gray-600" />
@@ -67,23 +74,23 @@ export default function SearchSheet({ onClose }: { onClose: () => void }) {
 
         {query && (
           <ul className="max-h-[64vh] overflow-auto divide-y">
-            {results.length === 0 && (
+            {matches.length === 0 && (
               <li className="p-6 text-center text-gray-600">
                 Engar niðurstöður 😕
               </li>
             )}
 
-            {results.map((p) => (
-              <li key={p._id}>
+            {matches.map((product) => (
+              <li key={product._id}>
                 <Link
-                  href={`/products/${p.slug.current}`}
+                  href={`/products/${product.slug.current}`}
                   onClick={onClose}
-                  className="block px-6 py-4 hover:bg-gray-50 transition"
+                  className="block px-6 py-4 transition hover:bg-gray-50"
                 >
-                  <p className="font-medium text-gray-700">{p.title}</p>
-                  <p className="text-sm text-gray-600 mt-0.5">
-                    {p.brand} ·{" "}
-                    {p.functions?.length ? ` · ${p.functions.join(", ")}` : ""}
+                  <p className="font-medium text-gray-700">{product.title}</p>
+                  <p className="mt-0.5 text-sm text-gray-600">
+                    {product.brand}
+                    {product.functions?.length ? ` · ${product.functions.join(", ")}` : ""}
                   </p>
                 </Link>
               </li>
