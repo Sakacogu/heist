@@ -46,7 +46,7 @@ src/
 ├── lib/ # Client-only libs (AuthContext, i18n, sanityClient)
 ├── sanity/ # Studio config, schemas & helper libs
 └── utils/ # Pure utility helpers
-
+```
 ---
 
 ## 🚀 Quick start
@@ -68,10 +68,10 @@ npm run studio   # = sanity dev
 
 # 4. Next.js dev (port 3000)
 npm run dev
-
+```
 ---
 
-🧪 Quality scripts
+## 🧪 Quality scripts
 
 Command	What it does
 npm run clean	Type-check → ESLint (auto-fix) → Prettier → ts-prune → audit
@@ -81,14 +81,14 @@ npm run studio	Launch Sanity Studio v3 locally
 
 ---
 
-🔒 Security & audits
+## 🔒 Security & audits
 npm audit fix --force is not used in CI to avoid unwanted major bumps.
 
 If you accidentally ran it, simply git restore package*.json && rm -rf node_modules && npm install (see “Undoing audit fix” in the wiki).
 
 ---
 
-🤝 Contributing
+## 🤝 Contributing
 Fork, clone, create a branch.
 
 Follow the ESLint/Prettier rules (npm run clean before pushing).
