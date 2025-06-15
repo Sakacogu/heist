@@ -51,30 +51,25 @@ export default function ProfileClient() {
     if (!user) return;
 
     const raw = localStorage.getItem(`heist-orders-${user.email}`) ?? "[]";
-    const parsed = JSON.parse(raw) as unknown[];
+    const parsed = JSON.parse(raw) as Partial<Order>[];
 
-    const cleaned: Order[] = parsed.map((row) => {
-      const o = row as Partial<Order>;
-      const status: OrderStatus =
+    const cleaned = parsed.map<Order>((o) => ({
+      id: o.id ?? crypto.randomUUID(),
+      total: o.total ?? 0,
+      date: o.date ?? new Date().toISOString(),
+      items: o.items ?? [],
+      status:
         o.status === "paid"
           ? "paid"
           : o.status === "canceled"
-            ? "canceled"
-            : "pending";
-
-      return {
-        id: o.id ?? crypto.randomUUID(),
-        total: o.total ?? 0,
-        date: o.date ?? new Date().toISOString(),
-        items: o.items ?? [],
-        status,
-      };
-    });
+          ? "canceled"
+          : "pending",
+    }));
 
     setOrders(cleaned);
   }, [user]);
 
-  if (!user) return null;
+  if (!user) return null; // while redirecting
 
   const persistOrders = (next: Order[]) => {
     setOrders(next);
@@ -82,35 +77,40 @@ export default function ProfileClient() {
   };
 
   const finishPay = (id: string) => {
-    const next = orders.map((o) =>
-      o.id === id ? { ...o, status: "paid" as OrderStatus } : o,
+    persistOrders(
+      orders.map((o) => (o.id === id ? { ...o, status: "paid" } : o)),
     );
-    persistOrders(next);
     alert("(stub) Stripe checkout would open now");
   };
 
-  /** cancel -> mark order + batch-restore its items */
   const cancelOrder = (id: string) => {
     const next = orders.map((o) =>
-      o.id === id ? { ...o, status: "canceled" as OrderStatus } : o,
+      o.id === id ? { ...o, status: "canceled" } : o,
     );
-    persistOrders(next);
+    persistOrders(
+      next.map((order) => ({
+        ...order,
+        status: order.status as OrderStatus,
+      })),
+    );
 
+    /* restore every line-item to the cart */
     const canceled = next.find((o) => o.id === id);
     if (canceled) {
-      // map OrderItem → CartItem-like for addItems
       addItems(
         canceled.items.map((it) => ({
-          ...it,
-          cartId: "", // placeholder, provider will replace with nanoid()
+          id: it.id,
+          name: it.name,
+          price: it.price,
+          image: it.image,
+          qty: it.qty,
         })),
       );
     }
   };
 
-
   const meetings: Meeting[] = JSON.parse(
-    localStorage.getItem(`heist-meet-${user.email}`) || "[]",
+    localStorage.getItem(`heist-meet-${user.email}`) ?? "[]",
   );
   const now = new Date();
   const upcoming = meetings.filter((m) => new Date(m.when) > now);
