@@ -42,6 +42,7 @@ export default function ProfileClient() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
 
+  /* ---------- auth guard ---------- */
   useEffect(() => {
     if (!user) router.replace("/login?next=/profile");
   }, [user, router]);
