@@ -3,126 +3,132 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 import LottieSlide from "@/components/LottieSlide";
 
-export interface FeaturedItem {
+export type FeaturedItem = {
   id: string;
   name: string;
-  description: string;
   lottie: object;
+  description: string;
   link?: string;
-}
+};
 
-interface FeaturedCarouselProps {
-  items: FeaturedItem[];
-}
+type FeaturedCarouselProps = { items: FeaturedItem[] };
 
 export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
-  const total = items.length;
-  const STEP_PX = 400; // horizontal slide step
-  const SCALE = [0.6, 0.8, 1, 0.8, 0.6] as const;
-  const DRAG_THRESHOLD = 10;
+  // constants
+  const STEP_PX = 400; // distance between slides
+  const SCALE = [0.6, 0.8, 1, 0.8, 0.6]; // scaling for positions –2…+2
+  const DRAG_TOLERANCE = 10; // px before a drag is “real”
+  const ROTATE_MS = 6000; // auto-advance period
 
-  const [dragX, setDragX] = useState(0);
+  // state & refs
   const [current, setCurrent] = useState(0);
+  const [dragX, setDragX] = useState(0);
 
   const dragging = useRef(false);
   const didDrag = useRef(false);
-  const startX = useRef(0);
+  const dragStartX = useRef(0);
   const hoverPause = useRef(false);
 
   const router = useRouter();
+  const itemCount = items.length;
 
-  // prev / next helpers
-  const prev = () => setCurrent((c) => (c - 1 + total) % total);
-  const next = () => setCurrent((c) => (c + 1) % total);
-
-  // distance from current slide (shortest path in circular list)
-  const diffFor = (i: number) => {
-    let d = i - current;
-    if (d > total / 2) d -= total;
-    if (d < -total / 2) d += total;
+  const slideDiff = (index: number) => {
+    // shortest signed distance between current & index
+    let d = index - current;
+    if (d > itemCount / 2) d -= itemCount;
+    if (d < -itemCount / 2) d += itemCount;
     return d;
   };
 
-  // Auto-advance every 6s unless user is dragging or hovering
+  const goNext = useCallback(
+    () => setCurrent((c) => (c + 1) % itemCount),
+    [itemCount],
+  );
+
+  const goPrev = useCallback(
+    () => setCurrent((c) => (c - 1 + itemCount) % itemCount),
+    [itemCount],
+  );
+
   useEffect(() => {
     const id = setInterval(() => {
-      if (!dragging.current && !hoverPause.current) next();
-    }, 6000);
+      if (!dragging.current && !hoverPause.current) goNext();
+    }, ROTATE_MS);
     return () => clearInterval(id);
-  }, [total]);
+  }, [goNext]);
 
-  // Pointer drag handlers
-  const onDragStart = (e: React.PointerEvent<HTMLDivElement>) => {
+  function handleDragStart(e: React.PointerEvent) {
     dragging.current = true;
     didDrag.current = false;
-    startX.current = e.clientX;
+    dragStartX.current = e.clientX;
     e.currentTarget.setPointerCapture(e.pointerId);
-  };
+  }
 
-  const onDragMove = (e: React.PointerEvent<HTMLDivElement>) => {
+  function handleDragMove(e: React.PointerEvent) {
     if (!dragging.current) return;
-    const dx = e.clientX - startX.current;
-    if (Math.abs(dx) > DRAG_THRESHOLD) didDrag.current = true;
+    const dx = e.clientX - dragStartX.current;
+    if (Math.abs(dx) > DRAG_TOLERANCE) didDrag.current = true;
     setDragX(dx);
-  };
-  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+  }
+
+  function handleDragEnd(e: React.PointerEvent) {
     if (!dragging.current) return;
     dragging.current = false;
     e.currentTarget.releasePointerCapture(e.pointerId);
 
-    // convert drag distance to slide count
-    const moved = Math.round(-dragX / STEP_PX);
-    setCurrent((c) => (c + moved + total) % total);
+    // snap to nearest slide
+    const delta = Math.round(-dragX / STEP_PX);
+    setCurrent((c) => (c + delta + itemCount) % itemCount);
     setDragX(0);
-  };
+  }
 
   return (
-    <div className="relative h-full w-full bg-gray-50">
+    <div className="relative w-full h-full bg-gray-50">
+      {/* track */}
       <div
-        className="relative flex h-[520px] w-full items-center justify-center overflow-hidden"
-        onPointerDown={onDragStart}
-        onPointerMove={onDragMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
+        className="relative h-[520px] flex items-center justify-center overflow-hidden"
+        onPointerDown={handleDragStart}
+        onPointerMove={handleDragMove}
+        onPointerUp={handleDragEnd}
+        onPointerCancel={handleDragEnd}
         onMouseEnter={() => (hoverPause.current = true)}
         onMouseLeave={() => (hoverPause.current = false)}
       >
         {items.map((item, i) => {
-          const diff = diffFor(i);
-          const absDiff = Math.abs(diff);
-          if (absDiff > 2) return null; // only render ±2 neighbours
+          const diff = slideDiff(i);
+          if (Math.abs(diff) > 2) return null; // only render ±2 neighbours
 
+          const x = diff * STEP_PX + dragX;
           const scale = SCALE[diff + 2];
-          const zIndex = 20 - absDiff;
-          const xOffset = diff * STEP_PX + dragX;
+          const z = 10 - Math.abs(diff); // depth ordering
 
           return (
             <div
               key={item.id}
-              className="absolute top-1/2 left-1/2 h-[448px] w-[672px] cursor-pointer overflow-hidden rounded-3xl bg-white shadow-md"
+              className="absolute left-1/2 top-1/2 h-[448px] w-[672px]
+                         rounded-3xl bg-white shadow-md overflow-hidden
+                         cursor-pointer"
               style={{
-                transform: `translate(calc(-50% + ${xOffset}px), -50%) scale(${scale})`,
-                zIndex,
-                transition: dragging.current
-                  ? "none"
-                  : "transform 0.04s ease, z-index 0.04s ease",
+                transform: `translate(calc(-50% + ${x}px), -50%) scale(${scale})`,
+                zIndex: z,
+                transition: dragging.current ? "none" : "transform 0.06s ease",
               }}
               onClick={() =>
                 !didDrag.current && router.push(item.link ?? "/products")
               }
             >
-              {/* description banner */}
-              <div className="pointer-events-none absolute inset-0 z-50 flex items-start justify-center pt-6">
-                <Link href={item.link ?? "/products"}>
-                  <div className="m-2 w-full rounded-3xl border border-cyan-400 bg-cyan-500 p-6 shadow-md">
-                    <p className="drop-shadow-lg text-xl text-gray-900">
-                      {item.description}
-                    </p>
-                  </div>
+              {/* overlay text block */}
+              <div className="absolute inset-0 z-10 flex items-start justify-center pt-6 pointer-events-none">
+                <Link
+                  href={item.link ?? "/products"}
+                  className="pointer-events-auto block w-full mx-2 rounded-3xl
+                             bg-cyan-500/90 px-6 py-4 text-center shadow-lg"
+                >
+                  <p className="text-xl text-gray-900">{item.description}</p>
                 </Link>
               </div>
 
@@ -133,17 +139,17 @@ export default function FeaturedCarousel({ items }: FeaturedCarouselProps) {
         })}
       </div>
 
-      {/* manual nav buttons */}
+      {/* nav buttons */}
       <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-6">
         <button
-          onClick={prev}
-          className="p-2 bg-white rounded-full shadow hover:bg-gray-100"
+          onClick={goPrev}
+          className="p-2 rounded-full bg-white shadow hover:bg-gray-100"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <button
-          onClick={next}
-          className="p-2 bg-white rounded-full shadow hover:bg-gray-100"
+          onClick={goNext}
+          className="p-2 rounded-full bg-white shadow hover:bg-gray-100"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
