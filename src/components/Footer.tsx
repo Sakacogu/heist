@@ -7,6 +7,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300">
       <div className="max-w-7xl mx-auto px-6 py-12 grid gap-8 md:grid-cols-3">
+        {/* brand blurb */}
         <div>
           <h3 className="text-lg font-semibold text-white mb-4">Heist</h3>
           <p className="text-sm leading-relaxed">
@@ -15,32 +16,26 @@ export default function Footer() {
           </p>
         </div>
 
+        {/* quick links */}
         <div>
           <h4 className="font-medium text-white mb-3">Flýtileiðir</h4>
           <ul className="space-y-2 text-sm">
-            <li>
-              <Link href="/products" className="hover:underline">
-                Vörur
-              </Link>
-            </li>
-            <li>
-              <Link href="/pakkar" className="hover:underline">
-                Pakkar
-              </Link>
-            </li>
-            <li>
-              <Link href="/uppsetning" className="hover:underline">
-                Uppsetning
-              </Link>
-            </li>
-            <li>
-              <Link href="/samband" className="hover:underline">
-                Hafa samband
-              </Link>
-            </li>
+            {[
+              { href: "/products", label: "Vörur" },
+              { href: "/packages", label: "Pakkar" },
+              { href: "/setup", label: "Uppsetning" },
+              { href: "/contact", label: "Hafa samband" },
+            ].map(link => (
+              <li key={link.href}>
+                <Link href={link.href} className="hover:underline">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
+        {/* contacts */}
         <div>
           <h4 className="font-medium text-white mb-3">Tengiliðir</h4>
           <ul className="space-y-2 text-sm">
@@ -61,6 +56,7 @@ export default function Footer() {
               <a
                 href="https://facebook.com/heist"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="hover:underline"
               >
                 facebook.com/heist
@@ -71,6 +67,7 @@ export default function Footer() {
               <a
                 href="https://linkedin.com/company/heist"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="hover:underline"
               >
                 LinkedIn
@@ -81,7 +78,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-gray-700 text-center py-4 text-xs text-gray-400">
-        © {new Date().getFullYear()} Heist&nbsp; ehf. Öll réttindi áskilin.
+        © {new Date().getFullYear()} Heist ehf. Öll réttindi áskilin.
       </div>
     </footer>
   );
